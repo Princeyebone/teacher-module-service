@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+import secrets
 
 class Settings(BaseSettings):
     APP_NAME:str = "keep"
@@ -10,5 +11,7 @@ class Settings(BaseSettings):
     class Config:
         env_file=".env"
     
+code = secrets.token_urlsafe(32)
+
 settings = Settings()
-print(settings)
+print(code)

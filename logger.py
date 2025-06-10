@@ -10,7 +10,7 @@ def setup_logging():
     log_dir.mkdir(exist_ok=True)
     
     # Main application logger
-    logger = logging.getLogger("erp")
+    logger = logging.getLogger("tmdl")
     logger.setLevel(logging.INFO)
     
     # Formatter
@@ -20,7 +20,7 @@ def setup_logging():
     
     # File handler (rotating)
     file_handler = RotatingFileHandler(
-        log_dir / "erp.log",
+        log_dir / "tmdl.log",
         maxBytes=1024*1024,  # 1MB
         backupCount=5
     )
