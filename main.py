@@ -54,7 +54,7 @@ app.add_middleware(
 
 # Include routers with proper tags
 app.include_router(auths_routes.router, prefix="/api", tags=["Authentication"])
-app.include_router(profile_routes.router, prefix="/api", tags=["Profile"])
+app.include_router(profile_routes.router, tags=["Profile"])
 app.include_router(teacher_crud.router, prefix="/api", tags=["Teacher Management"])
 
 

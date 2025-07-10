@@ -6,12 +6,15 @@ class Settings(BaseSettings):
     APP_VERSION:str = "This"
     DATABASE_URL:str = "a"
     CORE_SERVICE_URL:str = "Secret"
-    SERVICE_JWT:str = "from"
+    SERVICE_JWT:str= "from"
+    SECRET_KEY:str= "n"
+    ALGORITHM:str= "like"
+    ACCESS_TOKEN_EXPIRE_MINUTES:int= 0
 
     class Config:
         env_file=".env"
     
-code = secrets.token_urlsafe(32)
+
 
 settings = Settings()
-print(code)
+print()

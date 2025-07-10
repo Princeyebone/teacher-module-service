@@ -1,96 +1,69 @@
 # profile_routes.py or inside auth_routes.py
-from schemas import TeacherRead, TeacherUpdate, EmailSync
-from model import Teacher
+from schemas import TeacherRead, TeacherUpdate, EmailSync, TeacherProfileRead
+from model import TeacherProfile
 from database import get_db
 from dependencies import get_current_teacher
 from service_auth import verify_service_jwt
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Request
 from sqlmodel import Session, select
-from pydantic import BaseModel, EmailStr
 from typing import Annotated
+from httpx import AsyncClient
+from config import settings
+from logger import logger
 
 
 
-router = APIRouter(prefix="/teachers")
+router = APIRouter(prefix="/api")
+
+    
 
 
-@router.get("/me", response_model=TeacherRead)
-async def get_my_profile(current_teacher:Annotated[Teacher, Depends(get_current_teacher)] ):
-    return current_teacher
-
-
-@router.patch("/me", response_model=TeacherRead)
+@router.patch("/update-profile", response_model=TeacherProfileRead)
 async def update_my_profile(
     data: TeacherUpdate,
-    current_teacher:Annotated[Teacher, Depends(get_current_teacher)],
-    session: Session = Depends(get_db),
+    current_teacher:Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: Session = Depends(get_db),
     
 ):
+    logger.info(f"Updating profile for teacher: {getattr(current_teacher, 'id', None)} with data: {data.model_dump(exclude_unset=True)}")
     for field, value in data.model_dump(exclude_unset=True).items():
         setattr(current_teacher, field, value)
 
-    session.add(current_teacher)
-    session.commit()
-    session.refresh(current_teacher)
+    db.add(current_teacher)
+    db.commit()
+    db.refresh(current_teacher)
+    logger.info(f"Profile updated for teacher: {getattr(current_teacher, 'id', None)}")
     return current_teacher
 
-@router.delete("/me", status_code=204)
-async def delete_my_account(
-    current_teacher:Annotated[Teacher, Depends(get_current_teacher)],
-    session: Session = Depends(get_db)
-):
-    current_teacher.is_active = False
-    session.add(current_teacher)
-    session.commit()
-
-# teacher_module/profile_routes.py
-#
-@router.post("/sync-email",dependencies=[Depends(verify_service_jwt)] )
-async def sync_email(data: EmailSync, session: Session = Depends(get_db)):
-    teacher = session.exec(select(Teacher).where(Teacher.email == data.old_email)).first()
-    if not teacher:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Teacher not found")
-    teacher.email = data.new_email
-    session.add(teacher)
-    session.commit()
-    return {"message": "Local email updated."}
-
-# teacher_module/profile_routes.py
-
-class SyncProfile(BaseModel):
-    email: EmailStr
-    first_name: str
-    last_name: str
-    bio: str | None = None
-
 @router.post(
-    "/sync-profile",
-    status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(verify_service_jwt)],
-    summary="Create or update teacher profile (internal)"
+    "/deactivate-teacher"    
 )
-async def sync_profile(
-    data: SyncProfile,
-    session: Session = Depends(get_db)
+async def deactivate_teacher(
+    request:Request    
 ):
-    # Upsert pattern: create or update existing
-    existing = session.exec(select(Teacher).where(Teacher.email == data.email)).first()
-    if existing:
-        existing.first_name = data.first_name
-        existing.last_name  = data.last_name
-        existing.bio        = data.bio
-        session.add(existing)
-        session.commit()
-        session.refresh(existing)
-        return {"message": "Profile updated", "teacher_id": existing.id}
+    logger.info("Received request to deactivate teacher")
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        logger.warning("Missing Authorization header in deactivate_teacher request")
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
 
-    new_teacher = Teacher(
-        email=data.email,
-        first_name=data.first_name,
-        last_name=data.last_name,
-        bio=data.bio
-    )
-    session.add(new_teacher)
-    session.commit()
-    session.refresh(new_teacher)
-    return {"message": "Profile created", "teacher_id": new_teacher.id}
+    async with AsyncClient(verify=False) as client:
+        logger.info("Sending deactivation request to core service")
+        resp = await client.post(
+            f"{settings.CORE_SERVICE_URL}/api/register-teacher",
+            headers={
+                "intSAuthorization":f"Bearer {auth_header}",
+                "Authorization":f"Bearer {settings.SERVICE_JWT}"
+            } # Corrected "AUthorization" to "Authorization"
+        )
+
+        if resp.status_code not in (200, 201):
+            detail = resp.json().get("detail", resp.text)
+            logger.error(f"Deactivation failed with status {resp.status_code}: {detail}")
+            raise HTTPException(
+                status_code = resp.status_code,
+                detail = detail
+            )
+
+        logger.info("Teacher deactivated successfully")
+        return {"message":"successful deactivation",}

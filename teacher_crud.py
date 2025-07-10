@@ -3,7 +3,7 @@ from typing import Annotated
 from dependencies import get_current_teacher
 from database import get_db
 from sqlmodel import Session, select
-from model import Teacher
+from model import TeacherProfile
 from uuid import UUID
 from schemas import TeacherUpdate
 from httpx import AsyncClient
@@ -18,9 +18,9 @@ async def verify_teacher_access(
     db: Session,
     teacher_id: UUID,
     current_user: dict
-) -> Teacher:
+) -> TeacherProfile:
     """Shared verification logic for teacher operations"""
-    teacher = db.get(Teacher, teacher_id)
+    teacher = db.get(TeacherProfile, teacher_id)
     if not teacher:
         logger.error(f"Teacher not found: {teacher_id}")
         raise HTTPException(
@@ -33,7 +33,7 @@ async def verify_teacher_access(
 
 @router.get("/{teacher_id}", summary="Get teacher details")
 async def get_teacher(
-    current_user: Annotated[dict, Depends(get_current_teacher)],
+    
     teacher_id: UUID,
     db: Annotated[Session, Depends(get_db)]
 ):
@@ -55,7 +55,7 @@ async def get_teachers(
     db: Annotated[Session, Depends(get_db)]
 ):
     try:
-        return db.exec(select(Teacher)).all()
+        return db.exec(select(TeacherProfile)).all()
     except Exception as e:
         logger.error(f"Error fetching teachers: {str(e)}")
         raise HTTPException(

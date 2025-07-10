@@ -3,6 +3,12 @@ from datetime import date, time
 from typing import Optional, List
 from uuid import UUID
 
+class TokenData(BaseModel):
+    email:str | None = None
+    role:str | None = None
+    school_id:UUID | None = None
+    individual_id:UUID | None = None
+
 # Existing models
 class TeacherRegistrationRequest(BaseModel):
     name: str
@@ -25,17 +31,41 @@ class TeacherCreate(TeacherBase):
     pass
 
 class TeacherRead(TeacherBase):
-    employment_status: Optional[str] = None
-    subjects: Optional[str] = None
-    qualifications: Optional[str] = None
-    rating: Optional[int] = None
-    bio: Optional[str] = None
+    display_name:Optional[str] = None
+    qualification:Optional[str] = None
+    qualification_year:Optional[int] = None
+    qualification_institution:Optional[str] = None
+    work_institution:Optional[str] = None
+    subjects:Optional[str] = None    
+    bio:Optional[str] = None
 
 class TeacherUpdate(BaseModel):
-    employment_status: Optional[str] = None
+    display_name:Optional[str] = None
+    qualification:Optional[str] = None
+    qualification_year:Optional[int] = None
+    qualification_institution:Optional[str] = None
+    work_institution:Optional[str] = None
+    subjects:Optional[str] = None    
+    bio:Optional[str] = None
+
+class TeacherProfileRead(BaseModel):
+    id: Optional[UUID] = None
+    no_id: Optional[int] = None
+    school_id: Optional[UUID] = None
+    individual_id: Optional[UUID] = None
+    display_name: Optional[str] = None
+    qualification: Optional[str] = None
+    qualification_year: Optional[int] = None
+    qualification_institution: Optional[str] = None
+    work_institution: Optional[str] = None
     subjects: Optional[str] = None
-    qualifications: Optional[str] = None
     bio: Optional[str] = None
+    rating: Optional[int] = None
+    role: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+    
 
 class EmailSync(BaseModel):
     old_email: EmailStr
