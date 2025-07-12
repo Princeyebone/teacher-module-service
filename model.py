@@ -27,4 +27,7 @@ class TeacherProfile(SQLModel, table=True):
     role: UserRole = Field(default=UserRole.SCH_TEACHER)
 
 
+class TimeTable(SQLModel, table=True):
+
+
 
