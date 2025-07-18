@@ -84,6 +84,56 @@ class TeacherProfileResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class TimeTableItem(BaseModel):
+    weekday: str
+    pupils: str
+    subject: str
+    start_time: time
+    end_time: time
+    location: Optional[str] = None
+
+class TimeTableEntry(BaseModel):
+    items:List[TimeTableItem]
+    
+class AcademicCalendarEntry(BaseModel):
+    teacher_id:UUID
+    calender_id:int
+    semester_name: str
+    start_date: date
+    mid_semester_break_start_date:Optional[date] = None
+    mid_semester_break_start_date:Optional[date] = None
+    end_date: date
+    academic_level: Optional[str] = None
+    event_name: Optional[str] = None
+    event_start_day: Optional[date] = None
+    event_end_date: Optional[date] = None
+    event_start_time: Optional[time] = None
+    event_end_time: Optional[time] = None
+    is_holiday: Optional[bool] = None
+    requires_no_classes: Optional[bool] = None
+
+class AcademicCalendarPublic(BaseModel):
+    teacher_id: Optional[UUID] = None
+    semester_name: str
+    academic_level: Optional[str] = None
+    semester_start_date: date
+    mid_semester_break_start_date: Optional[date] = None
+    mid_semester_break_end_date:Optional[date] = None
+    semester_end_date: date
+
+class CalendarEventPublic(BaseModel):
+    event_name: Optional[str] = None
+    event_start_date: Optional[date] = None
+    event_end_date: Optional[date]  = None
+    event_start_time: Optional[time] = None
+    event_end_time: Optional[time] = None
+    is_holiday: Optional[bool] = None
+    requires_no_classes: Optional[bool] = None
+
+class UpdateCalendarResponse(BaseModel):
+    academic_calendar: AcademicCalendarPublic
+    calendar_events: List[CalendarEventPublic]
+
 # Semester Planner Schemas
 class SubjectBase(BaseModel):
     name: str

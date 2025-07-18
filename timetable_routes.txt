@@ -1,0 +1,372 @@
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi.responses import JSONResponse
+from sqlmodel import Session, select
+from database import get_db
+from dependencies import get_current_teacher
+from model import WeeklyTimeTable, TeacherProfile
+from config import settings
+import os
+import tempfile
+import json
+import google.generativeai as genai
+import uuid
+import shutil
+from typing import List, Optional
+from datetime import datetime
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
+
+# Configure Google Gen AI
+genai.configure(api_key=settings.API_KEY)
+model = genai.GenerativeModel('gemini-2.0-flash-exp')
+
+# Create router
+router = APIRouter()
+
+# Temporary file storage
+TEMP_DIR = tempfile.mkdtemp()
+
+@router.post("/upload-timetable")
+async def upload_timetable(
+    file: UploadFile = File(...),
+    current_user: TeacherProfile = Depends(get_current_teacher),
+    db: Session = Depends(get_db)
+):
+    """
+    Upload a timetable file (image or PDF) for AI processing
+    """
+    try:
+        logger.info(f"Upload request from user: {current_user.id}")
+        
+        # Validate file type
+        allowed_types = [
+            "image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif",
+            "application/pdf", 
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  # .docx
+            "application/msword",  # .doc
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # .xlsx
+            "application/vnd.ms-excel",  # .xls
+            "text/plain"  # .txt
+        ]
+        if file.content_type not in allowed_types:
+            raise HTTPException(
+                status_code=400, 
+                detail="Invalid file type. Supported formats: PNG, JPG, JPEG, WebP, GIF, PDF, DOC, DOCX, XLS, XLSX, TXT"
+            )
+        
+        # Validate file size (max 10MB)
+        if file.size and file.size > 10 * 1024 * 1024:
+            raise HTTPException(
+                status_code=400, 
+                detail="File too large. Maximum size is 10MB."
+            )
+        
+        # Generate unique file ID
+        file_id = str(uuid.uuid4())
+        file_extension = os.path.splitext(file.filename)[1] if file.filename else ".jpg"
+        temp_file_path = os.path.join(TEMP_DIR, f"{file_id}{file_extension}")
+        
+        # Save file temporarily
+        with open(temp_file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        logger.info(f"File uploaded successfully: {file_id}")
+        
+        return {
+            "file_id": file_id, 
+            "message": "File uploaded successfully",
+            "filename": file.filename,
+            "size": file.size
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Upload failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+from pydantic import BaseModel
+
+class ProcessRequest(BaseModel):
+    advancedSettings: dict = {}
+
+@router.post("/process-timetable/{file_id}")
+async def process_timetable(
+    file_id: str,
+    request: ProcessRequest,
+    current_user: TeacherProfile = Depends(get_current_teacher),
+    db: Session = Depends(get_db)
+):
+    """
+    Process uploaded timetable with Gemini AI
+    """
+    try:
+        logger.info(f"Processing request from user: {current_user.id} for file: {file_id}")
+        
+        # Find the uploaded file
+        file_path = None
+        for filename in os.listdir(TEMP_DIR):
+            if filename.startswith(file_id):
+                file_path = os.path.join(TEMP_DIR, filename)
+                break
+        
+        if not file_path:
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        # Get advanced settings from request
+        advanced_settings = request.advancedSettings
+        is_school_wide = advanced_settings.get("isSchoolWideTimetable", False)
+        teacher_classes = advanced_settings.get("teacherClasses", [])
+        teacher_subjects = advanced_settings.get("teacherSubjects", [])
+        
+        # Prepare prompt based on timetable type
+        if is_school_wide and (teacher_classes or teacher_subjects):
+            # School-wide timetable with filtering
+            classes_filter = f"Classes to look for: {', '.join(teacher_classes)}" if teacher_classes else "No specific classes specified"
+            subjects_filter = f"Subjects to look for: {', '.join(teacher_subjects)}" if teacher_subjects else "No specific subjects specified"
+            
+            prompt = f"""
+            Analyze this school-wide timetable and extract ONLY the classes and subjects that match the teacher's specifications.
+            
+            {classes_filter}
+            {subjects_filter}
+            
+            Extract the following information in JSON format:
+            
+            {{
+              "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "timeSlots": [
+                {{"start": "08:00", "end": "09:00"}},
+                {{"start": "09:00", "end": "10:00"}}
+              ],
+              "subjects": [
+                {{
+                  "day": "Monday",
+                  "timeSlot": 0,
+                  "subjectName": "Mathematics",
+                  "duration": 60,
+                  "confidence": 0.85
+                }}
+              ]
+            }}
+            
+            Rules:
+            1. ONLY extract classes that match the specified classes (if any)
+            2. ONLY extract subjects that match the specified subjects (if any)
+            3. If no classes/subjects are specified, extract all relevant entries
+            4. Convert all times to 24-hour format (HH:MM)
+            5. Duration should be in minutes
+            6. Confidence should be between 0.0 and 1.0 based on how clear the text is
+            7. If you can't read something clearly, set confidence low
+            8. Only return valid JSON, no other text
+            9. For days, use: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+            10. Focus on finding the teacher's specific classes and subjects in the school-wide timetable
+            """
+        else:
+            # Personal teacher timetable or no filtering
+            prompt = """
+            Analyze this timetable and extract the following information in JSON format:
+            
+            {
+              "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "timeSlots": [
+                {"start": "08:00", "end": "09:00"},
+                {"start": "09:00", "end": "10:00"}
+              ],
+              "subjects": [
+                {
+                  "day": "Monday",
+                  "timeSlot": 0,
+                  "subjectName": "Mathematics",
+                  "duration": 60,
+                  "confidence": 0.85
+                }
+              ]
+            }
+            
+            Rules:
+            1. Extract all subjects, days, and time slots
+            2. Convert all times to 24-hour format (HH:MM)
+            3. Duration should be in minutes
+            4. Confidence should be between 0.0 and 1.0 based on how clear the text is
+            5. If you can't read something clearly, set confidence low
+            6. Only return valid JSON, no other text
+            7. For days, use: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+            """
+        
+        # Process with Gemini 2.5 Flash
+        file_extension = os.path.splitext(file_path)[1].lower()
+        
+        # Read file content
+        with open(file_path, "rb") as file_data:
+            file_content = file_data.read()
+        
+        # Prepare content for AI processing
+        if file_extension in ['.jpg', '.jpeg', '.png', '.webp', '.gif']:
+            # Image files - send as image content
+            content = [prompt, file_content]
+        elif file_extension in ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt']:
+            # Document files - send as text content
+            # For PDFs and Office documents, Gemini 2.5 Flash can process them directly
+            content = [prompt, file_content]
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported file type: {file_extension}"
+            )
+        
+        # Call Gemini 2.5 Flash API
+        logger.info(f"Calling Gemini 2.5 Flash for timetable processing: {file_extension}")
+        response = model.generate_content(content)
+        
+        # Parse JSON response
+        try:
+            timetable_data = json.loads(response.text)
+            
+            # Validate structure
+            required_fields = ["days", "timeSlots", "subjects"]
+            for field in required_fields:
+                if field not in timetable_data:
+                    raise ValueError(f"Missing required field: {field}")
+            
+            # Clean up temporary file
+            os.remove(file_path)
+            
+            logger.info(f"Timetable processed successfully for user: {current_user.id}")
+            
+            return timetable_data
+            
+        except json.JSONDecodeError:
+            logger.error("AI returned invalid JSON format")
+            raise HTTPException(
+                status_code=500, 
+                detail="AI returned invalid JSON format. Please try again with a clearer image."
+            )
+        except ValueError as e:
+            logger.error(f"Invalid data structure: {str(e)}")
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Invalid data structure: {str(e)}"
+            )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Processing failed: {str(e)}")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error details: {e}")
+        raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
+
+@router.post("/save-timetable")
+async def save_timetable(
+    timetable_data: dict,
+    current_user: TeacherProfile = Depends(get_current_teacher),
+    db: Session = Depends(get_db)
+):
+    """
+    Save the processed timetable to database
+    """
+    try:
+        logger.info(f"Saving timetable for user: {current_user.id}")
+        
+        # Validate input data
+        if not timetable_data.get("subjects"):
+            raise HTTPException(status_code=400, detail="No subjects to save")
+        
+        # Clear existing timetable for this teacher
+        existing_entries = db.exec(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_user.id)
+        ).all()
+        
+        for entry in existing_entries:
+            db.delete(entry)
+        
+        # Save new timetable entries
+        saved_entries = []
+        for subject in timetable_data["subjects"]:
+            time_slot = timetable_data["timeSlots"][subject["timeSlot"]]
+            
+            timetable_entry = WeeklyTimeTable(
+                teacher_id=current_user.id,
+                weekday=subject["day"],
+                pupils="",  # Can be filled later
+                subject=subject["subjectName"],
+                start_time=time_slot["start"],
+                end_time=time_slot["end"],
+                location=""  # Can be filled later
+            )
+            
+            db.add(timetable_entry)
+            saved_entries.append(timetable_entry)
+        
+        db.commit()
+        
+        logger.info(f"Timetable saved successfully for user: {current_user.id}")
+        
+        return {
+            "message": "Timetable saved successfully",
+            "entries_saved": len(saved_entries),
+            "teacher_id": str(current_user.id)
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Save failed: {str(e)}")
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Save failed: {str(e)}")
+
+@router.get("/get-timetable")
+async def get_timetable(
+    current_user: TeacherProfile = Depends(get_current_teacher),
+    db: Session = Depends(get_db)
+):
+    """
+    Get the current teacher's timetable
+    """
+    try:
+        logger.info(f"Fetching timetable for user: {current_user.id}")
+        
+        entries = db.exec(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_user.id)
+        ).all()
+        
+        # Group by day
+        timetable_by_day = {}
+        for entry in entries:
+            day = entry.weekday.lower()
+            if day not in timetable_by_day:
+                timetable_by_day[day] = []
+            
+            timetable_by_day[day].append({
+                "id": entry.id,
+                "subject": entry.subject,
+                "start_time": entry.start_time,
+                "end_time": entry.end_time,
+                "pupils": entry.pupils,
+                "location": entry.location
+            })
+        
+        return {
+            "teacher_id": str(current_user.id),
+            "timetable": timetable_by_day
+        }
+    
+    except Exception as e:
+        logger.error(f"Failed to fetch timetable: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch timetable: {str(e)}")
+
+# Cleanup function for temporary files
+async def cleanup_temp_files():
+    """Clean up temporary files"""
+    try:
+        if os.path.exists(TEMP_DIR):
+            shutil.rmtree(TEMP_DIR)
+            logger.info("Temporary files cleaned up")
+    except Exception as e:
+        logger.error(f"Failed to cleanup temporary files: {str(e)}")
+
+# Export the cleanup function for use in main.py
+__all__ = ['router', 'cleanup_temp_files'] 

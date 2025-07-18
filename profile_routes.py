@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api")
     
 
 
-@router.patch("/update-profile", response_model=TeacherProfileRead)
+@router.patch("/update-profile")
 async def update_my_profile(
     data: TeacherUpdate,
     current_teacher:Annotated[TeacherProfile, Depends(get_current_teacher)],
@@ -33,7 +33,7 @@ async def update_my_profile(
     db.commit()
     db.refresh(current_teacher)
     logger.info(f"Profile updated for teacher: {getattr(current_teacher, 'id', None)}")
-    return current_teacher
+    return {"message":"Successfully updated profile"}
 
 @router.post(
     "/deactivate-teacher"    

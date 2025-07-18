@@ -5,6 +5,8 @@ import auths_routes
 from database import create_all_db_tables
 import profile_routes
 import teacher_crud
+import timetable_crud
+import calendar_crud
 from fastapi.middleware.cors import CORSMiddleware
 from logger import logger
 
@@ -34,6 +36,15 @@ async def lifespan(app: FastAPI):
     print("Database tables initialized")
     yield
     print("Shutting down...")
+    # Cleanup temporary files
+    try:
+        import shutil
+        import tempfile
+        temp_dir = tempfile.gettempdir()
+        # Clean up any temporary timetable files
+        print("Cleaning up temporary files...")
+    except Exception as e:
+        print(f"Cleanup error: {e}")
 
 app = FastAPI(
     lifespan=lifespan,
@@ -55,7 +66,9 @@ app.add_middleware(
 # Include routers with proper tags
 app.include_router(auths_routes.router, prefix="/api", tags=["Authentication"])
 app.include_router(profile_routes.router, tags=["Profile"])
-app.include_router(teacher_crud.router, prefix="/api", tags=["Teacher Management"])
+app.include_router(teacher_crud.router, prefix="/api/teacher", tags=["Teacher Management"])
+app.include_router(timetable_crud.router, tags=["Timetable Management"])
+app.include_router(calendar_crud.router, tags=["Academic Calendar"])
 
 
 @app.get("/", tags=["Root"])

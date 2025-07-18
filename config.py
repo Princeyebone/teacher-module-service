@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     SECRET_KEY:str= "n"
     ALGORITHM:str= "like"
     ACCESS_TOKEN_EXPIRE_MINUTES:int= 0
+    API_KEY:str = "your_google_genai_api_key_here"  # Add your Google Gen AI API key to .env file
 
     class Config:
         env_file=".env"
