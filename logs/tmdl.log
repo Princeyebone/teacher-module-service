@@ -392,3 +392,137 @@
 2025-07-20 14:15:48,679 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
 2025-07-20 14:15:48,688 - tmdl - INFO - Sending request to core service /api/me endpoint
 2025-07-20 14:15:49,837 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 07:47:46,539 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 07:47:46,575 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 07:47:46,576 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 07:47:46,580 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 07:47:46,984 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 07:56:58,929 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 07:56:58,932 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 07:56:58,932 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 07:56:58,933 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 07:56:58,995 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 08:21:51,509 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 08:21:51,610 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 08:21:51,611 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 08:21:51,614 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 08:21:51,669 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 10:56:12,885 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 10:56:12,907 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 10:56:12,908 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 10:56:12,912 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 10:56:13,061 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 10:56:15,095 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 10:56:15,097 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 10:56:15,113 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 10:56:15,119 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 11:55:49,850 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 11:55:49,992 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 11:55:50,189 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 11:55:50,191 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:39,808 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:04:39,828 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:39,829 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:39,833 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 15:04:39,977 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 15:04:42,229 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:04:42,235 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:42,287 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:04:42,304 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:55,829 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:04:55,835 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:04:55,884 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:04:55,888 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:05:19,561 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:05:19,566 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:05:19,593 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:05:19,599 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:08:02,215 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:08:02,247 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:08:02,250 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:08:02,257 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-21 15:08:02,390 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-21 15:08:06,271 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:08:06,274 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:08:06,299 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:08:06,316 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:39:37,565 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:39:37,569 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:39:44,683 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:39:44,688 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-21 15:39:44,718 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-21 15:39:44,723 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:10,350 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:52:10,356 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:10,358 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:10,365 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 00:52:10,833 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 00:52:13,689 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:52:13,776 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:13,828 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:52:13,842 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:23,479 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:52:23,483 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:52:23,498 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:52:23,510 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:55:28,519 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:55:28,534 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:55:30,794 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:55:30,797 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:55:48,292 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:55:48,295 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 00:55:48,310 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 00:55:48,325 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 02:55:41,672 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 02:55:41,704 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 02:55:41,705 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 02:55:41,709 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 02:55:41,885 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 02:55:44,111 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 02:55:44,114 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 02:55:44,158 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 02:55:44,174 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:23:02,394 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 04:23:02,477 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:23:02,478 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:23:02,548 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 04:23:03,790 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 04:23:05,933 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 04:23:05,948 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:23:05,994 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 04:23:06,000 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:24:07,343 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 04:24:07,345 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 04:49:32,823 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 04:49:32,828 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:20:30,448 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:20:30,479 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:20:30,479 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:20:30,484 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 10:20:31,212 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 10:20:34,244 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:20:34,249 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:20:34,287 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:20:34,293 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:25:45,724 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:25:45,728 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:25:45,729 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:25:45,731 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 10:25:45,772 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 10:25:48,295 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:25:48,298 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 10:25:48,316 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 10:25:48,325 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 13:37:28,877 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 13:37:28,901 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 13:37:28,902 - tmdl - INFO - Received request for central user info (teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 13:37:28,907 - tmdl - INFO - Sending request to core service /api/me endpoint
+2025-07-22 13:37:29,532 - tmdl - INFO - Successfully fetched user info from ERP
+2025-07-22 13:37:31,711 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 13:37:31,720 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 13:37:31,764 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 13:37:31,773 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 13:38:51,270 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 13:38:51,273 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)
+2025-07-22 14:10:57,770 - tmdl - INFO - Token decoded: user@gmail.com (Role: sch_teacher, School: None, individual ID: 791dbae6-21e7-4b48-bb82-5c378aca8886)
+2025-07-22 14:10:57,802 - tmdl - INFO - Current user resolved: user@gmail.com (ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82)

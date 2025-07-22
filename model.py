@@ -83,4 +83,4 @@ class TeacherPlannerEvent(SQLModel, table=True):
     description: Optional[str] = None
     event_type: str  # e.g., "meeting", "grading", "revision"
     is_required: bool = True
-    related_session_id: Optional[int] = Field(default=None, foreign_key="classsession.id")
+    related_session_id:Optional[int]=None
