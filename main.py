@@ -9,6 +9,7 @@ import timetable_crud
 import calendar_crud
 from fastapi.middleware.cors import CORSMiddleware
 from logger import logger
+import productivity
 
 def custom_openapi():
     if app.openapi_schema:
@@ -69,7 +70,7 @@ app.include_router(profile_routes.router, tags=["Profile"])
 app.include_router(teacher_crud.router, prefix="/api/teacher", tags=["Teacher Management"])
 app.include_router(timetable_crud.router, tags=["Timetable Management"])
 app.include_router(calendar_crud.router, tags=["Academic Calendar"])
-
+app.include_router(productivity.router, prefix="/api/teacher")
 
 @app.get("/", tags=["Root"])
 async def read_root():

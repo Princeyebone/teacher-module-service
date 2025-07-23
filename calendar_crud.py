@@ -60,6 +60,8 @@ async def create_calendar(
                 teacher_id=new_calendar.teacher_id,
                 semester_name=new_calendar.semester_name,
                 academic_level=new_calendar.academic_level,
+                midsem_exams_date=new_calendar.midsem_exams_date,
+                revision_start_date=new_calendar.revision_start_date,
                 semester_start_date=new_calendar.semester_start_date,
                 mid_semester_break_start_date=new_calendar.mid_semester_break_start_date,
                 mid_semester_break_end_date=new_calendar.mid_semester_break_end_date,
@@ -71,6 +73,7 @@ async def create_calendar(
                     calender_id=e.calender_id,
                     event_name=e.event_name,
                     event_start_date=e.event_start_date,
+
                     event_end_date=e.event_end_date,
                     event_start_time=e.event_start_time,
                     event_end_time=e.event_end_time,
@@ -95,13 +98,13 @@ async def get_calendar(
 ):
     try:
         calendar = db.exec(select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)).first()
-        calendar_events = db.exec(select(CalendarEvent).where(CalendarEvent.calender_id == calendar.id)).all()
-
         if not calendar:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="No calendar found for this teacher"
+                detail="No academic calendar found for this teacher"
             )
+        calendar_events = db.exec(select(CalendarEvent).where(CalendarEvent.calender_id == calendar.id)).all()
+
         return calendar, calendar_events
     
     except Exception as e:
@@ -185,6 +188,8 @@ async def update_calendar(
                 semester_name=existing_academic_calendar.semester_name,
                 academic_level=existing_academic_calendar.academic_level,
                 semester_start_date=existing_academic_calendar.semester_start_date,
+                midsem_exams_date=existing_academic_calendar.midsem_exams_date,
+                revision_start_date=existing_academic_calendar.revision_start_date,
                 mid_semester_break_start_date=existing_academic_calendar.mid_semester_break_start_date,
                 mid_semester_break_end_date=existing_academic_calendar.mid_semester_break_end_date,
                 semester_end_date=existing_academic_calendar.semester_end_date

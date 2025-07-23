@@ -26,6 +26,7 @@ class TeacherProfile(SQLModel, table=True):
     bio:Optional[str] = None
     rating:Optional[int] = None
     role: UserRole = Field(default=UserRole.SCH_TEACHER)
+    country:Optional[str]=None 
 
 
 class AcademicCalendar(SQLModel, table=True):
@@ -34,8 +35,10 @@ class AcademicCalendar(SQLModel, table=True):
     semester_name: str
     academic_level: Optional[str] = None
     semester_start_date: date
+    midsem_exams_date:Optional[date] = None
     mid_semester_break_start_date:Optional[date] = None
     mid_semester_break_end_date:Optional[date] =None
+    revision_start_date:Optional[date] = None
     semester_end_date: date
 
 class CalendarEvent(SQLModel, table=True):
@@ -63,12 +66,12 @@ class WeeklyTimeTable(SQLModel, table=True):
 class ClassSession(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id")
-    timetable_id: int = Field(foreign_key="weeklytimetable.id")
     subject: str
     date: date
     start_time: str
     end_time: str
     class_name: str
+    location: Optional[str] = None
     session_number: Optional[int]
     is_completed: bool = False
     resource_generated: bool = False
@@ -77,10 +80,12 @@ class TeacherPlannerEvent(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id")
     date: date
-    start_time: str
-    end_time: str
+    start_time: Optional[str] = None
+    end_time: Optional[str] = None
     title: str
     description: Optional[str] = None
     event_type: str  # e.g., "meeting", "grading", "revision"
     is_required: bool = True
     related_session_id:Optional[int]=None
+
+     

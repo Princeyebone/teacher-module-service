@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     ALGORITHM:str= "like"
     ACCESS_TOKEN_EXPIRE_MINUTES:int= 0
     API_KEY:str = "your_google_genai_api_key_here"  # Add your Google Gen AI API key to .env file
+    CELERY_BROKER_URL:str = "h"
+    CELERY_RESULT_BACKEND:str = "a"
 
     class Config:
         env_file=".env"

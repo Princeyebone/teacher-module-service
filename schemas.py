@@ -45,6 +45,7 @@ class TeacherUpdate(BaseModel):
     qualification_year:Optional[int] = None
     qualification_institution:Optional[str] = None
     work_institution:Optional[str] = None
+    country:Optional[str] = None
     subjects:Optional[str] = None    
     bio:Optional[str] = None
 
@@ -116,6 +117,8 @@ class AcademicCalendarPublic(BaseModel):
     teacher_id: Optional[UUID] = None
     semester_name: str
     academic_level: Optional[str] = None
+    midsem_exams_date: Optional[date] = None
+    revision_start_date: Optional[date] = None
     semester_start_date: date
     mid_semester_break_start_date: Optional[date] = None
     mid_semester_break_end_date:Optional[date] = None
