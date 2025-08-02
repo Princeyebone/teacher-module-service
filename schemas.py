@@ -137,6 +137,20 @@ class UpdateCalendarResponse(BaseModel):
     academic_calendar: AcademicCalendarPublic
     calendar_events: List[CalendarEventPublic]
 
+
+class Calendar(BaseModel):
+    title: str
+    description: Optional[str] = None
+    start_date: date
+    end_date: date
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
+    Location:Optional[str] = None
+    is_completed: bool = False
+
+class UpdateCalendar(BaseModel):
+    items:List[Calendar]
+
 # Semester Planner Schemas
 class SubjectBase(BaseModel):
     name: str

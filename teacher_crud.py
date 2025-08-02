@@ -31,7 +31,7 @@ async def verify_teacher_access(
     # Add any additional permission checks here if needed
     return teacher
 
-@router.get("/{teacher_id}", summary="Get teacher details")
+@router.get("/read-teacher/{teacher_id}", summary="Get teacher details")
 async def get_teacher(
     
     teacher_id: UUID,

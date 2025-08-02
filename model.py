@@ -1,9 +1,11 @@
 from sqlmodel import SQLModel, Field
-from typing import Optional
+from typing import Optional, List, Tuple
 from uuid import UUID
 import uuid
 from enum import Enum
-from datetime import date, time
+from datetime import date, time,datetime,timezone
+from uuid import uuid4
+
 
 class UserRole(str, Enum):
     SUPERUSER = "SUPERUSER"
@@ -88,4 +90,64 @@ class TeacherPlannerEvent(SQLModel, table=True):
     is_required: bool = True
     related_session_id:Optional[int]=None
 
-     
+class TeacherNotification(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    teacher_id: UUID = Field(index=True, nullable=False)
+    title: str
+    message: str
+    type: Optional[str] = Field(default="info")  # e.g., info, warning, success
+    is_read: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class Calendar(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    title: str
+    description: Optional[str] = None
+    start_date: date
+    end_date: date
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
+    Location:Optional[str] = None
+    is_completed: bool = False
+
+class StrandBlock(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    strand: str
+    week_range: str
+
+class SubstrandBlock(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    substrand: str
+    strand_block_id: UUID
+    week_range: str
+
+class ContentStandardBlock(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    content_standard: str
+    substrand_block_id: UUID
+
+
+class IndicatorSlot(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    indicator_code: str
+    content_standard_block_id: UUID
+    session_day: date  # or lesson_number
+    split_index: Optional[int] = None  # if split into Part A / B
+
+
+class LearningObjectives(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    class_session_id: int = Field(foreign_key="classsession.id")
+    objective_text: str
+    key_terms: str  # for AI prompt quality
+    taxonomy_level: Optional[str]  # e.g., Bloom's level: Understand, Apply, Analyze
+
+class LearningResource(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    learning_objective_id: UUID = Field(foreign_key="learningobjectives.id")
+    type: str  # "note", "video", "quiz", "assignment", etc.
+    content: str  # or link, or blob
+    generated_by_ai: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+

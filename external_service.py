@@ -1,15 +1,25 @@
 import json
+from datetime import datetime
 import google.generativeai as genai
+from google.generativeai import protos
 from config import settings
 
-# ✅ Configure API Key
+# ✅ Configure API Key securely (from .env)
 genai.configure(api_key=settings.API_KEY)
 
 def get_holidays_from_ai(country: str, year: int):
     """
-    Uses Gemini to fetch national/public holidays (real-time if supported).
-    Deduplicates by date before returning.
-    Returns a list of holiday dicts.
+    Fetch up-to-date national/public holidays using Gemini 1.5 Flash with Google Search tool.
+    Returns a list of holiday dicts in the format:
+    [
+        {
+            "date": "YYYY-MM-DD",
+            "name": "Holiday Name",
+            "type": "Public Holiday",
+            "requires_no_classes": True,
+            "description": "Why the holiday is observed"
+        }
+    ]
     """
     prompt_json = {
         "prompt_type": "national_holidays_request",
@@ -22,15 +32,25 @@ def get_holidays_from_ai(country: str, year: int):
                     "name": "Holiday Name",
                     "type": "Public Holiday",
                     "requires_no_classes": True,
-                    "description": "Optional details about the holiday or why it's observed on this date"
+                    "description": "Optional details about the holiday"
                 }
             ]
         }
     }
 
     try:
-        model = genai.GenerativeModel("gemini-2.0-flash")  # ✅ Or gemini-2.5-flash if available
+        # ✅ Enable Google Search Tool
+        google_search_tool = protos.Tool(
+            google_search_retrieval=protos.GoogleSearchRetrieval()
+        )
 
+        # ✅ Load Gemini model with tool enabled
+        model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash-latest",
+            tools=[google_search_tool]
+        )
+
+        # ✅ Generate AI Response
         response = model.generate_content(
             json.dumps(prompt_json),
             generation_config=genai.types.GenerationConfig(
@@ -39,28 +59,25 @@ def get_holidays_from_ai(country: str, year: int):
             )
         )
 
+        # ✅ Parse Response Safely
         parsed = json.loads(response.text)
         holidays = parsed.get("holidays", [])
 
-        # ✅ Deduplicate holidays by date
-        unique_holidays = {}
-        for h in holidays:
-            date_key = h.get("date")
-            if date_key and date_key not in unique_holidays:
-                unique_holidays[date_key] = h  # First occurrence kept
+        # ✅ Log (for debugging only)
+        print(f"✅ AI (Google Search) returned {len(holidays)} holidays for {country} in {year}.")
 
-        holidays = list(unique_holidays.values())
+        # ✅ Optionally inspect sources (to verify real-time info)
+        if response.candidates and hasattr(response.candidates[0], "grounding_metadata"):
+            metadata = response.candidates[0].grounding_metadata
+            if hasattr(metadata, "grounding_attributions") and metadata.grounding_attributions:
+                print("🔗 Sources used by AI:")
+                for attribution in metadata.grounding_attributions:
+                    if hasattr(attribution, "web") and hasattr(attribution.web, "uri"):
+                        title = getattr(attribution.web, "title", "N/A")
+                        print(f"  - {title}: {attribution.web.uri}")
 
-        print(f"✅ AI returned {len(holidays)} unique holidays for {country} in {year}.")
         return holidays
 
     except Exception as e:
         print(f"⚠️ AI Holiday Fetch Error: {e}")
         return []
-
-# ✅ Manual Test
-if __name__ == "__main__":
-    holidays = get_holidays_from_ai("Ghana", 2025)
-    print("\nFetched Holidays:")
-    for h in holidays:
-        print(f"- {h['date']}: {h['name']} ({'No Classes' if h.get('requires_no_classes', True) else 'Classes May Hold'})")

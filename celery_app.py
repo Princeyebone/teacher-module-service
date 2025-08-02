@@ -25,5 +25,5 @@ import background
 
 from celery.result import AsyncResult
 
-result = AsyncResult("0b91a127-3967-4c87-b016-6ad4916acf55", app=celery_app)
-print(result.status)  # e.g., "SUCCESS"
+#result = AsyncResult(task_id, app=celery_app)
+#print(result.status)  # e.g., "SUCCESS"
