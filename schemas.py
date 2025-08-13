@@ -152,22 +152,7 @@ class Calendar(BaseModel):
 class UpdateCalendar(BaseModel):
     items:List[Calendar]
 
-class SessionCreate(BaseModel):
-    session_name: str
-    session_type: str
-    date: str  # YYYY-MM-DD
-    start_time: str  # HH:MM
-    end_time: str  # HH:MM
 
-class StrandCreate(BaseModel):
-    name: str
-    weeks: List[str]
-    selected_sessions: Dict[str, List[SessionCreate]]
-
-class StrandRead(BaseModel):
-    id: UUID
-    name: str
-    weeks: List[Dict[str, object]]  # week: {'week': str, 'sessions': List[Dict]}
     
 
 # Semester Planner Schemas

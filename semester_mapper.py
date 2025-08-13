@@ -118,6 +118,7 @@ async def update_strand(
     db: AsyncSession = Depends(get_db)
 ):
     teacher_id = current_teacher.id
+
     if not strand_data.strand_name.strip():
         raise HTTPException(status_code=400, detail="Strand name cannot be empty")
     if not strand_data.weeks_sessions:
@@ -126,22 +127,23 @@ async def update_strand(
         raise HTTPException(status_code=400, detail="Each week must have at least one session")
 
     # Handle strand renaming: if original_strand_name is provided and different, delete old strands
-    if strand_data.original_strand_name and strand_data.original_strand_name != strand_data.strand_name:
+    if strand_data.original_strand_name and strand_data.original_strand_name.strip() != strand_data.strand_name.strip():
         old_strands_to_delete_query = select(Strand).where(
-            Strand.strand_name == strand_data.original_strand_name,
+            Strand.strand_name == strand_data.original_strand_name.strip(),
             Strand.subject == strand_data.subject,
             Strand.teacher_id == teacher_id
         )
         await db.execute(delete(Strand).where(
-            Strand.strand_name == strand_data.original_strand_name,
+            Strand.strand_name == strand_data.original_strand_name.strip(),
             Strand.subject == strand_data.subject,
             Strand.teacher_id == teacher_id
         ))
+        await db.commit() # Commit the deletion immediately
         existing_strands = [] # No existing strands to update, will create new ones
     else:
         # Fetch existing strands for the teacher, strand_name, and subject
         existing_strands_query = select(Strand).where(
-            Strand.strand_name == strand_data.strand_name,
+            Strand.strand_name == strand_data.strand_name.strip(),
             Strand.subject == strand_data.subject,
             Strand.teacher_id == teacher_id
         )
@@ -157,6 +159,7 @@ async def update_strand(
         for strand in existing_strands:
             if strand.week_number in weeks_to_delete:
                 await db.delete(strand)
+        await db.commit() # Commit deletion of old weeks immediately
 
     updated_strands = []
     for week, session_ids in strand_data.weeks_sessions.items():
@@ -186,13 +189,13 @@ async def update_strand(
         # Update existing strand or create a new one
         strand = next((s for s in existing_strands if s.week_number == week_number), None)
         if strand:
-            strand.strand_name = strand_data.strand_name
+            strand.strand_name = strand_data.strand_name.strip()
             strand.session_ids = session_ids
             strand.session_details = session_details
             strand.updated_at = datetime.utcnow()
         else:
             strand = Strand(
-                strand_name=strand_data.strand_name,
+                strand_name=strand_data.strand_name.strip(),
                 subject=strand_data.subject,
                 teacher_id=teacher_id,
                 week_number=week_number,
@@ -209,7 +212,7 @@ async def update_strand(
 
     return [
         StrandResponse(
-            strand_name=strand.strand_name,
+            strand_name=strand.strand_name.strip(),
             subject=strand.subject,
             teacher_id=strand.teacher_id,
             weeks_sessions={f"Week {strand.week_number}": [
@@ -218,7 +221,7 @@ async def update_strand(
             created_at=strand.created_at,
             updated_at=strand.updated_at
         ) for strand in updated_strands
-    ]    
+    ]
 
 @router.post("/create-strands", response_model=List[StrandResponse], status_code=status.HTTP_201_CREATED)
 async def create_strand(
