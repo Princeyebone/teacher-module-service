@@ -3,22 +3,21 @@ from model import TeacherProfile, TeacherPlannerEvent, ClassSession, Calendar
 from typing import Annotated
 from dependencies import get_current_teacher
 from database import get_db
-from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
 from schemas import UpdateCalendar
- 
-
 
 router = APIRouter(tags=["Calendar"])
 
 @router.get("/read-school-calendar")
 async def read_calendar(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        events = db.exec(
+        events = (await db.execute(
             select(TeacherPlannerEvent).where(TeacherPlannerEvent.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
         
         if not events:
             raise HTTPException(
@@ -29,31 +28,34 @@ async def read_calendar(
         return events
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    
+
 @router.get("/read-class-sessions")
 async def read_class_sessions(
-    current_teacher:Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db:Annotated[Session, Depends(get_db)]
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        class_sessions= db.exec(select(ClassSession).where(ClassSession.teacher_id == current_teacher.id)).all()
+        class_sessions = (await db.execute(
+            select(ClassSession).where(ClassSession.teacher_id == current_teacher.id)
+        )).scalars().all()
         if not class_sessions:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No class sessions found"
             )
         return class_sessions
-
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.get("/read-calendar")
 async def read_calendar(
-    current_teacher:Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db:Annotated[Session, Depends(get_db)]
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        calendar= db.exec(select(Calendar).where(Calendar.teacher_id == current_teacher.id)).all()
+        calendar = (await db.execute(
+            select(Calendar).where(Calendar.teacher_id == current_teacher.id)
+        )).scalars().all()
         if not calendar:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -63,41 +65,46 @@ async def read_calendar(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
 @router.post("/create-event")
 async def create_event(
     event: UpdateCalendar,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        records = [
-            {**item.model_dump(), "teacher_id": current_teacher.id}
+        calendar_objs = [
+            Calendar(
+                teacher_id=current_teacher.id,
+                **item.model_dump(exclude_unset=True)
+            )
             for item in event.items
         ]
 
-        db.bulk_insert_mappings(Calendar, records)
-        db.commit()
+        for obj in calendar_objs:
+            db.add(obj)
+        await db.commit()
+
+        for obj in calendar_objs:
+            await db.refresh(obj)
         return event.items
     except Exception as e:
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-    
 @router.patch("/update-calendar")
 async def update_calendar(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
     event: UpdateCalendar,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
         # Fetch existing entries for this teacher
-        existing_entries = db.exec(
+        existing_entries = (await db.execute(
             select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
         existing_entries_dict = {e.id: e for e in existing_entries if e.id is not None}
 
         # Build a set of IDs from the payload (if they exist)
@@ -118,58 +125,53 @@ async def update_calendar(
             else:
                 # New entry
                 new_entry = Calendar(
-                    teacher_id=current_teacher.id, **item_data
+                    teacher_id=current_teacher.id,
+                    **item_data
                 )
                 db.add(new_entry)
-                db.commit()
-                db.refresh(new_entry)
+                await db.commit()
+                await db.refresh(new_entry)
                 updated_entries.append(new_entry)
 
         # Delete entries that are not in the payload
         for entry in existing_entries:
             if entry.id not in payload_ids:
-                db.delete(entry)
-        db.commit()
+                await db.delete(entry)
+        await db.commit()
 
         # Get the latest list of entries
-        final_entries = db.exec(
+        final_entries = (await db.execute(
             select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
 
         return final_entries
 
     except Exception as e:
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error updating calendar: {e}"
+            detail=f"Error updating calendar: {str(e)}"
         )
 
-    
 @router.delete("/delete-calendar")
 async def delete_calendar(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
         # Delete all events for the current teacher
-        events_to_delete = db.exec(
+        events_to_delete = (await db.execute(
             select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
         
         for event in events_to_delete:
-            db.delete(event)
-        
-        db.commit()
+            await db.delete(event)
+        await db.commit()
         return {"message": f"Deleted {len(events_to_delete)} calendar events"}
 
     except Exception as e:
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
-
-
-
-

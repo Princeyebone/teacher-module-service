@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr, Field
-from datetime import date, time
-from typing import Optional, List
+from datetime import date, time, datetime, timedelta, timezone
+from typing import Optional, List, Dict
 from uuid import UUID
+
 
 class TokenData(BaseModel):
     email:str | None = None
@@ -151,6 +152,24 @@ class Calendar(BaseModel):
 class UpdateCalendar(BaseModel):
     items:List[Calendar]
 
+class SessionCreate(BaseModel):
+    session_name: str
+    session_type: str
+    date: str  # YYYY-MM-DD
+    start_time: str  # HH:MM
+    end_time: str  # HH:MM
+
+class StrandCreate(BaseModel):
+    name: str
+    weeks: List[str]
+    selected_sessions: Dict[str, List[SessionCreate]]
+
+class StrandRead(BaseModel):
+    id: UUID
+    name: str
+    weeks: List[Dict[str, object]]  # week: {'week': str, 'sessions': List[Dict]}
+    
+
 # Semester Planner Schemas
 class SubjectBase(BaseModel):
     name: str
@@ -199,6 +218,57 @@ class AcademicEventRead(AcademicEventBase):
 
     class Config:
         from_attributes = True
+
+class SessionDetail(BaseModel):
+    id: int
+    date: str
+    subject: str
+    start_time: str
+    end_time: str
+    class_name: str
+    location: str
+    week_number: int
+
+class StrandCreate(BaseModel):
+    strand_name: str
+    subject: str
+    weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
+
+class StrandUpdate(BaseModel):
+    strand_name: str
+    original_strand_name: str | None = None
+    subject: str
+    weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53], "Week 2": [54]}
+
+class StrandResponse(BaseModel):
+    strand_name: str
+    subject: str
+    teacher_id: UUID
+    weeks_sessions: Dict[str, List[SessionDetail]]
+    created_at: datetime
+    updated_at: datetime
+
+class SubstrandCreate(BaseModel):
+    substrand_name: str
+    strand_name: str
+    subject: str
+    weeks_sessions: dict[str, List[int]]  # e.g., {"Week 1": [1, 2], "Week 2": [3]}
+
+class SubstrandUpdate(BaseModel):
+    substrand_name: str
+    original_substrand_name: str | None = None
+    strand_name: str
+    subject: str
+    weeks_sessions: dict[str, List[int]]
+
+class SubstrandResponse(BaseModel):
+    substrand_name: str
+    strand_name: str
+    subject: str
+    teacher_id: UUID
+    weeks_sessions: dict[str, List[SessionDetail]]
+    created_at: datetime
+    updated_at: datetime
 
 class MaterialRequest(BaseModel):
     subject_id: UUID

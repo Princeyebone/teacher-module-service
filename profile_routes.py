@@ -1,45 +1,42 @@
-# profile_routes.py or inside auth_routes.py
 from schemas import TeacherRead, TeacherUpdate, EmailSync, TeacherProfileRead
 from model import TeacherProfile
 from database import get_db
 from dependencies import get_current_teacher
 from service_auth import verify_service_jwt
 from fastapi import APIRouter, HTTPException, status, Depends, Request
-from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
 from typing import Annotated
 from httpx import AsyncClient
 from config import settings
 from logger import logger
 
-
-
 router = APIRouter(prefix="/api")
-
-    
-
 
 @router.patch("/update-profile")
 async def update_my_profile(
     data: TeacherUpdate,
-    current_teacher:Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db),
-    
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: AsyncSession = Depends(get_db),
 ):
     logger.info(f"Updating profile for teacher: {getattr(current_teacher, 'id', None)} with data: {data.model_dump(exclude_unset=True)}")
-    for field, value in data.model_dump(exclude_unset=True).items():
-        setattr(current_teacher, field, value)
+    try:
+        for field, value in data.model_dump(exclude_unset=True).items():
+            setattr(current_teacher, field, value)
 
-    db.add(current_teacher)
-    db.commit()
-    db.refresh(current_teacher)
-    logger.info(f"Profile updated for teacher: {getattr(current_teacher, 'id', None)}")
-    return {"message":"Successfully updated profile"}
+        db.add(current_teacher)
+        await db.commit()
+        await db.refresh(current_teacher)
+        logger.info(f"Profile updated for teacher: {getattr(current_teacher, 'id', None)}")
+        return {"message": "Successfully updated profile"}
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error updating profile for teacher {getattr(current_teacher, 'id', None)}: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error updating profile: {str(e)}")
 
-@router.post(
-    "/deactivate-teacher"    
-)
+@router.post("/deactivate-teacher")
 async def deactivate_teacher(
-    request:Request    
+    request: Request    
 ):
     logger.info("Received request to deactivate teacher")
     auth_header = request.headers.get("Authorization")
@@ -52,18 +49,18 @@ async def deactivate_teacher(
         resp = await client.post(
             f"{settings.CORE_SERVICE_URL}/api/register-teacher",
             headers={
-                "intSAuthorization":f"Bearer {auth_header}",
-                "Authorization":f"Bearer {settings.SERVICE_JWT}"
-            } # Corrected "AUthorization" to "Authorization"
+                "intSAuthorization": f"Bearer {auth_header}",
+                "Authorization": f"Bearer {settings.SERVICE_JWT}"
+            }
         )
 
         if resp.status_code not in (200, 201):
             detail = resp.json().get("detail", resp.text)
             logger.error(f"Deactivation failed with status {resp.status_code}: {detail}")
             raise HTTPException(
-                status_code = resp.status_code,
-                detail = detail
+                status_code=resp.status_code,
+                detail=detail
             )
 
         logger.info("Teacher deactivated successfully")
-        return {"message":"successful deactivation",}
+        return {"message": "successful deactivation"}

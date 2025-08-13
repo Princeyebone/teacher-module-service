@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
 from dependencies import get_current_teacher
 from database import get_db
-from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select, delete
 from model import TeacherProfile
 from uuid import UUID
 from schemas import TeacherUpdate
@@ -15,12 +16,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 async def verify_teacher_access(
-    db: Session,
+    db: AsyncSession,
     teacher_id: UUID,
     current_user: dict
 ) -> TeacherProfile:
     """Shared verification logic for teacher operations"""
-    teacher = db.get(TeacherProfile, teacher_id)
+    teacher = await db.get(TeacherProfile, teacher_id)
     if not teacher:
         logger.error(f"Teacher not found: {teacher_id}")
         raise HTTPException(
@@ -33,9 +34,9 @@ async def verify_teacher_access(
 
 @router.get("/read-teacher/{teacher_id}", summary="Get teacher details")
 async def get_teacher(
-    
+    current_user: Annotated[dict, Depends(get_current_teacher)],
     teacher_id: UUID,
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
         teacher = await verify_teacher_access(db, teacher_id, current_user)
@@ -52,10 +53,11 @@ async def get_teacher(
 @router.get("/", summary="List all teachers")
 async def get_teachers(
     current_user: Annotated[dict, Depends(get_current_teacher)],
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        return db.exec(select(TeacherProfile)).all()
+        teachers = (await db.execute(select(TeacherProfile))).scalars().all()
+        return teachers
     except Exception as e:
         logger.error(f"Error fetching teachers: {str(e)}")
         raise HTTPException(
@@ -68,24 +70,31 @@ async def update_teacher(
     current_user: Annotated[dict, Depends(get_current_teacher)],
     teacher_id: UUID,
     data: TeacherUpdate,
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
         teacher = await verify_teacher_access(db, teacher_id, current_user)
         
         update_data = data.model_dump(exclude_unset=True)
         for key, value in update_data.items():
-            setattr(teacher, key, value)
+            if hasattr(teacher, key):
+                setattr(teacher, key, value)
+            else:
+                logger.warning(f"Field {key} not found in TeacherProfile for teacher {teacher_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid field: {key}"
+                )
 
         db.add(teacher)
-        db.commit()
-        db.refresh(teacher)
+        await db.commit()
+        await db.refresh(teacher)
         return teacher
     except HTTPException:
         raise
     except Exception as e:
+        await db.rollback()
         logger.error(f"Error updating teacher: {str(e)}")
-        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Could not update teacher"
@@ -95,12 +104,12 @@ async def update_teacher(
 async def deactivate_teacher(
     current_user: Annotated[dict, Depends(get_current_teacher)],
     teacher_id: UUID,
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
         teacher = await verify_teacher_access(db, teacher_id, current_user)
         
-        async with AsyncClient() as client:
+        async with AsyncClient(verify=False) as client:
             resp = await client.post(
                 f"{settings.CORE_SERVICE_URL}/api/deactivate",
                 headers={"Authorization": f"Bearer {settings.SERVICE_JWT}"},
@@ -109,7 +118,7 @@ async def deactivate_teacher(
 
         if resp.status_code not in (200, 201):
             detail = resp.json().get("detail", resp.text)
-            logger.error(f"Auth service error: {detail}")
+            logger.error(f"Auth service error for teacher {teacher_id}: {detail}")
             raise HTTPException(
                 status_code=resp.status_code,
                 detail=detail
@@ -119,7 +128,7 @@ async def deactivate_teacher(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deactivating teacher: {str(e)}")
+        logger.error(f"Error deactivating teacher {teacher_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Could not deactivate teacher"
@@ -129,15 +138,15 @@ async def deactivate_teacher(
 async def delete_teacher(
     current_user: Annotated[dict, Depends(get_current_teacher)],
     teacher_id: UUID,
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
         teacher = await verify_teacher_access(db, teacher_id, current_user)
         
         # Only allow deletion if teacher isn't linked to auth system
         if teacher.individual_id is None:
-            db.delete(teacher)
-            db.commit()
+            await db.delete(teacher)
+            await db.commit()
             return {"message": "Teacher deleted successfully"}
         else:
             raise HTTPException(
@@ -147,8 +156,8 @@ async def delete_teacher(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deleting teacher: {str(e)}")
-        db.rollback()
+        await db.rollback()
+        logger.error(f"Error deleting teacher {teacher_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Could not delete teacher"

@@ -4,26 +4,22 @@ from config import settings
 from typing import Callable, Any
 from functools import wraps
 from model import UserRole, TeacherProfile
-from sqlmodel import Session, select
-from database import get_db 
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_db
 from jose import jwt, JWTError
 from logger import logger
 from schemas import TokenData
+from sqlmodel import select
 
-
-
-
-ROLE_HIERARCHY={
-    UserRole.SUPERUSER :4,
-    UserRole.ADMIN :2,
-    UserRole.SCH_TEACHER :1,
+ROLE_HIERARCHY = {
+    UserRole.SUPERUSER: 4,
+    UserRole.ADMIN: 2,
+    UserRole.SCH_TEACHER: 1,
 }
-
-
 
 async def get_current_teacher(
     authorization: str = Header(None),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     logger.debug("Validating access token")
     credentials_exception = HTTPException(
@@ -47,22 +43,21 @@ async def get_current_teacher(
             
         role = payload.get("role")
         school_id = payload.get("school_id")
-        Individual_id = payload.get("individual_id")
-        logger.info(f"Token decoded: {email} (Role: {role}, School: {school_id}, individual ID: {Individual_id})")
+        individual_id = payload.get("individual_id")
+        logger.info(f"Token decoded: {email} (Role: {role}, School: {school_id}, individual ID: {individual_id})")
         
-        token_data = TokenData(email=email, role=role, school_id=school_id, individual_id=Individual_id)
+        token_data = TokenData(email=email, role=role, school_id=school_id, individual_id=individual_id)
     except JWTError as e:
         logger.error(f"Token validation error: {str(e)}")
         raise credentials_exception
     
-    user = db.exec(select(TeacherProfile).where(TeacherProfile.individual_id == token_data.individual_id)).first()
+    user = (await db.execute(select(TeacherProfile).where(TeacherProfile.individual_id == token_data.individual_id))).scalar_one_or_none()
     if user is None:
         logger.warning(f"Token user not found: {token_data.email}")
         raise credentials_exception
     
     logger.info(f"Current user resolved: {token_data.email} (ID: {user.id})")
     return user
-
 
 def requires_role(*required_roles:UserRole):
     def decorator(func:Callable[...,Any]) -> Callable[...,Any]:

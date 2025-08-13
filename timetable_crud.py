@@ -1,48 +1,83 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
-from model import TeacherProfile
+from model import TeacherProfile, WeeklyTimeTable
 from dependencies import get_current_teacher
 from database import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Session, select, delete
 from schemas import TimeTableEntry, TimeTableItem
-from model import WeeklyTimeTable
 from uuid import UUID
-
-
 
 router = APIRouter(prefix="/api")
 
+@router.get("/subjects")
+async def subjects(
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        timetable = (await db.execute(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )).scalars().all()
+        if not timetable:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No timetable found for this teacher"
+            )
+        
+        # Extract subjects and pupils from the timetable entries
+        subjects_with_pupils = [
+            {
+                "subject": entry.subject,
+                "pupils": entry.pupils  # Assuming `pupils` is a field or relationship in WeeklyTimeTable
+            }
+            for entry in timetable if entry.subject
+        ]
+        return {"subjects": subjects_with_pupils}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error retrieving subjects: {str(e)}"
+        )
 
 @router.post("/create-timetable")
 async def create_timetable(
     data: TimeTableEntry,
     current_teacher: TeacherProfile = Depends(get_current_teacher),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-        records = [
-            {**item.model_dump(), "teacher_id": current_teacher.id}
+        timetable_entries = [
+            WeeklyTimeTable(
+                teacher_id=current_teacher.id,
+                **item.model_dump(exclude_unset=True)
+            )
             for item in data.items
         ]
 
-        db.bulk_insert_mappings(WeeklyTimeTable, records)
-        db.commit()
-        return data.items
+        for entry in timetable_entries:
+            db.add(entry)
+        await db.commit()
 
+        for entry in timetable_entries:
+            await db.refresh(entry)
+        return data.items
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error creating timetable: {e}"
+            detail=f"Error creating timetable: {str(e)}"
         )
 
 @router.get("/get-timetable", response_model=list[TimeTableItem])
 async def get_timetable(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-       
-        timetable=db.exec(select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)).all()
+        timetable = (await db.execute(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )).scalars().all()
 
         if not timetable:
             raise HTTPException(
@@ -50,24 +85,23 @@ async def get_timetable(
                 detail="No timetable found for this teacher"
             )
         return timetable
-    
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Could not retrieve timetable: {e}"
+            detail=f"Could not retrieve timetable: {str(e)}"
         )
 
 @router.patch("/update-timetable", response_model=list[TimeTableItem])
 async def update_timetable(
     data: TimeTableEntry,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
         # Fetch existing entries for this teacher
-        existing_entries = db.exec(
+        existing_entries = (await db.execute(
             select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
         existing_entries_dict = {e.id: e for e in existing_entries if e.id is not None}
 
         # Build a set of IDs from the payload (if they exist)
@@ -88,54 +122,53 @@ async def update_timetable(
             else:
                 # New entry
                 new_entry = WeeklyTimeTable(
-                    teacher_id=current_teacher.id, **item_data
+                    teacher_id=current_teacher.id,
+                    **item_data
                 )
                 db.add(new_entry)
-                db.commit()
-                db.refresh(new_entry)
+                await db.commit()
+                await db.refresh(new_entry)
                 updated_entries.append(new_entry)
 
         # Delete entries that are not in the payload
         for entry in existing_entries:
             if entry.id not in payload_ids:
-                db.delete(entry)
-        db.commit()
+                await db.delete(entry)
+        await db.commit()
 
         # Get the latest list of entries
-        final_entries = db.exec(
+        final_entries = (await db.execute(
             select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-        ).all()
+        )).scalars().all()
 
         return final_entries
-
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error updating timetable: {e}"
+            detail=f"Error updating timetable: {str(e)}"
         )
 
 @router.delete("/delete-timetable")
 async def delete_timetable(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-        result = db.exec(
+        result = await db.execute(
             delete(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
         )
-        db.commit()
-        # result.rowcount may not always be available depending on backend, so double-check
-        if hasattr(result, 'rowcount'):
-            if result.rowcount == 0:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="No timetable entries found for this teacher"
-                )
-        # Optionally, you can also check if any rows remain
+        await db.commit()
+        # Check if any rows were deleted (if supported by the backend)
+        if hasattr(result, 'rowcount') and result.rowcount == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No timetable entries found for this teacher"
+            )
         return {"message": "Timetable deleted successfully"}
-
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error deleting timetable: {e}"
+            detail=f"Error deleting timetable: {str(e)}"
         )

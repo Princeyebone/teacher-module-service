@@ -1,5 +1,6 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional, List, Tuple
+from sqlmodel import SQLModel, Field, Column
+from typing import Optional, List
+from sqlalchemy.dialects.postgresql import JSONB
 from uuid import UUID
 import uuid
 from enum import Enum
@@ -111,27 +112,44 @@ class Calendar(SQLModel, table=True):
     Location:Optional[str] = None
     is_completed: bool = False
 
-class StrandBlock(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
-    strand: str
-    week_range: str
+class Strand(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    strand_name: str = Field(index=True)
+    subject: str = Field(index=True)
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
+    week_number: int = Field(ge=1, le=16)
+    session_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    session_details: List[dict] = Field(default_factory=list, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    is_completed: bool = Field(default=False)
 
-class SubstrandBlock(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
-    substrand: str
-    strand_block_id: UUID
-    week_range: str
+# Substrand Table Definition
+class Substrand(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    substrand_name: str = Field(index=True)
+    strand_id: int = Field(foreign_key="strand.id")
+    subject: str = Field(index=True)
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
+    week_numbers: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    session_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    session_details: List[dict] = Field(default_factory=list, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    is_completed: bool = Field(default=False)
 
 class ContentStandardBlock(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    substrand_block_id : UUID = Field(foreign_key="substrand.id")
     content_standard: str
     substrand_block_id: UUID
-
+    duration: str
+    content_standard_code: str  # e.g., "CS-1.1", "CS-1.2"
 
 class IndicatorSlot(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
+    contentStandardBlock_id : UUID =  Field(foreign_key="contentstandardblock.id")
     indicator_code: str
-    content_standard_block_id: UUID
     session_day: date  # or lesson_number
     split_index: Optional[int] = None  # if split into Part A / B
 

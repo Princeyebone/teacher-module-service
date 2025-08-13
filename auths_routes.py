@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends, Request
 from schemas import TeacherRegistrationRequest
 from httpx import AsyncClient
 from config import settings
-from sqlmodel import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from uuid import UUID
 from model import TeacherProfile
@@ -10,9 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from logger import logger
 from dependencies import get_current_teacher
 
-
-
-router = APIRouter(tags=["Athentication/Registration"])
+router = APIRouter(tags=["Authentication/Registration"])
 
 @router.post(
     "/register-teacher",
@@ -20,24 +18,24 @@ router = APIRouter(tags=["Athentication/Registration"])
     summary="Standalone teacher Registration Module",
 )
 async def register_teacher(
-    data:TeacherRegistrationRequest,
-    db: Session = Depends(get_db)
+    data: TeacherRegistrationRequest,
+    db: AsyncSession = Depends(get_db)
 ):
     logger.info(f"Received teacher registration request for: {data.email}")
     async with AsyncClient(verify=False) as client:
         logger.info(f"Sending registration request for teacher: {data.email} to core service")
         resp = await client.post(
             f"{settings.CORE_SERVICE_URL}/api/register-teacher",
-            json = data.model_dump(),
-            headers={"intSAuthorization":f"Bearer {settings.SERVICE_JWT}"}
+            json=data.model_dump(),
+            headers={"intSAuthorization": f"Bearer {settings.SERVICE_JWT}"}
         )
 
         if resp.status_code not in (200, 201):
             detail = resp.json().get("detail", resp.text)
             logger.error(f"Registration failed for {data.email} with status {resp.status_code}: {detail}")
             raise HTTPException(
-                status_code = resp.status_code,
-                detail = detail
+                status_code=resp.status_code,
+                detail=detail
             )
         
         respond_data = resp.json()
@@ -47,14 +45,14 @@ async def register_teacher(
         try:
             new_teacher = TeacherProfile(individual_id=UUID(individual_id_str))
             db.add(new_teacher)
-            db.commit()
-            db.refresh(new_teacher)
+            await db.commit()
+            await db.refresh(new_teacher)
             logger.info(f"TeacherProfile created in local DB for user_id: {individual_id_str}")
         except IntegrityError as e:
-            db.rollback()
+            await db.rollback()
             logger.warning(f"IntegrityError while creating TeacherProfile for user_id: {individual_id_str}: {e}")
 
-        return {"message":"successful registration check your email for activation link",}
+        return {"message": "successful registration check your email for activation link"}
     
 
 

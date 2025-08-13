@@ -2,11 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
 from dependencies import get_current_teacher
 from database import get_db
-from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
 from model import TeacherProfile, AcademicCalendar, CalendarEvent
 from schemas import AcademicCalendarEntry, AcademicCalendarPublic, CalendarEventPublic, UpdateCalendarResponse
-
-
 
 router = APIRouter(prefix="/api")
 
@@ -14,46 +13,49 @@ router = APIRouter(prefix="/api")
 async def create_calendar(
     data: UpdateCalendarResponse,
     current_teacher: TeacherProfile = Depends(get_current_teacher),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-        existing_calender = db.exec(
+        # Check for existing calendar
+        existing_calendar = (await db.execute(
             select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
-        ).first()
-        if existing_calender:
+        )).scalar_one_or_none()
+        if existing_calendar:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Academic calendar already exists please delete before creating a new one."
+                detail="Academic calendar already exists. Please delete before creating a new one."
             )
 
+        # Create new calendar
         new_calendar = AcademicCalendar(
             teacher_id=current_teacher.id,
             **data.academic_calendar.model_dump(exclude_unset=True)
         )
-
         db.add(new_calendar)
-        db.commit()
-        db.refresh(new_calendar)
+        await db.commit()
+        await db.refresh(new_calendar)
 
+        # Create events
         event_objs = []
-        for event_data in data.calendar_events: 
+        for event_data in data.calendar_events:
             event_dict = event_data.model_dump(exclude_unset=True)
-
             event_obj = CalendarEvent(
-                calender_id=new_calendar.id,  # link to the created calendar
+                calender_id=new_calendar.id,  # Link to the created calendar
                 **event_dict
             )
             db.add(event_obj)
             event_objs.append(event_obj)
-        db.commit()
-        # Optionally refresh to get IDs
+        await db.commit()
+
+        # Optionally refresh events to get IDs
         for event_obj in event_objs:
-            db.refresh(event_obj)
-        
-        events = db.exec(
+            await db.refresh(event_obj)
+
+        # Fetch events
+        events = (await db.execute(
             select(CalendarEvent).where(CalendarEvent.calender_id == new_calendar.id)
-        ).all()
-        
+        )).scalars().all()
+
         return {
             "academic_calendar": AcademicCalendarPublic(
                 id=new_calendar.id,
@@ -73,7 +75,6 @@ async def create_calendar(
                     calender_id=e.calender_id,
                     event_name=e.event_name,
                     event_start_date=e.event_start_date,
-
                     event_end_date=e.event_end_date,
                     event_start_time=e.event_start_time,
                     event_end_time=e.event_end_time,
@@ -85,46 +86,77 @@ async def create_calendar(
         }
 
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error creating calendar: {e}"
+            detail=f"Error creating calendar: {str(e)}"
         )
 
-    
-@router.get("/get-academic-calender/events")
+@router.get("/get-academic-calendar/events")
 async def get_calendar(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-        calendar = db.exec(select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)).first()
+        calendar = (await db.execute(
+            select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
+        )).scalar_one_or_none()
         if not calendar:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No academic calendar found for this teacher"
             )
-        calendar_events = db.exec(select(CalendarEvent).where(CalendarEvent.calender_id == calendar.id)).all()
 
-        return calendar, calendar_events
-    
+        calendar_events = (await db.execute(
+            select(CalendarEvent).where(CalendarEvent.calender_id == calendar.id)
+        )).scalars().all()
+
+        return {
+            "academic_calendar": AcademicCalendarPublic(
+                id=calendar.id,
+                teacher_id=calendar.teacher_id,
+                semester_name=calendar.semester_name,
+                academic_level=calendar.academic_level,
+                midsem_exams_date=calendar.midsem_exams_date,
+                revision_start_date=calendar.revision_start_date,
+                semester_start_date=calendar.semester_start_date,
+                mid_semester_break_start_date=calendar.mid_semester_break_start_date,
+                mid_semester_break_end_date=calendar.mid_semester_break_end_date,
+                semester_end_date=calendar.semester_end_date
+            ),
+            "calendar_events": [
+                CalendarEventPublic(
+                    id=e.id,
+                    calender_id=e.calender_id,
+                    event_name=e.event_name,
+                    event_start_date=e.event_start_date,
+                    event_end_date=e.event_end_date,
+                    event_start_time=e.event_start_time,
+                    event_end_time=e.event_end_time,
+                    is_holiday=e.is_holiday,
+                    requires_no_classes=e.requires_no_classes
+                )
+                for e in calendar_events
+            ]
+        }
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Could not retrieve calendar: {e}"
+            detail=f"Could not retrieve calendar: {str(e)}"
         )
-        
 
 @router.patch("/update-academic-calendar/events")
 async def update_calendar(
     payload: UpdateCalendarResponse,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
         # Get the existing academic calendar
-        existing_academic_calendar = db.exec(
+        existing_academic_calendar = (await db.execute(
             select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
-        ).first()
+        )).scalar_one_or_none()
         if not existing_academic_calendar:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -135,17 +167,15 @@ async def update_calendar(
         for key, value in payload.academic_calendar.model_dump(exclude_unset=True).items():
             setattr(existing_academic_calendar, key, value)
         db.add(existing_academic_calendar)
-        db.commit()
-        db.refresh(existing_academic_calendar)
+        await db.commit()
+        await db.refresh(existing_academic_calendar)
 
         # Handle events: update existing, add new, remove missing
-        # Get all existing events for this calendar
-        existing_events = db.exec(
+        existing_events = (await db.execute(
             select(CalendarEvent).where(CalendarEvent.calender_id == existing_academic_calendar.id)
-        ).all()
+        )).scalars().all()
         existing_events_dict = {e.id: e for e in existing_events}
 
-        # Build a set of event IDs from the payload (if they exist)
         payload_event_ids = set()
         updated_events = []
         for event in payload.calendar_events:
@@ -163,23 +193,24 @@ async def update_calendar(
             else:
                 # New event
                 new_event = CalendarEvent(
-                    calender_id=existing_academic_calendar.id, **event_data
+                    calender_id=existing_academic_calendar.id,
+                    **event_data
                 )
                 db.add(new_event)
-                db.commit()
-                db.refresh(new_event)
+                await db.commit()
+                await db.refresh(new_event)
                 updated_events.append(new_event)
 
         # Delete events that are not in the payload
         for event in existing_events:
             if event.id not in payload_event_ids:
-                db.delete(event)
-        db.commit()
+                await db.delete(event)
+        await db.commit()
 
         # Get the latest list of events
-        final_events = db.exec(
+        final_events = (await db.execute(
             select(CalendarEvent).where(CalendarEvent.calender_id == existing_academic_calendar.id)
-        ).all()
+        )).scalars().all()
 
         return {
             "academic_calendar": AcademicCalendarPublic(
@@ -211,41 +242,40 @@ async def update_calendar(
         }
 
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error updating calendar: {e}"
+            detail=f"Error updating calendar: {str(e)}"
         )
 
-
-@router.delete("/delete-academic-calender/events")
+@router.delete("/delete-academic-calendar/events")
 async def delete_calendar(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     try:
-        existing_calendar = db.exec(
+        existing_calendar = (await db.execute(
             select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
-        ).first()
-
+        )).scalar_one_or_none()
         if not existing_calendar:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Calendar not found for this teacher"
             )
 
-        # Delete all related events first
-        related_events = db.exec(
+        # Delete all related events
+        related_events = (await db.execute(
             select(CalendarEvent).where(CalendarEvent.calender_id == existing_calendar.id)
-        ).all()
+        )).scalars().all()
         for event in related_events:
-            db.delete(event)
-        db.flush()  # Ensure events are deleted before calendar
-        db.delete(existing_calendar)
-        db.commit()
+            await db.delete(event)
+        await db.delete(existing_calendar)
+        await db.commit()
         return {"message": "Calendar deleted successfully"}
 
     except Exception as e:
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error deleting calendar: {e}"
+            detail=f"Error deleting calendar: {str(e)}"
         )

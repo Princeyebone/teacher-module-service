@@ -17,6 +17,8 @@ from websocket_manager import redis_listener, connect_websocket, disconnect_webs
 from logger import logger
 import notifications_crud
 import main_calendar_crud
+import semester_mapper
+
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
     if app.openapi_schema:
@@ -38,11 +40,10 @@ def custom_openapi():
     return app.openapi_schema
 
 
-# ✅ Unified Lifespan (DB Init + Redis Listener)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("🚀 Starting FastAPI with Redis listener...")
-    create_all_db_tables()
+    await create_all_db_tables()  # Await the async database initialization
     asyncio.create_task(redis_listener())  # Start Redis Pub/Sub listener
     yield
     print("🛑 Shutting down FastAPI...")
@@ -75,6 +76,7 @@ app.include_router(calendar_crud.router, tags=["Academic Calendar"])
 app.include_router(productivity.router, prefix="/api/teacher")
 app.include_router(notifications_crud.router, prefix="/api/teacher")
 app.include_router(main_calendar_crud.router, prefix="/api/teacher")
+app.include_router(semester_mapper.router, prefix="/api/teacher")
 
 # ✅ WebSocket Endpoint (Only handles live connections)
 @app.websocket("/ws/{teacher_id}")
