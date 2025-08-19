@@ -81,3 +81,67 @@ def get_holidays_from_ai(country: str, year: int):
     except Exception as e:
         print(f"⚠️ AI Holiday Fetch Error: {e}")
         return []
+
+
+
+from groq import Groq
+import json
+
+async def fetch_number_from_ai(country: str, year: int):
+    """
+    Fetch national holidays for a given country/year from AI using Groq's chat completions.
+    Returns the content of the AI response.
+    """
+    country="Ghana"
+    year="2023"
+
+    # Build the structured prompt
+    prompt_json = {
+        "prompt_type": "national_holidays_request",
+        "country": country,
+        "year": year,
+        "output_format": {
+            "holidays": [
+                {
+                    "date": "YYYY-MM-DD",
+                    "name": "Holiday Name",
+                    "type": "Public Holiday",
+                    "requires_no_classes": True,
+                    "description": "Optional details about the holiday"
+                }
+            ]
+        }
+    }
+
+    client = Groq(api_key="")  # Insert your actual API key here
+
+    completion = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {
+                "role": "user",  # keep role "user" so model knows it's the actual prompt
+                "content": json.dumps(prompt_json, indent=2)
+            }
+        ],
+        temperature=1,
+        max_completion_tokens=8192,
+        top_p=1,
+        reasoning_effort="medium",
+        stream=True,
+        stop=None
+    )
+
+    # Streaming response
+    for chunk in completion:
+        print(chunk.choices[0].delta.content or "", end="")
+
+
+
+
+
+
+
+
+
+
+

@@ -7,7 +7,7 @@ from database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from celery.result import AsyncResult
-from celery_app import celery_app
+
 
 router = APIRouter(tags=["Productivity"])
 

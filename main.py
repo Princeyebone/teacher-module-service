@@ -18,6 +18,7 @@ from logger import logger
 import notifications_crud
 import main_calendar_crud
 import semester_mapper
+import file_handler
 
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
@@ -77,6 +78,8 @@ app.include_router(productivity.router, prefix="/api/teacher")
 app.include_router(notifications_crud.router, prefix="/api/teacher")
 app.include_router(main_calendar_crud.router, prefix="/api/teacher")
 app.include_router(semester_mapper.router, prefix="/api/teacher")
+app.include_router(file_handler.router, prefix="/api/teacher")
+
 
 # ✅ WebSocket Endpoint (Only handles live connections)
 @app.websocket("/ws/{teacher_id}")

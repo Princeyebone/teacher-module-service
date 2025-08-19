@@ -255,6 +255,35 @@ class SubstrandResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+class ContentStandardCreate(BaseModel):
+    content_standard_code: str | None = None
+    content_standard: str
+    substrand_name: str
+    strand_name: str
+    subject: str
+    weeks_sessions: Dict[str, List[int]] | None = None  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
+
+class ContentStandardUpdate(BaseModel):
+    content_standard_code: str | None = None
+    original_content_standard_code: str | None = None
+    original_content_standard_text: str | None = None
+    content_standard: str
+    substrand_name: str
+    strand_name: str
+    subject: str
+    weeks_sessions: Dict[str, List[int]] | None = None  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
+
+class ContentStandardResponse(BaseModel):
+    content_standard_code: str | None = None
+    content_standard: str
+    substrand_name: str
+    strand_name: str
+    subject: str
+    teacher_id: UUID
+    weeks_sessions: Dict[str, List[SessionDetail]] | None = None
+    created_at: datetime
+    updated_at: datetime
+
 class MaterialRequest(BaseModel):
     subject_id: UUID
     topic: str

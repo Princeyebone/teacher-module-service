@@ -33,8 +33,8 @@ class TeacherProfile(SQLModel, table=True):
 
 
 class AcademicCalendar(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     semester_name: str
     academic_level: Optional[str] = None
     semester_start_date: date
@@ -45,8 +45,8 @@ class AcademicCalendar(SQLModel, table=True):
     semester_end_date: date
 
 class CalendarEvent(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    calender_id:Optional[int] = Field(foreign_key="academiccalendar.id")
+    id: Optional[int] = Field(default=None, primary_key=True , index=True)
+    calender_id:Optional[int] = Field(foreign_key="academiccalendar.id", index=True)
     event_name: Optional[str] = None
     event_start_date: Optional[date] = None
     event_end_date: Optional[date] = None
@@ -57,8 +57,8 @@ class CalendarEvent(SQLModel, table=True):
 
 
 class WeeklyTimeTable(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    id: Optional[int] = Field(default=None, primary_key=True , index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id" , index=True)
     weekday: str
     pupils: str
     subject: str
@@ -67,8 +67,8 @@ class WeeklyTimeTable(SQLModel, table=True):
     location: Optional[str] = None
 
 class ClassSession(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id" , index=True)
     subject: str
     date: date
     start_time: str
@@ -80,8 +80,8 @@ class ClassSession(SQLModel, table=True):
     resource_generated: bool = False
 
 class TeacherPlannerEvent(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     date: date
     start_time: Optional[str] = None
     end_time: Optional[str] = None
@@ -92,7 +92,7 @@ class TeacherPlannerEvent(SQLModel, table=True):
     related_session_id:Optional[int]=None
 
 class TeacherNotification(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    id: UUID = Field(default_factory=uuid4, primary_key=True , index=True)
     teacher_id: UUID = Field(index=True, nullable=False)
     title: str
     message: str
@@ -101,8 +101,8 @@ class TeacherNotification(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class Calendar(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id")
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     title: str
     description: Optional[str] = None
     start_date: date
@@ -113,10 +113,10 @@ class Calendar(SQLModel, table=True):
     is_completed: bool = False
 
 class Strand(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True, index=True)
     strand_name: str = Field(index=True)
     subject: str = Field(index=True)
-    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id", index=True)
     week_number: int = Field(ge=1, le=16)
     session_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
     session_details: List[dict] = Field(default_factory=list, sa_column=Column(JSONB))
@@ -126,9 +126,9 @@ class Strand(SQLModel, table=True):
 
 # Substrand Table Definition
 class Substrand(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True, index=True)
     substrand_name: str = Field(index=True)
-    strand_id: int = Field(foreign_key="strand.id")
+    strand_id: int = Field(foreign_key="strand.id", index=True)
     subject: str = Field(index=True)
     teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
     week_numbers: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
@@ -138,34 +138,15 @@ class Substrand(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     is_completed: bool = Field(default=False)
 
-class ContentStandardBlock(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
-    substrand_block_id : UUID = Field(foreign_key="substrand.id")
+class ContentStandard(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True, index=True)
+    content_standard_code: str | None = Field(default=None, index=True, nullable=True)
     content_standard: str
-    substrand_block_id: UUID
-    duration: str
-    content_standard_code: str  # e.g., "CS-1.1", "CS-1.2"
-
-class IndicatorSlot(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)  # Define a primary key
-    contentStandardBlock_id : UUID =  Field(foreign_key="contentstandardblock.id")
-    indicator_code: str
-    session_day: date  # or lesson_number
-    split_index: Optional[int] = None  # if split into Part A / B
-
-
-class LearningObjectives(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    class_session_id: int = Field(foreign_key="classsession.id")
-    objective_text: str
-    key_terms: str  # for AI prompt quality
-    taxonomy_level: Optional[str]  # e.g., Bloom's level: Understand, Apply, Analyze
-
-class LearningResource(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    learning_objective_id: UUID = Field(foreign_key="learningobjectives.id")
-    type: str  # "note", "video", "quiz", "assignment", etc.
-    content: str  # or link, or blob
-    generated_by_ai: bool = True
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
+    substrand_id: int = Field(foreign_key="substrand.id")
+    subject: str = Field(index=True)
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
+    session_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    session_details: List[dict] = Field(default_factory=list, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    is_completed: bool = Field(default=False)
