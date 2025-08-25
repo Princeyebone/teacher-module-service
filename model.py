@@ -150,3 +150,25 @@ class ContentStandard(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     is_completed: bool = Field(default=False)
+
+
+class Indicator(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True, index=True)
+    indicator_code: str | None = Field(default=None, index=True, nullable=True)
+    indicator_text: str
+    content_standard_id: int = Field(foreign_key="contentstandard.id")
+    subject: str = Field(index=True)
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id")
+    # Add session storage fields
+    session_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    session_details: List[dict] = Field(default_factory=list, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    is_completed: bool = Field(default=False)
+
+
+class SemesterMaterials(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True, index=True)
+    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id", index=True)
+    strand_id: int = Field(foreign_key="strand.id", index=True)
+    material:str = Field

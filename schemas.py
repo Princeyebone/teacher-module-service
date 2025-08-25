@@ -284,6 +284,73 @@ class ContentStandardResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+class IndicatorCreate(BaseModel):
+    indicator_code: str | None = None
+    indicator_text: str
+    content_standard_code: str | None = None
+    content_standard_text: str | None = None
+    substrand_name: str
+    strand_name: str
+    subject: str
+    # Add session information
+    weeks_sessions: Dict[str, List[int]] | None = None  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
+
+class IndicatorUpdate(BaseModel):
+    indicator_code: str | None = None
+    original_indicator_code: str | None = None
+    original_indicator_text: str | None = None
+    indicator_text: str
+    content_standard_code: str | None = None
+    content_standard_text: str | None = None
+    original_content_standard_code: str | None = None
+    original_content_standard_text: str | None = None
+    substrand_name: str
+    strand_name: str
+    subject: str
+    # Add session information
+    weeks_sessions: Dict[str, List[int]] | None = None
+    
+class IndicatorResponse(BaseModel):
+    indicator_code: str | None = None
+    indicator_text: str
+    content_standard_code: str | None = None
+    content_standard_text: str
+    substrand_name: str
+    strand_name: str
+    subject: str
+    teacher_id: UUID
+    # Add session information
+    weeks_sessions: Dict[str, List[SessionDetail]] | None = None
+    created_at: datetime
+    updated_at: datetime
+
+class SessionInfo(BaseModel):
+    id: int
+    date: str
+    subject: str
+    start_time: str
+    end_time: str
+    class_name: str
+    location: Optional[str] = None
+    session_number: Optional[int] = None
+
+class WeekAvailability(BaseModel):
+    week_key: str  # e.g., "Week 6"
+    week_number: int  # e.g., 6
+    total_sessions: int
+    available_sessions: List[SessionInfo]
+
+class AvailableWeeksResponse(BaseModel):
+    subject: str
+    class_name: str
+    teacher_id: UUID
+    available_weeks: Dict[str, WeekAvailability]  # week_key -> WeekAvailability
+    total_available_weeks: int
+    total_available_sessions: int
+    semester_info: Dict[str, str]  # start_date, end_date, total_weeks
+
+
+
 class MaterialRequest(BaseModel):
     subject_id: UUID
     topic: str

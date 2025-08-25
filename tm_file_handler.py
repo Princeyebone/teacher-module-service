@@ -7,6 +7,9 @@ from logger import logger
 from model import WeeklyTimeTable
 from database import get_db
 from datetime import datetime
+from typing import Annotated
+from dependencies import get_current_teacher
+from model import TeacherProfile
 
 router = APIRouter(tags=["File Handler"])
 
@@ -30,19 +33,34 @@ async def extract_timetable_data(file_path: str) -> dict:
         ]
     }
 
-@router.post("/timetable/upload/{teacher_id}")
-async def upload_timetable(teacher_id: str, file: UploadFile, session: AsyncSession = Depends(get_db)):
-    try:
-        UUID(teacher_id)  # Validate teacher_id
-        file_path = await save_file(file, teacher_id)
-        data = await extract_timetable_data(file_path)
-        return {"file_path": file_path, "extracted_data": data}
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid teacher_id")
-    except Exception as e:
-        logger.error(f"Upload failed: {e}")
-        raise HTTPException(status_code=500, detail="Upload failed")
 
+@router.post("/timetable/upload")
+async def upload_timetable(current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)], file: UploadFile, session: AsyncSession = Depends(get_db)):
+    """
+    Upload timetable file and return extracted data.
+    Teacher ID is extracted from the access token.
+    """
+    try:
+        teacher_id = str(current_teacher.id)
+        logger.info(f"Processing timetable upload for teacher: {teacher_id}")
+        
+        # Log file details
+        logger.info(f"Received file: {file.filename}, size: {file.size}, content_type: {file.content_type}")
+        
+        # Save the uploaded file
+        file_path = await save_file(file, teacher_id)
+        logger.info(f"File saved to: {file_path}")
+        
+        # Extract timetable data
+        data = await extract_timetable_data(file_path)
+        logger.info(f"Timetable upload successful for teacher {teacher_id}")
+        
+        return {"file_path": file_path, "extracted_data": data}
+    except Exception as e:
+        logger.error(f"Timetable upload failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+        
 @router.post("/timetable/confirm/{teacher_id}")
 async def confirm_timetable(teacher_id: str, data: dict, session: AsyncSession = Depends(get_db)):
     try:
