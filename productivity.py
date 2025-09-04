@@ -1,20 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from model import AcademicCalendar, TeacherProfile, ClassSession, WeeklyTimeTable
-from background import generate_schedule_task
 from dependencies import get_current_teacher
 from database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
-from celery.result import AsyncResult
+from enque_task import enqueue_schedule_generation, check_job_status
 
 
 router = APIRouter(tags=["Productivity"])
-
-# utils.py or a helper module
-def trigger_schedule_generation(teacher_id: str, country: str):
-    result = generate_schedule_task.delay(teacher_id, country)
-    return result.id
 
 @router.post("/generate-schedule")
 async def generate_schedule(
@@ -28,12 +22,17 @@ async def generate_schedule(
         if not teacher:
             raise HTTPException(status_code=404, detail="Teacher not found")
         
-        task_id = trigger_schedule_generation(str(teacher.id), teacher.country)
-        return {
-            "status": "processing",
-            "message": f"Schedule generation started for teacher {teacher.id}.",
-            "task_id": task_id
-        }
+        # Use ARQ to enqueue the task
+        job_id = await enqueue_schedule_generation(str(teacher.id), teacher.country or "Ghana")
+        
+        if job_id:
+            return {
+                "status": "processing",
+                "message": f"Schedule generation started for teacher {teacher.id}.",
+                "job_id": job_id
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to queue schedule generation task")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -66,16 +65,33 @@ async def confirm_and_generate_schedule(
                 "message": "No timetable or academic calendar found, please create one first"
             }
 
-        task_id = trigger_schedule_generation(str(current_teacher.id), current_teacher.country)
-        return {
-            "status": "processing",
-            "message": f"No existing schedule found. Started generation for teacher {current_teacher.id}.",
-            "task_id": task_id
-        }
+        # Use ARQ to enqueue the task
+        job_id = await enqueue_schedule_generation(str(current_teacher.id), current_teacher.country or "Ghana")
+        
+        if job_id:
+            return {
+                "status": "processing",
+                "message": f"No existing schedule found. Started generation for teacher {current_teacher.id}.",
+                "job_id": job_id
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to queue schedule generation task")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/task-status/{task_id}")
-def get_task_status(task_id: str):
-    result = AsyncResult(task_id, app=celery_app)
-    return {"task_id": task_id, "status": result.status}
+@router.get("/task-status/{job_id}")
+async def get_task_status(job_id: str):
+    """Check the status of an ARQ background job"""
+    try:
+        status = await check_job_status(job_id)
+        return {
+            "job_id": job_id,
+            "status": status.get("status", "unknown"),
+            "details": status
+        }
+    except Exception as e:
+        return {
+            "job_id": job_id,
+            "status": "error",
+            "error": str(e)
+        }

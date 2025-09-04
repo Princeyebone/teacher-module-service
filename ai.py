@@ -25,8 +25,9 @@
 from groq import Groq
 import json
 import re
+from config import settings
 
-client = Groq(api_key="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")  # add your API key here
+client = Groq(api_key=settings.API_KEY)  # add your API key here
 
 prompt_json = {
     "task": "Fetch national holidays",

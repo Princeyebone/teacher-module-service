@@ -1,11 +1,12 @@
 from sqlmodel import SQLModel, Field, Column
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from sqlalchemy.dialects.postgresql import JSONB
 from uuid import UUID
 import uuid
 from enum import Enum
 from datetime import date, time,datetime,timezone
 from uuid import uuid4
+
 
 
 class UserRole(str, Enum):
@@ -166,9 +167,52 @@ class Indicator(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     is_completed: bool = Field(default=False)
 
+class UploadedFile(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", nullable=False)
+    file_name: str
+    file_type: str  # "pdf", "docx", "xlsx", "jpg"
+    purpose: str    # "timetable", "academic_calendar", "lesson_plan"
+    gcs_path: Optional[str] = None   # permanent bucket path
+    extracted_text: str | None 
 
 class SemesterMaterials(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True, index=True)
     teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id", index=True)
     strand_id: int = Field(foreign_key="strand.id", index=True)
     material:str = Field
+    url: str = Field
+
+class AssessmentWeights(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    name: str = Field(index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    weights: List[Dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSONB))
+    columns: Optional[List[Dict[str, Any]]] = Field(default_factory=list, sa_column=Column(JSONB))  # Add column information
+    is_default: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class GradeSystem(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    name: str = Field(index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    grading_type: str = Field(index=True)  # e.g., "Letter Grade", "Percentage", "GPA", etc.
+    grade_ranges: List[Dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSONB))
+    is_default: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class AssessmentScores(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    columns: List[Dict[str, Any]] = Field(default_factory=list, sa_column=Column(JSONB))
+    grades: Dict[str, Dict[str, Any]] = Field(default_factory=dict, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)

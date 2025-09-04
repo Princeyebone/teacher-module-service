@@ -1,0 +1,1488 @@
+2025-08-26 08:05:25,048 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 08:05:25,049 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 08:05:25,049 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 08:05:25,049 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 08:05:25,087 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 08:05:25,096 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.47M clients_connected=2 db_keys=14
+2025-08-26 08:05:25,110 - table_back - INFO - Timetable processing worker started
+2025-08-26 08:06:14,831 - table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 08:06:15,112 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 08:06:15,113 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 08:06:15,116 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 08:06:15,118 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 08:06:15,125 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 08:06:15,126 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 08:06:15,433 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:06:15,437 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:06:15,438 - sqlalchemy.engine.Engine - INFO - [generated in 0.00097s] (UUID('ddf65034-2059-435b-87f9-9528da9c897a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 7, 6, 15, 131213))
+2025-08-26 08:06:15,463 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:06:15,480 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 08:06:15,492 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 08:06:15,494 - table_back - INFO - Detected file type: pdf
+2025-08-26 08:06:15,497 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:06:15,498 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:06:15,499 - sqlalchemy.engine.Engine - INFO - [cached since 0.0621s ago] (UUID('5d6c4fe5-ba4e-41ea-9afe-9d118e7061e6'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 7, 6, 15, 495676))
+2025-08-26 08:06:15,508 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:06:15,517 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 08:06:15,522 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 08:06:15,524 - table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 08:06:15,525 - table_back - ERROR - Required library not installed: pdfplumber not installed
+2025-08-26 08:06:15,530 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:06:15,531 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:06:15,532 - sqlalchemy.engine.Engine - INFO - [cached since 0.09508s ago] (UUID('a859fd05-939d-4b36-90cf-7cd02440e72d'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdfplumber not installed', 'error', False, datetime.datetime(2025, 8, 26, 7, 6, 15, 529090))
+2025-08-26 08:06:15,534 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:06:15,542 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 08:06:15,545 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdfplumber not installed', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 08:08:44,153 - table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 08:08:44,158 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:08:44,159 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:08:44,159 - sqlalchemy.engine.Engine - INFO - [cached since 148.7s ago] (UUID('607e281e-ad6c-4737-9b5c-96ce7c62a9a2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 7, 8, 44, 156263))
+2025-08-26 08:08:44,167 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:08:44,177 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 08:08:44,289 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 08:08:44,290 - table_back - INFO - Detected file type: pdf
+2025-08-26 08:08:44,293 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:08:44,294 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:08:44,294 - sqlalchemy.engine.Engine - INFO - [cached since 148.9s ago] (UUID('5a8b2e77-2c6d-47e7-842e-3184ef792dc2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 7, 8, 44, 291885))
+2025-08-26 08:08:44,299 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:08:44,327 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 08:08:44,336 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 08:08:44,337 - table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 08:08:44,338 - table_back - ERROR - Required library not installed: pdfplumber not installed
+2025-08-26 08:08:44,341 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 08:08:44,342 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 08:08:44,343 - sqlalchemy.engine.Engine - INFO - [cached since 148.9s ago] (UUID('b6a1252d-dcae-481c-8619-873df4f2e526'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdfplumber not installed', 'error', False, datetime.datetime(2025, 8, 26, 7, 8, 44, 339831))
+2025-08-26 08:08:44,347 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 08:08:44,352 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 08:08:44,394 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdfplumber not installed', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 08:53:42,056 - table_back - INFO - Timetable processing worker shutdown
+2025-08-26 10:13:01,438 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 10:13:01,439 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 10:13:01,439 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 10:13:01,440 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 10:13:01,472 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 10:13:01,477 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=0
+2025-08-26 10:13:01,487 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 10:13:33,532 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:13:33,834 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 10:13:33,835 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:13:33,840 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 10:13:33,841 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:13:33,845 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 10:13:33,846 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:13:34,219 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:13:34,227 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:13:34,229 - sqlalchemy.engine.Engine - INFO - [generated in 0.00210s] (UUID('5e1d4b6d-3740-412c-9c9a-4659e9f638d0'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 13, 33, 853037))
+2025-08-26 10:13:34,264 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:13:34,272 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:13:34,289 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 10:13:34,292 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 10:13:34,299 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:13:34,301 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:13:34,304 - sqlalchemy.engine.Engine - INFO - [cached since 0.07712s ago] (UUID('7561dcac-2f7f-4444-857a-69e77dc48677'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 13, 34, 296167))
+2025-08-26 10:13:34,315 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:13:34,319 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:13:34,327 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:13:34,331 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:13:34,412 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 10:13:34,414 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:13:34,414 - t_ground.table_back - ERROR - Required library not installed: pytesseract or PIL not installed
+2025-08-26 10:13:34,422 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:13:34,423 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:13:34,425 - sqlalchemy.engine.Engine - INFO - [cached since 0.198s ago] (UUID('9e13c8c5-a22b-4f07-88d4-a3a62bdd7362'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pytesseract or PIL not installed', 'error', False, datetime.datetime(2025, 8, 26, 9, 13, 34, 419239))
+2025-08-26 10:13:34,429 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:13:34,434 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 10:13:34,459 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pytesseract or PIL not installed', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:15:33,425 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:15:33,433 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:15:33,435 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:15:33,436 - sqlalchemy.engine.Engine - INFO - [cached since 119.2s ago] (UUID('67d71e3e-32dd-419d-be35-0c25b404ae0b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 15, 33, 429801))
+2025-08-26 10:15:33,440 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:15:33,443 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:15:33,453 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 10:15:33,456 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 10:15:33,462 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:15:33,464 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:15:33,466 - sqlalchemy.engine.Engine - INFO - [cached since 119.2s ago] (UUID('ea714843-1997-40ca-a4ce-b8771ac172e7'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 15, 33, 460354))
+2025-08-26 10:15:33,470 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:15:33,473 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:15:33,483 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:15:33,487 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:15:33,560 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 10:15:33,561 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 10:15:33,562 - t_ground.table_back - ERROR - Required library not installed: pytesseract or PIL not installed
+2025-08-26 10:15:33,568 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:15:33,570 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:15:33,573 - sqlalchemy.engine.Engine - INFO - [cached since 119.3s ago] (UUID('77443597-2d3b-4515-bf14-31bcbdc03e93'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pytesseract or PIL not installed', 'error', False, datetime.datetime(2025, 8, 26, 9, 15, 33, 565440))
+2025-08-26 10:15:33,576 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:15:33,578 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 10:15:33,584 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pytesseract or PIL not installed', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:16:30,226 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 10:16:38,398 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 10:16:38,399 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 10:16:38,399 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 10:16:38,400 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 10:16:38,424 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 10:16:38,427 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=1 db_keys=2
+2025-08-26 10:16:38,436 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 10:17:34,314 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:17:34,801 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 10:17:34,802 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:17:34,809 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 10:17:34,810 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:17:34,815 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 10:17:34,826 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:17:35,255 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:17:35,274 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:17:35,281 - sqlalchemy.engine.Engine - INFO - [generated in 0.00883s] (UUID('676145fa-f0e0-48c0-a61c-c54d39d3b7cd'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 17, 34, 832605))
+2025-08-26 10:17:35,301 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:17:35,311 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:17:35,330 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 10:17:35,332 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 10:17:35,356 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:17:35,364 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:17:35,368 - sqlalchemy.engine.Engine - INFO - [cached since 0.0955s ago] (UUID('33e00dba-9bd8-4be7-95ab-fe09079b8811'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 17, 35, 343695))
+2025-08-26 10:17:35,385 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:17:35,393 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:17:35,401 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:17:35,404 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:17:40,730 - t_ground.table_back - ERROR - OCR extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+2025-08-26 10:17:40,760 - t_ground.table_back - ERROR - Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 275, in run_tesseract
+    proc = subprocess.Popen(cmd_args, **subprocess_args())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1554, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 337, in process_timetable_file_task
+    extracted_text = FileExtractor.extract_with_ocr(file_path)
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 148, in extract_with_ocr
+    text_content = pytesseract.image_to_string(image)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 486, in image_to_string
+    return {
+           ~
+    ...<2 lines>...
+        Output.STRING: lambda: run_and_get_output(*args),
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }[output_type]()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 489, in <lambda>
+    Output.STRING: lambda: run_and_get_output(*args),
+                           ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 352, in run_and_get_output
+    run_tesseract(**kwargs)
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 280, in run_tesseract
+    raise TesseractNotFoundError()
+pytesseract.pytesseract.TesseractNotFoundError: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+2025-08-26 10:17:40,767 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:17:40,768 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:17:40,769 - sqlalchemy.engine.Engine - INFO - [cached since 5.497s ago] (UUID('8f362319-3edc-422e-b777-a0363ad25c1f'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'error', False, datetime.datetime(2025, 8, 26, 9, 17, 40, 765559))
+2025-08-26 10:17:40,776 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:17:40,786 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 10:17:40,793 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:21:18,349 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 10:21:24,252 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 10:21:24,252 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 10:21:24,252 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 10:21:24,253 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 10:21:24,278 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 10:21:24,282 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=1 db_keys=3
+2025-08-26 10:21:24,293 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 10:21:53,696 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:21:54,052 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 10:21:54,052 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:21:54,057 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 10:21:54,059 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:21:54,062 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 10:21:54,063 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:21:54,495 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:21:54,503 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:21:54,505 - sqlalchemy.engine.Engine - INFO - [generated in 0.00190s] (UUID('c635993c-668c-4dd5-bf77-891b2dd80572'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 21, 54, 67946))
+2025-08-26 10:21:54,562 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:21:54,640 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:21:54,725 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 10:21:54,731 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 10:21:54,738 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:21:54,743 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:21:54,745 - sqlalchemy.engine.Engine - INFO - [cached since 0.2421s ago] (UUID('7144a4bd-a78a-413b-a425-4712dc501199'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 21, 54, 734456))
+2025-08-26 10:21:54,773 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:21:54,779 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:21:54,807 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:21:54,810 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:21:56,350 - t_ground.table_back - ERROR - OCR extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+2025-08-26 10:21:56,359 - t_ground.table_back - ERROR - Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 275, in run_tesseract
+    proc = subprocess.Popen(cmd_args, **subprocess_args())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1554, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 337, in process_timetable_file_task
+    extracted_text = FileExtractor.extract_with_ocr(file_path)
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 148, in extract_with_ocr
+    text_content = pytesseract.image_to_string(image)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 486, in image_to_string
+    return {
+           ~
+    ...<2 lines>...
+        Output.STRING: lambda: run_and_get_output(*args),
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }[output_type]()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 489, in <lambda>
+    Output.STRING: lambda: run_and_get_output(*args),
+                           ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 352, in run_and_get_output
+    run_tesseract(**kwargs)
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 280, in run_tesseract
+    raise TesseractNotFoundError()
+pytesseract.pytesseract.TesseractNotFoundError: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+2025-08-26 10:21:56,366 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:21:56,367 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:21:56,368 - sqlalchemy.engine.Engine - INFO - [cached since 1.866s ago] (UUID('6e8372a4-e3a4-471b-9629-2da60e7c38c5'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'error', False, datetime.datetime(2025, 8, 26, 9, 21, 56, 364337))
+2025-08-26 10:21:56,371 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:21:56,373 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 10:21:56,376 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:22:46,704 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 10:22:53,872 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 10:22:53,873 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 10:22:53,873 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 10:22:53,874 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 10:22:53,902 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 10:22:53,905 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=4
+2025-08-26 10:22:53,915 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 10:22:58,087 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 10:23:29,438 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 10:23:29,438 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 10:23:29,438 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 10:23:29,439 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 10:23:29,466 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 10:23:29,470 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=6
+2025-08-26 10:23:29,481 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 10:23:29,511 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:23:29,738 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 10:23:29,739 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:23:29,743 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 10:23:29,743 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:23:29,746 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 10:23:29,747 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 10:23:30,018 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:23:30,024 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:23:30,025 - sqlalchemy.engine.Engine - INFO - [generated in 0.00119s] (UUID('2c58b857-c1e5-48de-9804-40dca07121e8'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 23, 29, 750782))
+2025-08-26 10:23:30,031 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:23:30,057 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:23:30,068 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 10:23:30,070 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 10:23:30,077 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:23:30,081 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:23:30,082 - sqlalchemy.engine.Engine - INFO - [cached since 0.05819s ago] (UUID('4486a2e6-ce5d-428c-ac1e-f2ab9903c0ca'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 9, 23, 30, 73180))
+2025-08-26 10:23:30,088 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:23:30,091 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 10:23:30,096 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 10:23:30,098 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 10:23:31,775 - t_ground.table_back - ERROR - OCR extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+2025-08-26 10:23:31,783 - t_ground.table_back - ERROR - Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 275, in run_tesseract
+    proc = subprocess.Popen(cmd_args, **subprocess_args())
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 1554, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 337, in process_timetable_file_task
+    extracted_text = FileExtractor.extract_with_ocr(file_path)
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 148, in extract_with_ocr
+    text_content = pytesseract.image_to_string(image)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 486, in image_to_string
+    return {
+           ~
+    ...<2 lines>...
+        Output.STRING: lambda: run_and_get_output(*args),
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }[output_type]()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 489, in <lambda>
+    Output.STRING: lambda: run_and_get_output(*args),
+                           ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 352, in run_and_get_output
+    run_tesseract(**kwargs)
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\pytesseract\pytesseract.py", line 280, in run_tesseract
+    raise TesseractNotFoundError()
+pytesseract.pytesseract.TesseractNotFoundError: tesseract is not installed or it's not in your PATH. See README file for more information.
+
+2025-08-26 10:23:31,791 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 10:23:31,792 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 10:23:31,793 - sqlalchemy.engine.Engine - INFO - [cached since 1.769s ago] (UUID('dec1b16d-68b9-4b06-bdbe-4b867cb0e757'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'error', False, datetime.datetime(2025, 8, 26, 9, 23, 31, 788550))
+2025-08-26 10:23:31,796 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 10:23:31,800 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 10:23:31,803 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Text extraction failed: tesseract is not installed or it's not in your PATH. See README file for more information.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:23:29,935 - arq.worker - INFO - recording health: Aug-26 11:23:29 j_complete=1 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-08-26 11:25:22,526 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 11:45:09,713 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 11:45:09,714 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 11:45:09,715 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 11:45:09,715 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 11:45:09,734 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 11:45:09,737 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=3
+2025-08-26 11:45:09,745 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 11:45:09,774 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 11:45:09,793 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/test_timetable.pdf
+2025-08-26 11:45:10,037 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 11:45:10,038 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:45:10,042 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 11:45:10,042 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:45:10,044 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 11:45:10,045 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:45:10,215 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:10,218 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:10,219 - sqlalchemy.engine.Engine - INFO - [generated in 0.00082s] (UUID('d0fca3e4-748c-4c3a-9873-bdaeb96fd753'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 45, 10, 78458))
+2025-08-26 11:45:10,257 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:10,389 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:45:10,402 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:10,403 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:10,421 - sqlalchemy.engine.Engine - INFO - [cached since 0.203s ago] (UUID('fa39fd3c-00ad-4bb5-bbaa-cbe3a6ae8479'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 45, 10, 48045))
+2025-08-26 11:45:10,423 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/test_timetable.pdf'}
+2025-08-26 11:45:10,424 - t_ground.table_back - ERROR - File not found: ./uploads/test_timetable.pdf
+2025-08-26 11:45:10,432 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:10,433 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:10,434 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:10,435 - sqlalchemy.engine.Engine - INFO - [cached since 0.2171s ago] (UUID('71964dd6-1bed-4cd9-a637-fddca0600808'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'File not found: ./uploads/test_timetable.pdf', 'error', False, datetime.datetime(2025, 8, 26, 10, 45, 10, 428877))
+2025-08-26 11:45:10,437 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:45:10,442 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 11:45:10,445 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 11:45:10,446 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:10,450 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:45:10,452 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:10,454 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:10,455 - sqlalchemy.engine.Engine - INFO - [cached since 0.2368s ago] (UUID('27cf23c7-27da-4198-9290-a09de38f508a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 45, 10, 449555))
+2025-08-26 11:45:10,456 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'File not found: ./uploads/test_timetable.pdf', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:45:10,473 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:10,478 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:45:10,487 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:45:10,490 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 11:45:26,614 - t_ground.table_back - INFO - OCR extraction successful: 4020 characters
+2025-08-26 11:45:26,620 - t_ground.table_back - INFO - Successfully extracted 4020 characters
+2025-08-26 11:45:26,632 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:26,635 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:26,636 - sqlalchemy.engine.Engine - INFO - [cached since 16.42s ago] (UUID('2a34b72f-fcbb-4939-b1a8-bc6845432591'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 10, 45, 26, 630072))
+2025-08-26 11:45:26,639 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:26,652 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:45:26,658 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:45:26,659 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 11:45:26,673 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 11:45:26,675 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 11:45:26,680 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:26,684 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 11:45:26,685 - sqlalchemy.engine.Engine - INFO - [generated in 0.00165s] (UUID('de9c8e52-72b2-4469-b5be-a9450fbd9995'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, "Week\n\nWeek 1\n\n+ (2025-07-28,\n08:00 - 10:00)\n\n+ (2025-07-29,\n08:00 - 10:00)\n\nWeek 2\n\n+ (2025-08-04,\n08:00 - 10:00)\n\n* (2025-08-05,\n08: ... (3904 characters truncated) ... - =\n+ Add Strand - =\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - =\n+ Add Strand - ~\n")
+2025-08-26 11:45:26,731 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:27,431 - t_ground.table_back - ERROR - Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                       ^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+
+2025-08-26 11:45:27,438 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:27,440 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:27,441 - sqlalchemy.engine.Engine - INFO - [cached since 17.22s ago] (UUID('6be1ff5e-da0e-4b92-b0eb-484a8a679e94'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'error', False, datetime.datetime(2025, 8, 26, 10, 45, 27, 436404))
+2025-08-26 11:45:27,443 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:27,449 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:45:27,465 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:45:27,479 - t_ground.table_back - ERROR - Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                       ^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+
+2025-08-26 11:45:27,506 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:45:27,513 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:45:27,516 - sqlalchemy.engine.Engine - INFO - [cached since 17.3s ago] (UUID('bc533592-7148-47c0-a1ce-678daf675b96'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'error', False, datetime.datetime(2025, 8, 26, 10, 45, 27, 504022))
+2025-08-26 11:45:27,524 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:45:27,537 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:45:27,545 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:45:27,555 - arq.worker - ERROR -  17.79s ! 0cda0dff61ad4761a0c5a507a20340a3:process_timetable_file_task failed, InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\arq\worker.py", line 594, in run_job
+    result = await asyncio.wait_for(task, timeout_s)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                       ^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+2025-08-26 11:49:15,385 - __main__ - INFO - [STARTING] Timetable Processing Worker...
+2025-08-26 11:49:15,386 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-08-26 11:49:15,386 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 11:49:15,386 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 11:49:15,387 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 11:49:15,387 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 11:49:15,422 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 11:49:15,431 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.58M clients_connected=6 db_keys=3
+2025-08-26 11:49:15,454 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 11:50:44,808 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 11:50:45,493 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:50:45,495 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:50:45,496 - sqlalchemy.engine.Engine - INFO - [cached since 335.3s ago] (UUID('52492e6f-ea89-4e84-a86e-d61c3b56a818'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 50, 45, 79714))
+2025-08-26 11:50:45,507 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:50:45,510 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:50:45,518 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 11:50:45,524 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 11:50:46,176 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:50:46,178 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:50:46,179 - sqlalchemy.engine.Engine - INFO - [cached since 336s ago] (UUID('00b8fb69-d0e3-4048-b516-638140d22c28'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 50, 45, 889099))
+2025-08-26 11:50:46,212 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:50:46,223 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:50:46,230 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:50:46,235 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 11:51:03,857 - t_ground.table_back - INFO - OCR extraction successful: 4020 characters
+2025-08-26 11:51:03,864 - t_ground.table_back - INFO - Successfully extracted 4020 characters
+2025-08-26 11:51:03,872 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:51:03,874 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:51:03,875 - sqlalchemy.engine.Engine - INFO - [cached since 353.7s ago] (UUID('77aba790-bfe8-467f-91bf-e7a0245fb5b3'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 10, 51, 3, 868920))
+2025-08-26 11:51:03,883 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:51:03,887 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:51:03,892 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:51:03,895 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 11:51:03,903 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 11:51:03,904 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 11:51:03,911 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:51:03,921 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 11:51:03,923 - sqlalchemy.engine.Engine - INFO - [cached since 337.2s ago] (UUID('4bbdd8be-4341-4f22-876d-5d8050919787'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, "Week\n\nWeek 1\n\n+ (2025-07-28,\n08:00 - 10:00)\n\n+ (2025-07-29,\n08:00 - 10:00)\n\nWeek 2\n\n+ (2025-08-04,\n08:00 - 10:00)\n\n* (2025-08-05,\n08: ... (3904 characters truncated) ... - =\n+ Add Strand - =\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - ~\n+ Add Strand - =\n+ Add Strand - ~\n")
+2025-08-26 11:51:03,940 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:51:03,969 - t_ground.table_back - ERROR - Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                           ^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+
+2025-08-26 11:51:04,041 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:51:04,054 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:51:04,055 - sqlalchemy.engine.Engine - INFO - [cached since 353.8s ago] (UUID('b17d9871-50f7-49fe-b052-1de9df23ee39'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'error', False, datetime.datetime(2025, 8, 26, 10, 51, 4, 40245))
+2025-08-26 11:51:04,069 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:51:04,071 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:51:04,076 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Database error: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:51:04,094 - t_ground.table_back - ERROR - Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                           ^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+
+2025-08-26 11:51:04,107 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:51:04,111 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:51:04,117 - sqlalchemy.engine.Engine - INFO - [cached since 353.9s ago] (UUID('f3e09191-bfc8-4028-974e-da6c43c6ef6a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', "Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'error', False, datetime.datetime(2025, 8, 26, 10, 51, 4, 105129))
+2025-08-26 11:51:04,122 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:51:04,124 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:51:04,128 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': "Timetable processing failed: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.", 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:51:04,134 - arq.worker - ERROR -  19.39s ! bd4f93f1c2894ba8bf20fe76460846b9:process_timetable_file_task failed, InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\arq\worker.py", line 594, in run_job
+    result = await asyncio.wait_for(task, timeout_s)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\tasks.py", line 507, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "c:\Users\HP\tmdl5\t_ground\table_back.py", line 440, in process_timetable_file_task
+    uploaded_file_id = uploaded_file.id
+                           ^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\orm\session.py", line 2105, in _connection_for_bind
+    TransactionalContext._trans_ctx_check(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\sqlalchemy\engine\util.py", line 111, in _trans_ctx_check
+    raise exc.InvalidRequestError(
+    ...<3 lines>...
+    )
+sqlalchemy.exc.InvalidRequestError: Can't operate on closed transaction inside context manager.  Please complete the context manager before emitting further commands.
+2025-08-26 11:54:03,967 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/test_timetable.pdf
+2025-08-26 11:54:04,535 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:54:04,537 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:54:04,538 - sqlalchemy.engine.Engine - INFO - [cached since 534.3s ago] (UUID('e71f9436-a575-48c0-8b9b-8e07cd64949a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 54, 4, 289984))
+2025-08-26 11:54:04,544 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:54:04,566 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:54:04,570 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/test_timetable.pdf'}
+2025-08-26 11:54:04,574 - t_ground.table_back - ERROR - File not found: ./uploads/test_timetable.pdf
+2025-08-26 11:54:05,158 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:54:05,170 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:54:05,180 - sqlalchemy.engine.Engine - INFO - [cached since 535s ago] (UUID('4f41ac92-778d-434a-a286-60ba3c5c4233'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'File not found: ./uploads/test_timetable.pdf', 'error', False, datetime.datetime(2025, 8, 26, 10, 54, 4, 863621))
+2025-08-26 11:54:05,202 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:54:05,222 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 11:54:05,262 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'File not found: ./uploads/test_timetable.pdf', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:54:38,326 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 11:54:47,548 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 11:54:47,549 - __main__ - INFO - [STOPPED] Worker stopped by user
+2025-08-26 11:55:13,601 - __main__ - INFO - [STARTING] Timetable Processing Worker...
+2025-08-26 11:55:13,601 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-08-26 11:55:13,602 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 11:55:13,602 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 11:55:13,602 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 11:55:13,602 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 11:55:13,619 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 11:55:13,623 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=4
+2025-08-26 11:55:13,632 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 11:55:42,591 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 11:55:42,797 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 11:55:42,798 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:55:42,800 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 11:55:42,801 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:55:42,804 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 11:55:42,805 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 11:55:43,060 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:55:43,065 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:55:43,066 - sqlalchemy.engine.Engine - INFO - [generated in 0.00153s] (UUID('d743f733-62a4-48a3-bb10-5b4eda432f16'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 55, 42, 807760))
+2025-08-26 11:55:43,072 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:55:43,093 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:55:43,108 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 11:55:43,119 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 11:55:43,123 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:55:43,127 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:55:43,130 - sqlalchemy.engine.Engine - INFO - [cached since 0.06484s ago] (UUID('74a9935c-e734-4702-8c4b-c014d9169a59'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 10, 55, 43, 121894))
+2025-08-26 11:55:43,139 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:55:43,142 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:55:43,149 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:55:43,152 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 11:55:43,320 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 11:55:43,322 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 11:55:43,328 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:55:43,330 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:55:43,332 - sqlalchemy.engine.Engine - INFO - [cached since 0.267s ago] (UUID('3ceb6246-7762-4a38-ac02-4e008470703a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 10, 55, 43, 325782))
+2025-08-26 11:55:43,335 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:55:43,337 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:55:43,343 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 11:55:43,349 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 11:55:43,350 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 11:55:43,351 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 11:55:43,355 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:55:43,362 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 11:55:43,367 - sqlalchemy.engine.Engine - INFO - [generated in 0.00509s] (UUID('5defbae1-2ddf-4b89-afd6-009bffe909c5'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 11:55:43,375 - t_ground.table_back - INFO - Uploaded file record saved with ID: 5defbae1-2ddf-4b89-afd6-009bffe909c5
+2025-08-26 11:55:43,375 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:55:43,379 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 11:55:43,384 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 11:55:43,385 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 11:55:43,386 - sqlalchemy.engine.Engine - INFO - [cached since 0.3211s ago] (UUID('86c61f2a-1081-4650-8bc9-bb2e15b9d8d2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 10, 55, 43, 382588))
+2025-08-26 11:55:43,389 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 11:55:43,390 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 11:55:43,394 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '5defbae1-2ddf-4b89-afd6-009bffe909c5', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 12:01:47,852 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-26 12:01:47,853 - __main__ - INFO - [STOPPED] Worker stopped by user
+2025-08-26 19:55:14,385 - __main__ - INFO - [STARTING] Timetable Processing Worker...
+2025-08-26 19:55:14,386 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-08-26 19:55:14,386 - __main__ - INFO -    - Max Tries: 3
+2025-08-26 19:55:14,387 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-08-26 19:55:14,387 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-08-26 19:55:14,387 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-08-26 19:55:14,417 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-08-26 19:55:14,420 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.57M clients_connected=2 db_keys=1
+2025-08-26 19:55:14,428 - t_ground.table_back - INFO - Timetable processing worker started
+2025-08-26 19:55:33,203 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 19:55:33,392 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-08-26 19:55:33,392 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 19:55:33,395 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-08-26 19:55:33,396 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 19:55:33,400 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-08-26 19:55:33,401 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-08-26 19:55:33,690 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 19:55:33,694 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 19:55:33,695 - sqlalchemy.engine.Engine - INFO - [generated in 0.00085s] (UUID('854989c0-3983-4ef6-8f96-705993e5e2ba'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 18, 55, 33, 404148))
+2025-08-26 19:55:33,719 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 19:55:33,725 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 19:55:33,735 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 19:55:33,736 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 19:55:33,743 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 19:55:33,745 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 19:55:33,745 - sqlalchemy.engine.Engine - INFO - [cached since 0.05119s ago] (UUID('cab87427-38b6-42c8-ad40-4369c0f5b3a2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 18, 55, 33, 739728))
+2025-08-26 19:55:33,752 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 19:55:33,755 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 19:55:33,762 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 19:55:33,766 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 19:55:33,965 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 19:55:33,976 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 19:55:34,006 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 19:55:34,051 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 19:55:34,062 - sqlalchemy.engine.Engine - INFO - [cached since 0.3679s ago] (UUID('ccdb156b-c4d8-48ec-ab4a-b31dec8f25d3'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 18, 55, 33, 992069))
+2025-08-26 19:55:34,078 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 19:55:34,084 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 19:55:34,111 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 19:55:34,116 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 19:55:34,118 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 19:55:34,120 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 19:55:34,128 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 19:55:34,133 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 19:55:34,134 - sqlalchemy.engine.Engine - INFO - [generated in 0.00137s] (UUID('fedc064b-0a6a-435c-87fb-7d564794d848'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 19:55:34,153 - t_ground.table_back - INFO - Uploaded file record saved with ID: fedc064b-0a6a-435c-87fb-7d564794d848
+2025-08-26 19:55:34,157 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 19:55:34,160 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 19:55:34,164 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 19:55:34,165 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 19:55:34,166 - sqlalchemy.engine.Engine - INFO - [cached since 0.4722s ago] (UUID('456f44c7-236b-4751-bfcb-8a725d7c8279'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 18, 55, 34, 162750))
+2025-08-26 19:55:34,169 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 19:55:34,171 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 19:55:34,180 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': 'fedc064b-0a6a-435c-87fb-7d564794d848', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 20:31:05,222 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:31:05,872 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:31:05,917 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:31:05,925 - sqlalchemy.engine.Engine - INFO - [cached since 2132s ago] (UUID('52469d17-3271-4cf7-978b-c676a53041df'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 31, 5, 632789))
+2025-08-26 20:31:05,951 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:31:05,960 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:31:05,971 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:31:05,977 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:31:05,984 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:31:05,985 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:31:05,985 - sqlalchemy.engine.Engine - INFO - [cached since 2132s ago] (UUID('37d11bd2-ee34-40ee-a679-1245933e248c'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 31, 5, 981273))
+2025-08-26 20:31:05,992 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:31:06,001 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:31:06,011 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:31:06,019 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:31:06,425 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 20:31:06,426 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 20:31:06,430 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:31:06,432 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:31:06,433 - sqlalchemy.engine.Engine - INFO - [cached since 2133s ago] (UUID('48108df9-b079-4a2c-bc4d-85ff5ae09f70'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 31, 6, 428069))
+2025-08-26 20:31:06,436 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:31:06,438 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:31:06,441 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:31:06,443 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:31:06,444 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:31:06,446 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:31:06,453 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:31:06,454 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:31:06,455 - sqlalchemy.engine.Engine - INFO - [cached since 2132s ago] (UUID('3cd3721a-04f9-4d17-a03a-1761dc2925e8'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 20:31:06,466 - t_ground.table_back - INFO - Uploaded file record saved with ID: 3cd3721a-04f9-4d17-a03a-1761dc2925e8
+2025-08-26 20:31:06,467 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:31:06,469 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:31:06,472 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:31:06,473 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:31:06,474 - sqlalchemy.engine.Engine - INFO - [cached since 2133s ago] (UUID('9c39e6e5-48ae-4502-ac0e-93903bdb5df8'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 31, 6, 470812))
+2025-08-26 20:31:06,477 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:31:06,479 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:31:06,482 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '3cd3721a-04f9-4d17-a03a-1761dc2925e8', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 20:34:14,767 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:34:15,229 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:34:15,230 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:34:15,231 - sqlalchemy.engine.Engine - INFO - [cached since 2322s ago] (UUID('d7dc858d-f60f-43ab-ad31-ba2774df23a9'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 34, 15, 55009))
+2025-08-26 20:34:15,265 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:34:15,269 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:34:15,272 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 20:34:15,277 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 20:34:15,284 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:34:15,286 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:34:15,288 - sqlalchemy.engine.Engine - INFO - [cached since 2322s ago] (UUID('13e18291-61a3-4df2-85e8-76439f50bd98'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 34, 15, 280311))
+2025-08-26 20:34:15,297 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:34:15,301 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:34:15,306 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:34:15,311 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:34:19,733 - t_ground.table_back - INFO - OCR extraction successful: 412 characters
+2025-08-26 20:34:19,735 - t_ground.table_back - INFO - Successfully extracted 412 characters
+2025-08-26 20:34:19,742 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:34:19,749 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:34:19,750 - sqlalchemy.engine.Engine - INFO - [cached since 2326s ago] (UUID('be7cf856-5d5d-4a02-b0f3-c8343886377a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 34, 19, 739684))
+2025-08-26 20:34:19,759 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:34:19,762 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:34:19,768 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:34:19,769 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:34:19,777 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:34:19,778 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:34:19,780 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:34:19,783 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:34:19,788 - sqlalchemy.engine.Engine - INFO - [cached since 2326s ago] (UUID('3e8430ae-b551-4358-983b-477b9011d20a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14 ... (187 characters truncated) ... trand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n')
+2025-08-26 20:34:19,797 - t_ground.table_back - INFO - Uploaded file record saved with ID: 3e8430ae-b551-4358-983b-477b9011d20a
+2025-08-26 20:34:19,802 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:34:19,806 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:34:19,810 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:34:19,811 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:34:19,812 - sqlalchemy.engine.Engine - INFO - [cached since 2326s ago] (UUID('e7d1773b-853e-433e-8a1f-3a6a25ed5670'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 34, 19, 808905))
+2025-08-26 20:34:19,814 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:34:19,822 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:34:19,827 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '3e8430ae-b551-4358-983b-477b9011d20a', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14\n\nWeek 15\n\nWeek 16\n\nStrand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n', 'file_type': 'image', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}}
+2025-08-26 20:36:52,814 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:36:52,821 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:36:52,822 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:36:52,823 - sqlalchemy.engine.Engine - INFO - [cached since 2479s ago] (UUID('0e300564-73be-4dd9-980c-d1e70391225b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 36, 52, 817007))
+2025-08-26 20:36:52,835 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:36:52,843 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:36:52,897 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 20:36:52,908 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 20:36:52,917 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:36:52,921 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:36:52,924 - sqlalchemy.engine.Engine - INFO - [cached since 2479s ago] (UUID('d4bcff89-052f-4b17-b02c-a0732e93408e'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 36, 52, 912263))
+2025-08-26 20:36:52,941 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:36:52,961 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:36:52,988 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:36:53,006 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:36:54,537 - t_ground.table_back - INFO - OCR extraction successful: 412 characters
+2025-08-26 20:36:54,539 - t_ground.table_back - INFO - Successfully extracted 412 characters
+2025-08-26 20:36:54,542 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:36:54,545 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:36:54,546 - sqlalchemy.engine.Engine - INFO - [cached since 2481s ago] (UUID('6b5a1c39-727d-4a3c-a6ec-9f2e5ff1d82d'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 36, 54, 541001))
+2025-08-26 20:36:54,548 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:36:54,550 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:36:54,555 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:36:54,562 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:36:54,563 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:36:54,563 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:36:54,565 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:36:54,567 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:36:54,570 - sqlalchemy.engine.Engine - INFO - [cached since 2480s ago] (UUID('9273361b-dd85-4efc-9ed9-cd217288e1cf'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14 ... (187 characters truncated) ... trand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n')
+2025-08-26 20:36:54,577 - t_ground.table_back - INFO - Uploaded file record saved with ID: 9273361b-dd85-4efc-9ed9-cd217288e1cf
+2025-08-26 20:36:54,577 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:36:54,579 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:36:54,583 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:36:54,584 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:36:54,585 - sqlalchemy.engine.Engine - INFO - [cached since 2481s ago] (UUID('a6de5ecc-72ee-41a5-9540-0a3077980741'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 36, 54, 582043))
+2025-08-26 20:36:54,587 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:36:54,588 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:36:54,591 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '9273361b-dd85-4efc-9ed9-cd217288e1cf', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14\n\nWeek 15\n\nWeek 16\n\nStrand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n', 'file_type': 'image', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}}
+2025-08-26 20:43:10,613 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:43:11,197 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:43:11,198 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:43:11,199 - sqlalchemy.engine.Engine - INFO - [cached since 2858s ago] (UUID('85434a02-5311-4d1f-8ca1-bf002e1c4667'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 43, 10, 976350))
+2025-08-26 20:43:11,205 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:43:11,208 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:43:11,213 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 20:43:11,219 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 20:43:11,224 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:43:11,226 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:43:11,227 - sqlalchemy.engine.Engine - INFO - [cached since 2858s ago] (UUID('1608f918-f877-4547-aedf-ee02dcda27a8'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 43, 11, 221917))
+2025-08-26 20:43:11,235 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:43:11,240 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:43:11,251 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:43:11,257 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:43:13,399 - t_ground.table_back - INFO - OCR extraction successful: 412 characters
+2025-08-26 20:43:13,404 - t_ground.table_back - INFO - Successfully extracted 412 characters
+2025-08-26 20:43:13,410 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:43:13,411 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:43:13,413 - sqlalchemy.engine.Engine - INFO - [cached since 2860s ago] (UUID('f50fe3f0-e198-4cd8-8c79-46c049007cce'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 43, 13, 407950))
+2025-08-26 20:43:13,416 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:43:13,420 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:43:13,438 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:43:13,455 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:43:13,457 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:43:13,458 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:43:13,476 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:43:13,486 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:43:13,492 - sqlalchemy.engine.Engine - INFO - [cached since 2859s ago] (UUID('725f9c27-3b6d-4229-aa49-d51dba382dd4'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14 ... (187 characters truncated) ... trand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n')
+2025-08-26 20:43:13,522 - t_ground.table_back - INFO - Uploaded file record saved with ID: 725f9c27-3b6d-4229-aa49-d51dba382dd4
+2025-08-26 20:43:13,528 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:43:13,533 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:43:13,542 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:43:13,544 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:43:13,583 - sqlalchemy.engine.Engine - INFO - [cached since 2860s ago] (UUID('ff59e45b-21d0-4ced-ba7d-aca6092c9ea5'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 43, 13, 540013))
+2025-08-26 20:43:13,588 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:43:13,602 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:43:13,623 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '725f9c27-3b6d-4229-aa49-d51dba382dd4', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14\n\nWeek 15\n\nWeek 16\n\nStrand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n', 'file_type': 'image', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}}
+2025-08-26 20:44:08,707 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:44:08,710 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:44:08,710 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:44:08,711 - sqlalchemy.engine.Engine - INFO - [cached since 2915s ago] (UUID('11b705c7-dbe6-4620-9791-4f919e0c91dc'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 44, 8, 708896))
+2025-08-26 20:44:08,713 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:44:08,730 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:44:08,733 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}
+2025-08-26 20:44:08,735 - t_ground.table_back - INFO - Detected file type: image
+2025-08-26 20:44:08,739 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:44:08,741 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:44:08,743 - sqlalchemy.engine.Engine - INFO - [cached since 2915s ago] (UUID('6dc569e3-dac2-4b85-ba69-59f170f19998'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from image file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 44, 8, 737778))
+2025-08-26 20:44:08,748 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:44:08,750 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:44:08,754 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from image file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:44:08,761 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png
+2025-08-26 20:44:10,366 - t_ground.table_back - INFO - OCR extraction successful: 412 characters
+2025-08-26 20:44:10,369 - t_ground.table_back - INFO - Successfully extracted 412 characters
+2025-08-26 20:44:10,372 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:44:10,373 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:44:10,374 - sqlalchemy.engine.Engine - INFO - [cached since 2917s ago] (UUID('d9145e30-fd40-46ab-b45d-8c0073aa8ac3'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 44, 10, 370985))
+2025-08-26 20:44:10,376 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:44:10,378 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:44:10,381 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:44:10,382 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:44:10,384 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:44:10,385 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:44:10,391 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:44:10,393 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:44:10,395 - sqlalchemy.engine.Engine - INFO - [cached since 2916s ago] (UUID('eb9e18fd-f29c-4795-9d71-469afe7904bc'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png', 'image', 'timetable', None, 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14 ... (187 characters truncated) ... trand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n')
+2025-08-26 20:44:10,406 - t_ground.table_back - INFO - Uploaded file record saved with ID: eb9e18fd-f29c-4795-9d71-469afe7904bc
+2025-08-26 20:44:10,407 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:44:10,411 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:44:10,415 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:44:10,416 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:44:10,417 - sqlalchemy.engine.Engine - INFO - [cached since 2917s ago] (UUID('ef1a30ea-a57e-4695-98d9-36a448b90baf'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 44, 10, 413830))
+2025-08-26 20:44:10,419 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:44:10,421 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:44:10,425 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': 'eb9e18fd-f29c-4795-9d71-469afe7904bc', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Week\n\nWeek 1\n\nWeek 2\n\nWeek 3\n\nWeek 4\n\nWeek 5\n\nWeek 6\n\nWeek 7\n\nWeek 8\n\nWeek 9\n\nWeek 10\n\nWeek 11\n\nWeek 12\n\nWeek 13\n\nWeek 14\n\nWeek 15\n\nWeek 16\n\nStrand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\n+ Add Strand\n\nSubstrand\n\nContent Standard\n\nIndicator\n', 'file_type': 'image', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.png'}}
+2025-08-26 20:50:41,994 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:50:42,345 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:50:42,346 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:50:42,346 - sqlalchemy.engine.Engine - INFO - [cached since 3309s ago] (UUID('997fd3ca-7e89-4e59-a107-9a1e8070ac9e'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 50, 42, 196292))
+2025-08-26 20:50:42,351 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:50:42,353 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:50:42,358 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:50:42,360 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:50:42,367 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:50:42,370 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:50:42,371 - sqlalchemy.engine.Engine - INFO - [cached since 3309s ago] (UUID('5f032a53-d7c0-4d1b-b8cf-23ec8b443dd7'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 50, 42, 363367))
+2025-08-26 20:50:42,384 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:50:42,387 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:50:42,396 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:50:42,400 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:50:42,545 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 20:50:42,546 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 20:50:42,551 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:50:42,552 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:50:42,554 - sqlalchemy.engine.Engine - INFO - [cached since 3309s ago] (UUID('7356c759-e0f2-4928-906a-756da4ee3c44'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 19, 50, 42, 548014))
+2025-08-26 20:50:42,559 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:50:42,561 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:50:42,565 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:50:42,567 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 20:50:42,567 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 20:50:42,568 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 20:50:42,569 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:50:42,575 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 20:50:42,576 - sqlalchemy.engine.Engine - INFO - [cached since 3308s ago] (UUID('32a6ae72-c6bf-4223-9523-e4a3ef579b9a'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 20:50:42,586 - t_ground.table_back - INFO - Uploaded file record saved with ID: 32a6ae72-c6bf-4223-9523-e4a3ef579b9a
+2025-08-26 20:50:42,587 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:50:42,595 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 20:50:42,598 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:50:42,602 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:50:42,603 - sqlalchemy.engine.Engine - INFO - [cached since 3309s ago] (UUID('604795db-0c69-4acb-a009-cf584caad932'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 19, 50, 42, 596962))
+2025-08-26 20:50:42,613 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:50:42,632 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:50:42,806 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '32a6ae72-c6bf-4223-9523-e4a3ef579b9a', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 20:55:14,849 - arq.worker - INFO - recording health: Aug-26 20:55:14 j_complete=7 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-08-26 20:57:55,031 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:57:55,418 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:57:55,418 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:57:55,419 - sqlalchemy.engine.Engine - INFO - [cached since 3742s ago] (UUID('9cd0ddc2-a149-4479-965e-63bf61f13612'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 57, 55, 222541))
+2025-08-26 20:57:55,427 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:57:55,430 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:57:55,434 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:57:55,436 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:57:55,442 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:57:55,444 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:57:55,445 - sqlalchemy.engine.Engine - INFO - [cached since 3742s ago] (UUID('a9bb7a55-cf05-48af-b0ca-f978237452e2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 57, 55, 439232))
+2025-08-26 20:57:55,452 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:57:55,455 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:57:55,460 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:57:55,462 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:57:55,526 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 20:57:55,526 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:57:55,542 - t_ground.table_back - ERROR - pdf2image not installed - cannot OCR PDF files
+2025-08-26 20:57:55,543 - t_ground.table_back - ERROR - OCR extraction failed: pdf2image required for PDF OCR
+2025-08-26 20:57:55,543 - t_ground.table_back - ERROR - Required library not installed: pdf2image required for PDF OCR
+2025-08-26 20:57:55,549 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:57:55,553 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:57:55,554 - sqlalchemy.engine.Engine - INFO - [cached since 3742s ago] (UUID('f61b2a49-4633-4bb8-bfd2-ec168477d8d3'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdf2image required for PDF OCR', 'error', False, datetime.datetime(2025, 8, 26, 19, 57, 55, 545682))
+2025-08-26 20:57:55,559 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:57:55,572 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 20:57:55,603 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdf2image required for PDF OCR', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:11,811 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:11,814 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:11,815 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:11,816 - sqlalchemy.engine.Engine - INFO - [cached since 3758s ago] (UUID('c5a7bf20-d6c2-4872-adc5-dcc7472c77dc'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 11, 813007))
+2025-08-26 20:58:11,817 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:11,825 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:11,828 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:58:11,829 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:58:11,838 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:11,842 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:11,843 - sqlalchemy.engine.Engine - INFO - [cached since 3758s ago] (UUID('b4a7bfb6-4e6e-4659-95c3-e9727bea953f'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 11, 834529))
+2025-08-26 20:58:11,845 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:11,850 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:11,856 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:11,857 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:11,901 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 20:58:11,901 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:11,903 - t_ground.table_back - ERROR - pdf2image not installed - cannot OCR PDF files
+2025-08-26 20:58:11,903 - t_ground.table_back - ERROR - OCR extraction failed: pdf2image required for PDF OCR
+2025-08-26 20:58:11,904 - t_ground.table_back - ERROR - Required library not installed: pdf2image required for PDF OCR
+2025-08-26 20:58:11,906 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:11,907 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:11,909 - sqlalchemy.engine.Engine - INFO - [cached since 3758s ago] (UUID('310dfa8c-2da7-459a-83af-b2a4e5ec02c2'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdf2image required for PDF OCR', 'error', False, datetime.datetime(2025, 8, 26, 19, 58, 11, 905420))
+2025-08-26 20:58:11,911 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:11,915 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 20:58:11,919 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdf2image required for PDF OCR', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:27,628 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:27,637 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:27,638 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:27,642 - sqlalchemy.engine.Engine - INFO - [cached since 3774s ago] (UUID('1fff652f-5962-4e82-bfcb-7dce6a2d47d4'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 27, 633162))
+2025-08-26 20:58:27,654 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:27,665 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:27,681 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:58:27,725 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:58:27,740 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:27,763 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:27,764 - sqlalchemy.engine.Engine - INFO - [cached since 3774s ago] (UUID('b1bddb78-3675-4e64-82b0-30714c9dca26'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 27, 739171))
+2025-08-26 20:58:27,766 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:27,773 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:27,778 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:27,780 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:27,824 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 20:58:27,824 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:27,826 - t_ground.table_back - ERROR - pdf2image not installed - cannot OCR PDF files
+2025-08-26 20:58:27,827 - t_ground.table_back - ERROR - OCR extraction failed: pdf2image required for PDF OCR
+2025-08-26 20:58:27,828 - t_ground.table_back - ERROR - Required library not installed: pdf2image required for PDF OCR
+2025-08-26 20:58:27,831 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:27,831 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:27,833 - sqlalchemy.engine.Engine - INFO - [cached since 3774s ago] (UUID('75226934-8201-4e83-a2f9-936cbe9bda05'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdf2image required for PDF OCR', 'error', False, datetime.datetime(2025, 8, 26, 19, 58, 27, 829774))
+2025-08-26 20:58:27,835 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:27,836 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 20:58:27,841 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdf2image required for PDF OCR', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:52,947 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:52,950 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:52,951 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:52,952 - sqlalchemy.engine.Engine - INFO - [cached since 3799s ago] (UUID('8fe51198-0d09-42b2-8491-c8e45585443b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 52, 949338))
+2025-08-26 20:58:52,954 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:52,971 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:52,979 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 20:58:53,009 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 20:58:53,078 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:53,088 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:53,096 - sqlalchemy.engine.Engine - INFO - [cached since 3799s ago] (UUID('0702d3ae-fe4c-4f27-9a4e-263d747fa403'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 19, 58, 53, 63144))
+2025-08-26 20:58:53,100 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:53,104 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 20:58:53,115 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 20:58:53,117 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:53,168 - t_ground.table_back - INFO - Falling back to OCR extraction
+2025-08-26 20:58:53,169 - t_ground.table_back - INFO - Extracting text using OCR: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 20:58:53,171 - t_ground.table_back - ERROR - pdf2image not installed - cannot OCR PDF files
+2025-08-26 20:58:53,172 - t_ground.table_back - ERROR - OCR extraction failed: pdf2image required for PDF OCR
+2025-08-26 20:58:53,176 - t_ground.table_back - ERROR - Required library not installed: pdf2image required for PDF OCR
+2025-08-26 20:58:53,180 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 20:58:53,181 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 20:58:53,181 - sqlalchemy.engine.Engine - INFO - [cached since 3799s ago] (UUID('1937c7b3-5936-4fbd-ac4d-bacc3fef9ccf'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Error Occurred', 'Required library not installed: pdf2image required for PDF OCR', 'error', False, datetime.datetime(2025, 8, 26, 19, 58, 53, 178519))
+2025-08-26 20:58:53,184 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 20:58:53,188 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Error Occurred
+2025-08-26 20:58:53,196 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'error', 'message': 'Required library not installed: pdf2image required for PDF OCR', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:00:29,926 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:00:29,929 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:29,930 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:29,931 - sqlalchemy.engine.Engine - INFO - [cached since 3896s ago] (UUID('b787e478-e82f-4be1-aa50-cb2c84acf8ce'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 29, 928073))
+2025-08-26 21:00:29,932 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:29,936 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:29,941 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 21:00:29,943 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 21:00:29,949 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:29,951 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:29,953 - sqlalchemy.engine.Engine - INFO - [cached since 3896s ago] (UUID('1a100247-11e3-4604-b0ba-e08cd55f3886'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 29, 947565))
+2025-08-26 21:00:29,956 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:29,957 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:29,963 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:00:29,967 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:00:30,160 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 21:00:30,286 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 21:00:30,393 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:30,538 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:30,569 - sqlalchemy.engine.Engine - INFO - [cached since 3897s ago] (UUID('58f7798c-42fa-4287-8e2e-79de20c49db4'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 30, 354650))
+2025-08-26 21:00:30,573 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:30,586 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:30,624 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:00:30,657 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 21:00:30,675 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 21:00:30,691 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 21:00:30,698 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:30,704 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 21:00:30,717 - sqlalchemy.engine.Engine - INFO - [cached since 3897s ago] (UUID('c07c0a3e-7e47-4dd4-9a17-848577825d16'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 21:00:30,758 - t_ground.table_back - INFO - Uploaded file record saved with ID: c07c0a3e-7e47-4dd4-9a17-848577825d16
+2025-08-26 21:00:30,760 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:30,766 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 21:00:30,771 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:30,773 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:30,774 - sqlalchemy.engine.Engine - INFO - [cached since 3897s ago] (UUID('55109215-1e61-42f7-a746-eea9ba6c0a4f'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 30, 770341))
+2025-08-26 21:00:30,776 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:30,782 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:30,788 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': 'c07c0a3e-7e47-4dd4-9a17-848577825d16', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 21:00:56,566 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:00:57,015 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:57,016 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:57,016 - sqlalchemy.engine.Engine - INFO - [cached since 3923s ago] (UUID('5bc5fa91-edaa-43ab-8b78-e344a8afb94e'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 56, 817392))
+2025-08-26 21:00:57,020 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:57,023 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:57,026 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 21:00:57,029 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 21:00:57,032 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:57,033 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:57,035 - sqlalchemy.engine.Engine - INFO - [cached since 3923s ago] (UUID('635b1245-43f8-4a3d-a74b-8a42c8fba879'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 57, 31235))
+2025-08-26 21:00:57,039 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:57,042 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:57,048 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:00:57,051 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:00:57,298 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 21:00:57,301 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 21:00:57,317 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:57,324 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:57,338 - sqlalchemy.engine.Engine - INFO - [cached since 3924s ago] (UUID('44f857a6-737e-40f6-9578-c140d85a5d38'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 57, 309992))
+2025-08-26 21:00:57,353 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:57,383 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:57,388 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:00:57,390 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 21:00:57,402 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 21:00:57,420 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 21:00:57,435 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:57,445 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 21:00:57,448 - sqlalchemy.engine.Engine - INFO - [cached since 3923s ago] (UUID('aeafea65-1cf2-47f5-8092-61f15fb10897'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 21:00:57,506 - t_ground.table_back - INFO - Uploaded file record saved with ID: aeafea65-1cf2-47f5-8092-61f15fb10897
+2025-08-26 21:00:57,517 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:57,523 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 21:00:57,537 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:00:57,539 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:00:57,562 - sqlalchemy.engine.Engine - INFO - [cached since 3924s ago] (UUID('4f3eb7bb-69d1-47b8-bcbb-084b72fd6fed'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 20, 0, 57, 533739))
+2025-08-26 21:00:57,570 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:00:57,601 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:00:57,646 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': 'aeafea65-1cf2-47f5-8092-61f15fb10897', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 21:09:51,920 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:09:52,419 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:09:52,420 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:09:52,420 - sqlalchemy.engine.Engine - INFO - [cached since 4459s ago] (UUID('92b9f00b-2ac4-492f-8193-517dd802ec14'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 9, 52, 130077))
+2025-08-26 21:09:52,428 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:09:52,431 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:09:52,438 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-26 21:09:52,450 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-26 21:09:52,455 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:09:52,457 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:09:52,458 - sqlalchemy.engine.Engine - INFO - [cached since 4459s ago] (UUID('942c60ac-6ed2-454e-a6d2-7c042929fd32'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 26, 20, 9, 52, 453418))
+2025-08-26 21:09:52,463 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:09:52,465 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:09:52,471 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:09:52,476 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-26 21:09:52,615 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-26 21:09:52,621 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-26 21:09:52,679 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:09:52,718 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:09:52,734 - sqlalchemy.engine.Engine - INFO - [cached since 4459s ago] (UUID('101f00bf-84a2-4647-880a-d43a3cabd7ab'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 26, 20, 9, 52, 633008))
+2025-08-26 21:09:52,751 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:09:52,792 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:09:52,816 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-26 21:09:52,818 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-26 21:09:52,819 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-26 21:09:52,844 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-26 21:09:52,866 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:09:52,872 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-26 21:09:52,880 - sqlalchemy.engine.Engine - INFO - [cached since 4459s ago] (UUID('416ee0aa-4755-447f-8403-2fce5a4d00ad'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-26 21:09:52,962 - t_ground.table_back - INFO - Uploaded file record saved with ID: 416ee0aa-4755-447f-8403-2fce5a4d00ad
+2025-08-26 21:09:53,057 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:09:53,095 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-26 21:09:53,111 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-26 21:09:53,167 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-26 21:09:53,175 - sqlalchemy.engine.Engine - INFO - [cached since 4459s ago] (UUID('4a42be79-2c11-4f2d-bab2-a981f7887e70'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 26, 20, 9, 53, 106571))
+2025-08-26 21:09:53,200 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-26 21:09:53,210 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-26 21:09:53,247 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '416ee0aa-4755-447f-8403-2fce5a4d00ad', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-26 21:55:15,310 - arq.worker - INFO - recording health: Aug-26 21:55:15 j_complete=14 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-08-27 05:49:33,015 - t_ground.table_back - INFO - Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-27 05:49:33,681 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-27 05:49:33,723 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-27 05:49:33,726 - sqlalchemy.engine.Engine - INFO - [cached since 3.565e+04s ago] (UUID('94061bb4-1939-4843-842b-eeefea9ba40b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 8, 27, 4, 49, 33, 488197))
+2025-08-27 05:49:33,765 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-27 05:49:33,780 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-27 05:49:33,798 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}
+2025-08-27 05:49:33,807 - t_ground.table_back - INFO - Detected file type: pdf
+2025-08-27 05:49:33,813 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-27 05:49:33,814 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-27 05:49:33,818 - sqlalchemy.engine.Engine - INFO - [cached since 3.565e+04s ago] (UUID('7fa8b471-9610-4f8e-b254-d5a4b51e9da5'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 8, 27, 4, 49, 33, 811655))
+2025-08-27 05:49:33,824 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-27 05:49:33,828 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-27 05:49:33,832 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-27 05:49:33,834 - t_ground.table_back - INFO - Extracting text from PDF: ./uploads/7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf
+2025-08-27 05:49:34,436 - t_ground.table_back - INFO - Successfully extracted text using pdfplumber: 777 characters
+2025-08-27 05:49:34,439 - t_ground.table_back - INFO - Successfully extracted 777 characters
+2025-08-27 05:49:34,542 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-27 05:49:34,702 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-27 05:49:34,705 - sqlalchemy.engine.Engine - INFO - [cached since 3.565e+04s ago] (UUID('a888ca38-a58b-4508-99ea-49fdfa18371e'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Parsing timetable data...', 'info', False, datetime.datetime(2025, 8, 27, 4, 49, 34, 538985))
+2025-08-27 05:49:34,710 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-27 05:49:34,719 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-27 05:49:34,741 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Parsing timetable data...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-08-27 05:49:34,744 - t_ground.table_back - INFO - Parsing timetable data from extracted text
+2025-08-27 05:49:34,751 - t_ground.table_back - WARNING - No timetable entries parsed - creating sample entry
+2025-08-27 05:49:34,752 - t_ground.table_back - INFO - Parsed 1 timetable entries
+2025-08-27 05:49:34,769 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-27 05:49:34,835 - sqlalchemy.engine.Engine - INFO - INSERT INTO uploadedfile (id, teacher_id, file_name, file_type, purpose, gcs_path, extracted_text) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR)
+2025-08-27 05:49:34,926 - sqlalchemy.engine.Engine - INFO - [cached since 3.565e+04s ago] (UUID('58d000d7-c553-4c94-bee5-b3ce3ba54791'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf', 'pdf', 'timetable', None, 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus)  ... (495 characters truncated) ... ly 7, 9:00 AM -\nCampus) 2025 12:00 PM\nHuman Computer Interaction TRINITY HALL (Miotso Tuesday, July 8, 9:00 AM -\n(COMP304) Campus) 2025 12:00 PM\n')
+2025-08-27 05:49:34,998 - t_ground.table_back - INFO - Uploaded file record saved with ID: 58d000d7-c553-4c94-bee5-b3ce3ba54791
+2025-08-27 05:49:35,021 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-27 05:49:35,024 - t_ground.table_back - INFO - File processed successfully! Extracted 1 timetable entries.
+2025-08-27 05:49:35,036 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-08-27 05:49:35,039 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-08-27 05:49:35,040 - sqlalchemy.engine.Engine - INFO - [cached since 3.565e+04s ago] (UUID('14077425-bb9b-4d8d-9528-4ed0386f11c0'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'File processed successfully! Extracted 1 timetable entries.', 'info', False, datetime.datetime(2025, 8, 27, 4, 49, 35, 30337))
+2025-08-27 05:49:35,048 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-08-27 05:49:35,055 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-08-27 05:49:35,088 - tmdl - INFO - [Redis] Published to ws:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'completed', 'message': 'File processed successfully! Extracted 1 timetable entries.', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'uploaded_file_id': '58d000d7-c553-4c94-bee5-b3ce3ba54791', 'extracted_data': {'timetables': [{'weekday': 'Monday', 'start_time': '09:00', 'end_time': '10:00', 'subject': 'Extracted Subject', 'pupils': 'Extracted Class', 'note': 'Extracted from uploaded file'}], 'raw_text': 'Level 300 Comp Science\nCourse Venue Day Time\nFundamentals of Project TRINITY HALL (Miotso Monday, June 23, 2:00 PM -\nManagement (COMP324) Campus) 2025 5:00 PM\nComputer Architecture & TRINITY HALL (Miotso Tuesday, June 24, 2:00 PM -\nOrganisation (COMP302) Campus) 2025 5:00 PM\nData Warehousing & Data Mining TRINITY HALL (Miotso Thursday, June 2:00 PM -\n(COMP318) Campus) 26, 2025 5:00 PM\nAnimation Technology (COMP322) E-103 (Miotso Campus) Monday, June 30, 9:00 AM -\n2025 12:00 PM\nResearch Methods (...', 'file_type': 'pdf', 'entries_count': 1, 'file_name': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82timetable.pdf'}}
+2025-08-27 06:22:00,801 - arq.worker - INFO - recording health: Aug-27 06:22:00 j_complete=15 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-08-30 09:31:49,820 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-08-30 09:31:49,886 - __main__ - INFO - [STOPPED] Worker stopped by user

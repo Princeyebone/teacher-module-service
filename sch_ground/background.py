@@ -1,14 +1,32 @@
 from arq import create_pool, ArqRedis
 from arq.connections import RedisSettings
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from config import settings
-from model import (
-    AcademicCalendar, WeeklyTimeTable, CalendarEvent,
-    ClassSession, TeacherPlannerEvent, TeacherNotification
-)
+
+# Handle imports for both direct execution and module import
+try:
+    from config import settings
+    from logger import logger
+    from model import (
+        AcademicCalendar, WeeklyTimeTable, CalendarEvent,
+        ClassSession, TeacherPlannerEvent, TeacherNotification
+    )
+    from external_service import get_holidays_from_ai
+except ImportError:
+    # If running as script directly, add parent directory to path
+    import sys
+    import os
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, parent_dir)
+    from config import settings
+    from logger import logger
+    from model import (
+        AcademicCalendar, WeeklyTimeTable, CalendarEvent,
+        ClassSession, TeacherPlannerEvent, TeacherNotification
+    )
+    from external_service import get_holidays_from_ai
+
 from sqlalchemy import select
 from datetime import timedelta, date, datetime
-from external_service import get_holidays_from_ai
 import redis.asyncio as redis
 import json
 from uuid import UUID
@@ -17,19 +35,6 @@ import traceback
 import asyncio
 from asyncpg.exceptions import InterfaceError, ConnectionFailureError, ClientCannotConnectError
 
-# Configure logging
-logger = logging.getLogger(__name__)
-class CustomFormatter(logging.Formatter):
-    def formatException(self, ei):
-        try:
-            return super().formatException(ei)
-        except AttributeError:
-            return "".join(traceback.format_exception(*ei))
-
-handler = logging.StreamHandler()
-handler.setFormatter(CustomFormatter())
-logger.handlers = [handler]
-logger.setLevel(logging.INFO)
 
 # Initialize async Redis client for WebSocket
 redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
@@ -392,7 +397,7 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
                             thread = threading.Thread(target=fetch_holidays)
                             thread.daemon = True
                             thread.start()
-                            thread.join(timeout=5)
+                            thread.join(timeout=10)
                             if thread.is_alive():
                                 logger.warning("Holiday fetch timed out, using empty list")
                                 holidays = []
@@ -492,9 +497,12 @@ worker_config = {
     'redis_settings': arq_redis_settings,
     'on_startup': startup,
     'on_shutdown': shutdown,
-    'max_tries': 5,
-    'retry_delay': 15,
-    'job_timeout': 300
+    'max_tries': 5,           # Retry failed jobs 5 times
+    'retry_delay': 15,        # Wait 15 seconds between retries
+    'job_timeout': 300,       # 5 minutes max per job
+    'concurrent_jobs': 2,     # Process 2 jobs simultaneously per worker
+    'keep_result': 3600,      # Keep job results for 1 hour
+    'max_jobs': 100           # Max jobs to process before worker restart
 }
 
 # ---------------- MANUAL RUN (for testing) ---------------- #
@@ -505,7 +513,7 @@ if __name__ == "__main__":
         try:
             teacher_id = "7bed2b69-8000-4b36-8e91-7fe0b70c9d82"
             job = await redis.enqueue_job('generate_schedule_task', teacher_id, "Ghana")
-            print("✅ Job queued:", job.job_id)
+            print("[SUCCESS] Job queued:", job.job_id)
         finally:
             await redis.aclose()
     asyncio.run(enqueue_task())

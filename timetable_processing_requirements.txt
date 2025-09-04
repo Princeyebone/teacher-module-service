@@ -1,0 +1,21 @@
+# Additional requirements for timetable file processing (table_back.py)
+# Add these to your main requirements.txt file
+
+# PDF text extraction
+pdfplumber>=0.9.0
+
+# OCR capabilities
+pytesseract>=3.10.1
+Pillow>=10.0.0
+pdf2image>=3.1.0  # For PDF to image conversion for OCR
+
+# Document processing  
+python-docx>=0.8.11
+
+# Excel file processing
+openpyxl>=3.1.0
+
+# Note: You may also need to install tesseract-ocr system package:
+# Windows: Download from https://github.com/UB-Mannheim/tesseract/wiki
+# Linux: sudo apt install tesseract-ocr
+# macOS: brew install tesseract

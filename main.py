@@ -18,9 +18,12 @@ from logger import logger
 import notifications_crud
 import main_calendar_crud
 import semester_mapper
-import tm_file_handler
-import ca_file_handler
-import sem_file_handler
+import file_handler.tm_file_handler as tm_file_handler
+import file_handler.ca_file_handler as ca_file_handler
+import file_handler.sem_file_handler as sem_file_handler
+import grade_crud
+import gradeweights
+import score
 
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
@@ -83,6 +86,9 @@ app.include_router(semester_mapper.router, prefix="/api/teacher")
 app.include_router(tm_file_handler.router, prefix="/api/teacher")
 app.include_router(ca_file_handler.router, prefix="/api/teacher")
 app.include_router(sem_file_handler.router, prefix="/api/teacher")
+app.include_router(grade_crud.router, prefix="/api/teacher")
+app.include_router(gradeweights.router, prefix="/api/teacher")
+app.include_router(score.router, prefix="/api/teacher")
 
 # ✅ WebSocket Endpoint (Only handles live connections)
 @app.websocket("/ws/{teacher_id}")

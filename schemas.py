@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import date, time, datetime, timedelta, timezone
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from uuid import UUID
 
 
@@ -349,6 +349,137 @@ class AvailableWeeksResponse(BaseModel):
     total_available_sessions: int
     semester_info: Dict[str, str]  # start_date, end_date, total_weeks
 
+class GradeRange(BaseModel):
+    id: int
+    min: float
+    max: float
+    grade: str
+    description: Optional[str] = None
+
+
+class GradeSystemCreate(BaseModel):
+    name: str
+    grading_type: str
+    grade_ranges: List[GradeRange]
+    is_default: bool = False
+
+
+class GradeSystemUpdate(BaseModel):
+    name: Optional[str] = None
+    grading_type: Optional[str] = None
+    grade_ranges: Optional[List[GradeRange]] = None
+    is_default: Optional[bool] = None
+
+
+class GradeSystemResponse(BaseModel):
+    id: int
+    name: str
+    teacher_id: UUID
+    grading_type: str
+    grade_ranges: List[GradeRange]
+    is_default: bool
+    created_at: datetime
+    updated_at: datetime
+
+
+# Assessment Weights Schemas
+class WeightsEntry(BaseModel):
+    id: str  # Unique identifier for the weight entry
+    assessment_type: str  # e.g., "Exams", "Test", "Midsem Ex", etc.
+    weight: float  # Weight percentage (0-100)
+    
+    @field_validator('weight')
+    def validate_weight(cls, v):
+        if v < 0 or v > 100:
+            raise ValueError('Weight must be between 0 and 100')
+        return v
+
+# Add a new schema for column information
+class ColumnInfoW(BaseModel):
+    id: str
+    assessment_type: str
+    full_mark: str
+    custom_full_mark: Optional[str] = None
+
+class AssessmentWeightsCreate(BaseModel):
+    name: str
+    subject: str
+    class_name: str
+    weights: List[WeightsEntry]
+    columns: Optional[List[ColumnInfoW]] = None  # Add column information
+    is_default: bool = False
+    
+    @field_validator('weights')
+    def validate_total_weight(cls, v):
+        total = sum(entry.weight for entry in v)
+        if total > 100:
+            raise ValueError('Total weight cannot exceed 100%')
+        return v
+
+
+class AssessmentWeightsUpdate(BaseModel):
+    name: Optional[str] = None
+    subject: Optional[str] = None
+    class_name: Optional[str] = None
+    weights: Optional[List[WeightsEntry]] = None
+    columns: Optional[List[ColumnInfoW]] = None  # Add column information
+    is_default: Optional[bool] = None
+    
+    @field_validator('weights')
+    def validate_total_weight(cls, v):
+        if v is not None:
+            total = sum(entry.weight for entry in v)
+            if total > 100:
+                raise ValueError('Total weight cannot exceed 100%')
+        return v
+
+
+class AssessmentWeightsResponse(BaseModel):
+    id: int
+    name: str
+    teacher_id: UUID
+    subject: str
+    class_name: str
+    weights: List[WeightsEntry]
+    columns: Optional[List[ColumnInfoW]] = None  # Add column information
+    is_default: bool
+    created_at: datetime
+    updated_at: datetime
+
+
+# Assessment Scores Schemas
+class ColumnInfoS(BaseModel):
+    id: str
+    label: str
+    type: str  # 'readonly' for student name, 'input' for assessment columns
+    assessmentType: Optional[str] = None  # e.g., "Exams", "Test", etc.
+    fullMark: Optional[str] = None  # e.g., "100", "Other"
+    customFullMark: Optional[str] = None  # Custom full mark value when fullMark is "Other"
+
+
+class AssessmentScoresCreate(BaseModel):
+    subject: str
+    class_name: str
+    columns: List[ColumnInfoS]
+    grades: Dict[str, Dict[str, Any]]  # {student_id: {column_id: grade_value}}
+
+
+class AssessmentScoresUpdate(BaseModel):
+    subject: Optional[str] = None
+    class_name: Optional[str] = None
+    columns: Optional[List[ColumnInfoS]] = None
+    grades: Optional[Dict[str, Dict[str, Any]]] = None
+
+
+class AssessmentScoresResponse(BaseModel):
+    id: int
+    teacher_id: UUID
+    subject: str
+    class_name: str
+    columns: List[ColumnInfoS]
+    grades: Dict[str, Dict[str, Any]]
+    created_at: datetime
+    updated_at: datetime
 
 
 class MaterialRequest(BaseModel):
