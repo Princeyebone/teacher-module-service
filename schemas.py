@@ -2,7 +2,9 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import date, time, datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 from uuid import UUID
+from enum import Enum
 
+ 
 
 class TokenData(BaseModel):
     email:str | None = None
@@ -482,64 +484,228 @@ class AssessmentScoresResponse(BaseModel):
     updated_at: datetime
 
 
-class MaterialRequest(BaseModel):
-    subject_id: UUID
-    topic: str
-    grade_level: str
-    guidance: Optional[str] = None
-    objectives: Optional[str] = None
-    duration_minutes: Optional[int] = Field(60, ge=15, le=240)
+# Student Authentication Schemas
+class StudentLoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
-class GeneratedMaterial(BaseModel):
-    type: str
-    content: str
-    title: str
+class StudentIDLoginRequest(BaseModel):
+    student_id: str
+    password: str
 
-class MaterialResponse(BaseModel):
-    topic: str
-    lesson_plan: str
-    presentations: List[GeneratedMaterial] = []
-    worksheets: List[GeneratedMaterial] = []
-    videos: List[GeneratedMaterial] = []
-    images: List[GeneratedMaterial] = []
-    questions: List[GeneratedMaterial] = []
+class StudentRegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    index_number: str
+    name: str
 
-# Full Timetable Response
-class TeacherTimetableResponse(BaseModel):
-    subjects: List[SubjectRead]
-    timetable_entries: List[TimetableEntryRead]
-    academic_events: List[AcademicEventRead]
+class StudentToken(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
 
-# UI Data Formats
-class TimetableSlot(BaseModel):
+class StudentTokenData(BaseModel):
+    student_id: UUID | None = None
+    email: str | None = None
+    index_number: str | None = None
+    role: str = "student"
+
+class StudentProfileResponse(BaseModel):
     id: UUID
-    subject_name: str
-    start_time: str
-    end_time: str
-    classroom: Optional[str] = None
-
-class DaySchedule(BaseModel):
-    day: str
-    slots: List[TimetableSlot]
-
-class WeeklyTimetable(BaseModel):
-    monday: List[TimetableSlot]
-    tuesday: List[TimetableSlot]
-    wednesday: List[TimetableSlot]
-    thursday: List[TimetableSlot]
-    friday: List[TimetableSlot]
-    saturday: List[TimetableSlot]
-    sunday: List[TimetableSlot]
-
-# Calendar View Models
-class CalendarEvent(BaseModel):
-    id: UUID
-    title: str
-    start: date
-    end: date
-    type: str
-    description: Optional[str] = None
-    color: Optional[str] = None  # For UI differentiation
+    email: str
+    index_number: str
+    name: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
+
+# Pydantic Schemas for API
+class QuestionOption(BaseModel):
+    id: int
+    text: str
+    is_correct: bool
+
+
+class MatchingPair(BaseModel):
+    id: int
+    left: str
+    right: str
+
+
+class SubQuestion(BaseModel):
+    id: Optional[int] = None
+    type: str
+    question_text: str
+    correct_answer: Optional[str] = None
+    explanation: Optional[str] = None
+    marking_guidelines: Optional[str] = None
+    points: int = 1
+
+
+class QuestionCreate(BaseModel):
+    subject: str
+    class_name: str
+    strand: Optional[str] = None  # Made strand optional
+    topic: Optional[str] = None
+    type: str
+    question_text: str
+    points: int = 1
+    tags: List[str] = []
+    
+    # Type-specific fields
+    options: Optional[List[QuestionOption]] = None
+    correct_answer: Optional[str] = None
+    explanation: Optional[str] = None
+    marking_guidelines: Optional[str] = None
+    matching_pairs: Optional[List[MatchingPair]] = None
+    sub_questions: Optional[List[SubQuestion]] = None
+
+
+class QuestionUpdate(BaseModel):
+    subject: Optional[str] = None
+    class_name: Optional[str] = None
+    strand: Optional[str] = None
+    topic: Optional[str] = None
+    type: Optional[str] = None
+    question_text: Optional[str] = None
+    points: Optional[int] = None
+    tags: Optional[List[str]] = None
+    
+    # Type-specific fields
+    options: Optional[List[QuestionOption]] = None
+    correct_answer: Optional[str] = None
+    explanation: Optional[str] = None
+    marking_guidelines: Optional[str] = None
+    matching_pairs: Optional[List[MatchingPair]] = None
+    sub_questions: Optional[List[SubQuestion]] = None
+
+
+class QuestionResponse(BaseModel):
+    id: int
+    teacher_id: UUID
+    subject: str
+    class_name: str
+    strand: Optional[str]  # Made strand optional
+    topic: Optional[str]
+    type: str
+    question_text: str
+    points: int
+    tags: List[str]
+    created_at: datetime
+    updated_at: datetime
+    
+    # Type-specific fields
+    options: Optional[List[QuestionOption]] = None
+    correct_answer: Optional[str] = None
+    explanation: Optional[str] = None
+    marking_guidelines: Optional[str] = None
+    matching_pairs: Optional[List[MatchingPair]] = None
+    sub_questions: Optional[List[SubQuestion]] = None
+
+
+# Assessment Pydantic Schemas
+class AssessmentCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    subject: str
+    class_name: str
+    assessment_type: str  # quiz, test, exercise, exam, etc.
+    tags: List[str] = []
+    question_ids: List[int] = []  # List of question IDs to include in the assessment
+from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class AssessmentSectionCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    section_order: int = 0
+
+
+class AssessmentSectionWithQuestionsCreate(AssessmentSectionCreate):
+    questions: List[int] = []  # List of question IDs to include in this section
+
+
+class AssessmentSectionWithQuestionsUpdate(AssessmentSectionCreate):
+    id: Optional[int] = None  # ID of existing section (if updating)
+    questions: List[int] = []  # List of question IDs to include in this section
+
+
+class AssessmentWithSectionsCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    subject: str
+    class_name: str
+    assessment_type: str  # Should be "exam" for exams with sections
+    tags: List[str] = []
+    sections: List[AssessmentSectionWithQuestionsCreate] = []
+
+
+class AssessmentWithSectionsUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    subject: Optional[str] = None
+    class_name: Optional[str] = None
+    assessment_type: Optional[str] = None
+    tags: Optional[List[str]] = None
+    is_published: Optional[bool] = None
+    sections: Optional[List[AssessmentSectionWithQuestionsUpdate]] = None
+
+
+class AssessmentUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    subject: Optional[str] = None
+    class_name: Optional[str] = None
+    assessment_type: Optional[str] = None
+    tags: Optional[List[str]] = None
+    is_published: Optional[bool] = None
+    question_ids: Optional[List[int]] = None  # Add this field to handle question associations
+
+class AssessmentQuestionCreate(BaseModel):
+    question_id: int
+    question_order: int = 0
+    points: int = 1
+    section_id: Optional[int] = None  # For sectioned assessments like exams
+
+
+class AssessmentQuestionUpdate(BaseModel):
+    question_order: Optional[int] = None
+    points: Optional[int] = None
+    section_id: Optional[int] = None
+
+
+class AssessmentQuestionResponse(BaseModel):
+    id: int
+    assessment_id: int
+    question_id: int
+    question_order: int
+    points: int
+    section_id: Optional[int] = None  # Add section_id field
+    created_at: datetime
+    
+    # Include question details
+    question: QuestionResponse
+
+
+class AssessmentResponse(BaseModel):
+    id: int
+    teacher_id: UUID
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    tags: List[str]
+    is_published: bool
+    created_at: datetime
+    updated_at: datetime
+    
+    # Include assessment questions
+    assessment_questions: List[AssessmentQuestionResponse] = []
+    
+    # Include sections for exams
+    sections: Optional[List[dict]] = []

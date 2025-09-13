@@ -24,6 +24,7 @@ import file_handler.sem_file_handler as sem_file_handler
 import grade_crud
 import gradeweights
 import score
+import assessment
 
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
@@ -67,7 +68,7 @@ app.openapi = custom_openapi
 # ✅ CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -89,7 +90,7 @@ app.include_router(sem_file_handler.router, prefix="/api/teacher")
 app.include_router(grade_crud.router, prefix="/api/teacher")
 app.include_router(gradeweights.router, prefix="/api/teacher")
 app.include_router(score.router, prefix="/api/teacher")
-
+app.include_router(assessment.router, prefix="/api/teacher")
 # ✅ WebSocket Endpoint (Only handles live connections)
 @app.websocket("/ws/{teacher_id}")
 async def websocket_endpoint(websocket: WebSocket, teacher_id: str):
