@@ -21,7 +21,6 @@ class TeacherProfile(SQLModel, table=True):
     id:Optional[UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
     school_id:Optional[UUID] = None
     individual_id:Optional[UUID] = None
-    
     display_name:Optional[str] = None
     qualification:Optional[str] = None
     qualification_year:Optional[int] = None
@@ -106,7 +105,7 @@ class TeacherNotification(SQLModel, table=True):
     message: str
     type: Optional[str] = Field(default="info")  # e.g., info, warning, success
     is_read: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
   
 class Calendar(SQLModel, table=True):
@@ -242,18 +241,32 @@ class AssessmentScores(SQLModel, table=True):
 class Student(SQLModel, table=True):
     id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
-    student_id: int = Field(index=True)
     class_name: str = Field(index=True)
-    email: str = Field(index=True, unique=True)
-    index_number: str = Field(index=True, unique=True)
+    email: Optional[str] = Field(index=True, unique=True)
+    index_number: Optional[str] = Field(index=True, unique=True)
     hashed_password: str
     name: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     is_active: bool = Field(default=True)
+    # Add field to track if password has been changed from default
+    password_changed: bool = Field(default=False)
     
     class Config:
         from_attributes = True
+
+# Student Models
+class StudentEnrollment(SQLModel, table=True):
+    """Table for student enrollments in subjects/courses"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    student_id: UUID = Field(foreign_key="student.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    teacher_display_name: Optional[str] = Field(default=None)
+    enrollment_date: datetime = Field(default_factory=datetime.utcnow)
+    is_active: bool = Field(default=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 # Assessment Question Models
 class Question(SQLModel, table=True):
@@ -358,3 +371,100 @@ class AssessmentSectionQuestion(SQLModel, table=True):
     # Relationships
     section: Optional[AssessmentSection] = Relationship(back_populates="section_questions")
     question: Optional[Question] = Relationship()
+
+class AssessmentAssignment(SQLModel, table=True):
+    """Main table for assessment assignments"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    assessment_id: int = Field(foreign_key="assessment.id", index=True)
+    assigned_by_teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    assigned_at: datetime = Field(default_factory=datetime.utcnow)
+    available_from: datetime = Field()
+    available_until: datetime = Field()
+    time_limit_minutes: Optional[int] = Field(default=None)
+    max_attempts: int = Field(default=1)  # Added max_attempts field
+    is_active: bool = Field(default=True)
+    show_results_timing: str = Field(default="after_submission")  # New field for when students see results
+    instructions: Optional[str] = Field(default=None)  # New field for teacher instructions
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)  # Added updated_at field
+    
+    # Relationship fields
+    access_rules: List["StudentAccessRule"] = Relationship(back_populates="assignment")
+    security_settings: List["SecuritySetting"] = Relationship(back_populates="assignment")
+
+class StudentAccessRule(SQLModel, table=True):
+    """Table for student access rules"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
+    student_id: Optional[UUID] = Field(default=None, foreign_key="student.id", index=True)  # For individual student
+    class_id: Optional[int] = Field(default=None)  # Added class_id field
+    can_access: bool = Field(default=True)
+    access_granted_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)  # Added updated_at field
+    # Relationship fields
+    assignment: Optional[AssessmentAssignment] = Relationship(back_populates="access_rules")
+
+class SecuritySetting(SQLModel, table=True):
+    """Table for security settings"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
+    strict_mode: bool = Field(default=False) 
+    open_mode: bool = Field(default=False)
+    free_mode: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)  # Added updated_at field
+    # Relationship fields
+    assignment: Optional[AssessmentAssignment] = Relationship(back_populates="security_settings")
+
+class AssignmentStatus(SQLModel, table=True):
+    """Table to track student assignment completion status"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    student_name: str = Field()
+    student_id: UUID = Field(foreign_key="student.id", index=True)
+    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
+    is_completed: bool = Field(default=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+ 
+class StudentLog(SQLModel, table=True):
+    """Table for storing student activity logs"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    student_id: UUID = Field(foreign_key="student.id", index=True)
+    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
+    activity_type: str = Field()  # started, answered, submitted, navigated, security_breach, heartbeat, etc.
+    question_id: Optional[int] = Field(default=None, foreign_key="question.id")
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    additional_data: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

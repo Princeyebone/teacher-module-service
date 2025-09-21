@@ -111,6 +111,16 @@ async def publish_ws_message(teacher_id: str, message: dict):
         logger.error(f"Failed to publish WebSocket message: {str(e)}\n{traceback.format_exc()}")
         raise
 
+async def publish_student_ws_message(student_id: str, message: dict):
+    """Publish a message to student WebSocket via Redis."""
+    logger.debug(f"Publishing WebSocket message for student {student_id}: {message}")
+    try:
+        await redis_client.publish(f"ws:student:{student_id}", json.dumps(message))
+        logger.info(f"[Redis] Published to ws:student:{student_id}: {message}")
+    except Exception as e:
+        logger.error(f"Failed to publish WebSocket message to student: {str(e)}\n{traceback.format_exc()}")
+        raise
+
 # ---------------- CONSTANTS ---------------- #
 WEEKDAY_MAP = {
     "monday": 0,

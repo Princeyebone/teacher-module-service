@@ -11,7 +11,7 @@ from model import TeacherProfile, Question, QuestionDetail, Assessment, Assessme
 from dependencies import get_current_teacher
 from database import get_db
 from logger import logger
-from schemas import QuestionOption, QuestionCreate, MatchingPair, QuestionUpdate
+from schemas import QuestionOption, QuestionCreate, MatchingPair, QuestionUpdate, SubQuestion
 from schemas import QuestionResponse, AssessmentCreate, AssessmentUpdate, AssessmentResponse
 from schemas import AssessmentQuestionCreate, AssessmentQuestionUpdate, AssessmentQuestionResponse
 from schemas import AssessmentWithSectionsCreate, AssessmentWithSectionsUpdate, AssessmentSectionCreate

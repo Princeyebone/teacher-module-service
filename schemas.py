@@ -225,7 +225,7 @@ class StrandUpdate(BaseModel):
     strand_name: str
     original_strand_name: str | None = None
     subject: str
-    weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53], "Week 2": [54]}
+    weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
 
 class StrandResponse(BaseModel):
     strand_name: str
@@ -493,11 +493,18 @@ class StudentIDLoginRequest(BaseModel):
     student_id: str
     password: str
 
-class StudentRegisterRequest(BaseModel):
-    email: EmailStr
-    password: str
-    index_number: str
+
+class StudentRegistrationRequest(BaseModel):
     name: str
+    email: Optional[EmailStr] = None
+    index_number: Optional[str] = None
+    class_name: Optional[str] = None
+    subject: Optional[str] = None
+    teacher_display_name: Optional[str] = None
+
+class StudentPasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
 
 class StudentToken(BaseModel):
     access_token: str
@@ -512,13 +519,40 @@ class StudentTokenData(BaseModel):
 
 class StudentProfileResponse(BaseModel):
     id: UUID
-    email: str
-    index_number: str
+    email: Optional[str]
+    index_number: Optional[str]
     name: str
+    class_name: Optional[str] = None
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+class StudentEnrollmentResponse(BaseModel):
+    id: int
+    subject: str
+    class_name: str
+    teacher_display_name: Optional[str] = None
+    enrollment_date: datetime
+    is_active: bool
+
+    class Config:
+        from_attributes = True
+
+class StudentRegistrationResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    index_number: str
+    class_name: str
+    login_id: str
+    created_at: Optional[str] = None
+    enrollment: Optional[Dict[str, Any]] = None
+
+class PaginatedStudentResponse(BaseModel):
+    students: List[StudentProfileResponse]
+    pagination: Dict[str, Any]
+    sort: Dict[str, str]
 
 # Pydantic Schemas for API
 class QuestionOption(BaseModel):
@@ -709,3 +743,311 @@ class AssessmentResponse(BaseModel):
     
     # Include sections for exams
     sections: Optional[List[dict]] = []
+
+class StudentLogCreate(BaseModel):
+    """Create model for student logs"""
+    assignment_id: int
+    activity_type: str
+    question_id: Optional[int] = None
+    additional_data: Dict[str, Any] = {}
+
+
+class StudentLogBatchCreate(BaseModel):
+    """Create model for batch student logs"""
+    assignment_id: int
+    logs: List[StudentLogCreate]
+
+
+class AssessmentAssignmentCreate(BaseModel):
+    assessment_id: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int] = None
+    is_active: bool = True
+    max_attempts: Optional[int] = None
+    show_results_timing: str = "after_submission"  # New field for when students see results
+    instructions: Optional[str] = None  # New field for teacher instructions
+
+
+
+class AssessmentAssignmentResponse(BaseModel):
+    id: int
+    assessment_id: int
+    assigned_by_teacher_id: UUID
+    assigned_at: datetime
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int] = None
+    is_active: bool
+    show_results_timing: str  # New field for when students see results
+    instructions: Optional[str] = None  # New field for teacher instructions
+    created_at: datetime
+    updated_at: datetime
+
+class SecuritySettingCreateWithoutAssignment(BaseModel):
+    strict_mode: bool = False
+    open_mode: bool = False
+    free_mode: bool = False
+
+
+class StudentAccessRuleCreateWithoutAssignment(BaseModel):
+    student_id: Optional[UUID] = None
+    class_id: Optional[int] = None
+    can_access: bool = True
+
+
+class CompositePublishingDataCreate(BaseModel):
+    assignment_data: AssessmentAssignmentCreate
+    security_settings: SecuritySettingCreateWithoutAssignment
+    access_rules: List[StudentAccessRuleCreateWithoutAssignment]
+
+class SurveillanceDataResponse(BaseModel):
+    id: int
+    title: str
+    assessment_type: str
+    subject: str
+    class_name: str
+    question_count: int
+    total_points: int
+    created_at: datetime
+    is_published: bool
+    is_active: bool
+    available_from: datetime
+    available_until: datetime
+
+class StudentMonitoringUpdate(BaseModel):
+    """Request model for student monitoring updates"""
+    assessment_id: int
+    student_id: str
+    student_name: str
+    current_status: str = "active"
+    current_question_id: Optional[int] = None
+    time_on_question: Optional[int] = None
+    total_time: int = 0
+    ip_address: str
+    location: str
+    security_breaches: int = 0
+    additional_data: Dict[str, Any] = {}
+
+
+class StudentMonitoringResponse(BaseModel):
+    """Response model for student monitoring data"""
+    id: int
+    assessment_id: int
+    student_id: str
+    student_name: str
+    last_updated: datetime
+    current_status: str
+    current_question_id: Optional[int] = None
+    time_on_question: Optional[int] = None
+    total_time: int
+    ip_address: str
+    location: str
+    security_breaches: int
+    additional_data: Dict[str, Any]
+    created_at: datetime
+
+class AssessmentAssignmentUpdate(BaseModel):
+    available_from: Optional[datetime] = None
+    available_until: Optional[datetime] = None
+    time_limit_minutes: Optional[int] = None
+    is_active: Optional[bool] = None
+    show_results_timing: Optional[str] = None  # New field for when students see results
+    instructions: Optional[str] = None  # New field for teacher instructions
+
+
+class SecuritySettingUpdate(BaseModel):
+    strict_mode: Optional[bool] = None
+    open_mode: Optional[bool] = None
+    free_mode: Optional[bool] = None
+
+class SecuritySettingResponse(BaseModel):
+    id: int
+    assignment_id: int
+    strict_mode: bool
+    open_mode: bool
+    free_mode: bool
+    created_at: datetime
+    updated_at: datetime
+
+class StudentAccessRuleCreate(BaseModel):
+    assignment_id: int
+    student_id: Optional[UUID] = None
+    class_id: Optional[int] = None
+    can_access: bool = True
+
+class StudentAccessRuleResponse(BaseModel):
+    id: int
+    assignment_id: int
+    student_id: Optional[UUID] = None
+    class_id: Optional[int] = None
+    can_access: bool
+    access_granted_at: datetime
+    created_at: datetime
+    updated_at: datetime
+
+
+class AssessmentAssignmentUpdateWithRelations(BaseModel):
+    assignment_data: Optional[AssessmentAssignmentUpdate] = None
+    security_settings: Optional[SecuritySettingUpdate] = None
+    access_rules: Optional[List[StudentAccessRuleCreateWithoutAssignment]] = None  # For adding new rules
+
+
+
+class StudentAvailableAssessmentResponse(BaseModel):
+    """Summary data for available assessments"""
+    id: int
+    title: str
+    assessment_type: str
+    subject: str
+    class_name: str
+    question_count: int
+    total_points: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int]
+    max_attempts: int
+    show_results_timing: str
+    created_at: datetime
+
+class StudentQuestionResponse(BaseModel):
+    """Question data for students (excluding answers, explanations, and marking guidelines)"""
+    id: int
+    subject: str
+    class_name: str
+    strand: Optional[str]
+    topic: Optional[str]
+    type: str
+    question_text: str
+    points: int
+    options: Optional[List[dict]] = None  # For multiple choice and true/false
+    matching_pairs: Optional[List[dict]] = None  # For matching questions (left side only)
+    sub_questions: Optional[List[dict]] = None  # For essay and short answer (without answers)
+
+
+class StudentAssessmentQuestionResponse(BaseModel):
+    """Assessment question data for students"""
+    id: int
+    question_order: int
+    points: int
+    section_id: Optional[int] = None
+    question: StudentQuestionResponse
+
+class StudentAssessmentSectionResponse(BaseModel):
+    """Assessment section data for students"""
+    id: int
+    name: str
+    section_order: int
+    description: Optional[str]
+
+class StudentAssessmentResponse(BaseModel):
+    """Assessment data for students (excluding sensitive information)"""
+    id: int
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    created_at: datetime
+    assessment_questions: List[StudentAssessmentQuestionResponse] = []
+    sections: List[StudentAssessmentSectionResponse] = []
+
+class StudentAssignedAssessmentResponse(BaseModel):
+    """Assigned assessment data for students"""
+    id: int
+    title: str
+    assessment_type: str
+    subject: str
+    class_name: str
+    question_count: int
+    total_points: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int]
+    max_attempts: int
+    show_results_timing: str
+    status: str  # active, expired, completed
+    created_at: datetime
+
+class StudentQuestionOption(BaseModel):
+    id: int
+    text: str
+
+class StudentMatchingPair(BaseModel):
+    id: int
+    left: str
+    right: str
+
+class StudentSubQuestion(BaseModel):
+    id: Optional[int] = None
+    type: str
+    question_text: str
+    points: int = 1
+
+class StudentQuestionResponse(BaseModel):
+    id: int
+    subject: str
+    class_name: str
+    strand: Optional[str]
+    topic: Optional[str]
+    type: str
+    question_text: str
+    points: int
+    created_at: datetime
+    
+    # Type-specific fields (without answers/explanations)
+    options: Optional[List[StudentQuestionOption]] = None
+    matching_pairs: Optional[List[StudentMatchingPair]] = None
+    sub_questions: Optional[List[StudentSubQuestion]] = None
+
+class StudentAssessmentSectionResponse(BaseModel):
+    id: int
+    name: str
+    section_order: int
+    description: Optional[str] = None
+    created_at: datetime
+
+class StudentAssessmentQuestionResponse(BaseModel):
+    id: int
+    assessment_id: int
+    question_id: int
+    question_order: int
+    points: int
+    section_id: Optional[int] = None
+    created_at: datetime
+    
+    # Include question details (without answers/explanations)
+    question: StudentQuestionResponse
+
+class StudentAssessmentResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    created_at: datetime
+    updated_at: datetime
+    
+    # Include assessment questions (without answers/explanations)
+    assessment_questions: List[StudentAssessmentQuestionResponse] = []
+    
+    # Include sections for exams
+    sections: Optional[List[StudentAssessmentSectionResponse]] = []
+
+# New model for dashboard daily challenges (simplified)
+class DashboardDailyChallengeResponse(BaseModel):
+    id: int
+    title: str
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    created_at: datetime
+
+class AssessmentCountResponse(BaseModel):
+    total_assessments: int
+    daily_challenges: int
+    enrolled_courses: int

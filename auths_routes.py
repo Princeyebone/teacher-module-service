@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Request, Response
-from schemas import TeacherRegistrationRequest, StudentLoginRequest, StudentIDLoginRequest, StudentRegisterRequest, StudentToken, StudentProfileResponse
+from schemas import TeacherRegistrationRequest, StudentLoginRequest, StudentIDLoginRequest, StudentToken, StudentProfileResponse
 from httpx import AsyncClient
 from config import settings
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -106,13 +106,13 @@ async def get_full_profile(
 
 # Student Authentication Endpoints
 
-@router.post("/auth/student-login", response_model=StudentToken)
+@router.post("/auth/student-login")
 async def student_login(
     response: Response,
     login_data: StudentLoginRequest,
     db: AsyncSession = Depends(get_db)
 ):
-    """Authenticate a student by email and password and return JWT tokens"""
+    """Authenticate a student by email and password and return basic profile info"""
     logger.info(f"Student login attempt for email: {login_data.email}")
     
     student = await authenticate_student(login_data.email, login_data.password, db)
@@ -141,21 +141,31 @@ async def student_login(
         key="refresh_token",
         value=tokens["refresh_token"],
         httponly=True,
-        secure=False,  # Set to True in production with HTTPS
+        secure=True,  # Set to True in production with HTTPS
         samesite="strict",
-        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60  # 7 days
+        max_age=settings.REFRESH_TOKEN_EXPIRE_MINUTES * 24 * 60 * 60  # 7 days
     )
     
     logger.info(f"Student login successful for email: {login_data.email}")
-    return tokens
+    return {
+        "token_type": "bearer",
+        "password_change_required": not student.password_changed,
+        "student": {
+            "id": str(student.id),
+            "email": student.email,
+            "index_number": student.index_number,
+            "name": student.name,
+            "created_at": student.created_at.isoformat() if student.created_at else None
+        }
+    }
 
-@router.post("/auth/student-id-login", response_model=StudentToken)
+@router.post("/auth/student-id-login")
 async def student_id_login(
     response: Response,
     login_data: StudentIDLoginRequest,
     db: AsyncSession = Depends(get_db)
 ):
-    """Authenticate a student by student ID and password and return JWT tokens"""
+    """Authenticate a student by student ID and password and return basic profile info"""
     logger.info(f"Student login attempt for ID: {login_data.student_id}")
     
     student = await authenticate_student_by_id(login_data.student_id, login_data.password, db)
@@ -190,47 +200,17 @@ async def student_id_login(
     )
     
     logger.info(f"Student login successful for ID: {login_data.student_id}")
-    return tokens
-
-@router.post("/auth/student-register", response_model=StudentProfileResponse, status_code=status.HTTP_201_CREATED)
-async def student_register(
-    register_data: StudentRegisterRequest,
-    db: AsyncSession = Depends(get_db)
-):
-    """Register a new student"""
-    logger.info(f"Student registration attempt for email: {register_data.email}")
-    
-    # Check if student already exists
-    existing_student = await db.execute(select(Student).where(Student.email == register_data.email))
-    if existing_student.scalar_one_or_none():
-        logger.warning(f"Student registration failed - email already exists: {register_data.email}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Student with this email already exists"
-        )
-    
-    # Check if index number already exists
-    existing_index = await db.execute(select(Student).where(Student.index_number == register_data.index_number))
-    if existing_index.scalar_one_or_none():
-        logger.warning(f"Student registration failed - index number already exists: {register_data.index_number}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Student with this index number already exists"
-        )
-    
-    try:
-        # Create student
-        student_data = register_data.dict()
-        student = await create_student(student_data, db)
-        
-        logger.info(f"Student registration successful for email: {register_data.email}")
-        return student
-    except Exception as e:
-        logger.error(f"Student registration failed for email: {register_data.email} - {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to register student"
-        )
+    return {
+        "token_type": "bearer",
+        "password_change_required": not student.password_changed,
+        "student": {
+            "id": str(student.id),
+            "email": student.email,
+            "index_number": student.index_number,
+            "name": student.name,
+            "created_at": student.created_at.isoformat() if student.created_at else None
+        }
+    }
 
 @router.post("/auth/student-refresh", response_model=dict)
 async def student_refresh_token(

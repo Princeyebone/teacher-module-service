@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
+from typing import Optional
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
+from websocket_manager import connect_student_websocket, disconnect_student_websocket
 import asyncio
 
 
@@ -25,6 +27,10 @@ import grade_crud
 import gradeweights
 import score
 import assessment
+import student_auth
+import publishing
+import student_read
+#import  monitering
 
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
@@ -91,17 +97,93 @@ app.include_router(grade_crud.router, prefix="/api/teacher")
 app.include_router(gradeweights.router, prefix="/api/teacher")
 app.include_router(score.router, prefix="/api/teacher")
 app.include_router(assessment.router, prefix="/api/teacher")
+app.include_router(publishing.router, prefix="/api/teacher")
+app.include_router(student_auth.router, prefix="/api/teacher")
+app.include_router(student_read.router, prefix="/api/student")
+#app.include_router(monitering.router, prefix="/api/teacher")
+
 # ✅ WebSocket Endpoint (Only handles live connections)
-@app.websocket("/ws/{teacher_id}")
+@app.websocket("/ws/teacher/{teacher_id}")
 async def websocket_endpoint(websocket: WebSocket, teacher_id: str):
+    connected = True
     await connect_websocket(teacher_id, websocket)
     try:
-        while True:
-            await asyncio.sleep(10)  # Keep alive
+        while connected:
+            try:
+                # First, try to receive a message with timeout
+                data = await asyncio.wait_for(websocket.receive(), timeout=30.0)
+                
+                # If we get here, we received a message - process it
+                if data["type"] == "websocket.receive":
+                    # No automatic pong response - frontend handles ping/pong on its side
+                    pass
+            except asyncio.TimeoutError:
+                # No message received within timeout, send ping to test connection
+                try:
+                    await websocket.send_text("ping")
+                    
+                    # Now wait for any response with shorter timeout
+                    try:
+                        await asyncio.wait_for(websocket.receive(), timeout=10.0)
+                        # We received some response, connection is alive
+                    except asyncio.TimeoutError:
+                        connected = False
+                        
+                except Exception:
+                    connected = False
+            except WebSocketDisconnect:
+                # Handle disconnect during receive/send operations
+                connected = False
+
     except WebSocketDisconnect:
+        connected = False
+        
+    finally:
+        # Always attempt to disconnect, the function handles checking if connection exists
         disconnect_websocket(teacher_id, websocket)
         print(f"🔌 WebSocket disconnected for teacher: {teacher_id}")
 
+
+# ✅ WebSocket Endpoint for Students
+@app.websocket("/ws/student/{student_id}")
+async def student_websocket_endpoint(websocket: WebSocket, student_id: str):
+    connected = True
+    await connect_student_websocket(student_id, websocket)
+    try:
+        while connected:
+            try:
+                # First, try to receive a message with timeout
+                data = await asyncio.wait_for(websocket.receive(), timeout=30.0)
+                
+                # If we get here, we received a message - process it
+                if data["type"] == "websocket.receive":
+                    # No automatic pong response - frontend handles ping/pong on its side
+                    pass
+            except asyncio.TimeoutError:
+                # No message received within timeout, send ping to test connection
+                try:
+                    await websocket.send_text("ping")
+                    
+                    # Now wait for any response with shorter timeout
+                    try:
+                        await asyncio.wait_for(websocket.receive(), timeout=10.0)
+                        # We received some response, connection is alive
+                    except asyncio.TimeoutError:
+                        connected = False
+                        
+                except Exception:
+                    connected = False
+            except WebSocketDisconnect:
+                # Handle disconnect during receive/send operations
+                connected = False
+
+    except WebSocketDisconnect:
+        connected = False
+        
+    finally:
+        # Always attempt to disconnect, the function handles checking if connection exists
+        disconnect_student_websocket(student_id, websocket)
+        print(f"🔌 WebSocket disconnected for student: {student_id}")
 
 # ✅ Root
 @app.get("/", tags=["Root"])

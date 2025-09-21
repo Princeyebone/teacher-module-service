@@ -1,225 +1,141 @@
 # Student Authentication System
 
-This document describes the student authentication system implemented in this project.
+## Overview
+The student authentication system allows teachers to register students, and students to authenticate using temporary passwords. The system supports shared student accounts across multiple teachers, enabling students to access all their courses with a single login.
 
-## Features
+## Key Features
+1. **Teacher-Managed Registration**: Teachers register students with temporary passwords (student names)
+2. **Student Authentication**: Students login with index_number/email and temporary password
+3. **Password Management**: Students must change temporary passwords on first login
+4. **Token-Based Authentication**: JWT tokens with HttpOnly cookies for security
+5. **Cross-Teacher Enrollment**: Students can be enrolled in courses by multiple teachers
+6. **Unified Student Experience**: Students log in once and access all their courses
+7. **Teacher-Scoped Views**: Each teacher only sees students in their own courses
+8. **Advanced Filtering**: Teachers can filter students by class and subject
 
-1. **Password Hashing with Argon2**: Secure password storage using the Argon2 algorithm
-2. **JWT Token Creation**: JSON Web Tokens for authentication with custom claims
-3. **Token Refresh**: Refresh tokens for improved security
-4. **Student Registration**: Endpoint for registering new students
-5. **Student Login**: Endpoint for authenticating existing students
-6. **HttpOnly Cookie Storage**: Secure storage of tokens in HttpOnly cookies
-7. **Dual Login Methods**: Login with email/password or index number/password
+## Shared Student Accounts
+The system implements a shared student account model:
+- Each actual student has one account in the system, regardless of how many teachers register them
+- When Teacher A registers a student, and then Teacher B registers the same student (by email or index_number), the system:
+  - Recognizes the student already exists
+  - Enrolls the existing student in Teacher B's course
+  - Does not create a duplicate account
+- Students can log in once and see all courses they're enrolled in from all teachers
+- Teachers only see students enrolled in their own courses
 
-## Important Distinction
+## Student Registration Process
+1. Teacher registers student with name (used as temporary password)
+2. System checks if student already exists by email or index_number
+3. If student exists, enrolls them in teacher's course without duplication
+4. If student doesn't exist, creates new account and enrolls in teacher's course
+5. System generates unique index_number if not provided
+6. Student receives login credentials (index_number or email + temporary password)
+7. Student authenticates and must change password on first login
 
-In this system, there are two different identifiers for students:
-- **Student.id**: UUID automatically assigned by the database (primary key)
-- **index_number**: String identifier assigned by the school (e.g., "STU001234")
+## Authentication Flow
+1. Student authenticates with index_number/email and temporary password (name)
+2. System issues JWT access and refresh tokens
+3. Tokens stored in HttpOnly cookies for security
+4. Student must change temporary password on first successful login
+5. Access tokens expire after 30 minutes by default
+6. Refresh tokens valid for 7 days
 
-## Endpoints
+## Token Management
+- Access tokens: Short-lived (30 minutes), used for authentication
+- Refresh tokens: Long-lived (7 days), used to obtain new access tokens
+- Both tokens stored in HttpOnly cookies for security
+- Tokens contain student ID, role, and other identifying information
 
-### Student Login (Email/Password)
+## Password Security
+- Temporary passwords are student names
+- Passwords hashed using Argon2 algorithm
+- Students must change temporary passwords on first login
+- Password strength requirements enforced
+
+## Student Enrollment
+Students can be enrolled in specific subjects and classes:
+- Enrollment information stored in StudentEnrollment table
+- Students can be enrolled in multiple courses from different teachers
+- Enrollment includes subject, class_name, and teacher_display_name
+- Teachers can view enrollments for students in their courses
+- Students can view all their enrollments from all teachers
+
+## API Endpoints
+
+### Student Authentication
+- `POST /student/login`: Authenticate student and issue tokens
+- `POST /student/refresh`: Refresh access token using refresh token
+- `POST /student/change-password`: Change temporary password
+
+### Student Management (Teacher Endpoints)
+- `POST /students/register`: Register a single student or enroll existing student in course
+- `POST /students/bulk-upload`: Bulk register students or enroll existing students in courses
+- `GET /students/{student_id}`: Get student profile (only for students in teacher's courses)
+- `GET /list-students`: List all students enrolled in current teacher's courses with pagination and filtering
+- `GET /students/me`: Get current student profile (student endpoint)
+- `DELETE /students/{student_id}`: Remove student from teacher's course (selective deletion)
+
+### Student Enrollment (Teacher Endpoints)
+- `GET /students/{student_id}/subjects`: Get all subjects for a student in teacher's courses
+- `GET /students/{student_id}/classes`: Get all classes for a student in teacher's courses
+- `GET /students/{student_id}/enrollments`: Get all enrollments for a student in teacher's courses
+
+### Student Enrollment (Student Endpoints)
+- `GET /students/me/subjects`: Get all subjects for current student from all teachers
+- `GET /students/me/classes`: Get all classes for current student from all teachers
+- `GET /students/me/enrollments`: Get all enrollments for current student from all teachers
+- `GET /students/me/enrollments/{enrollment_id}`: Get specific enrollment for current student
+
+## Filtering Students
+The list students endpoint supports advanced filtering:
+- **By Class Name**: Filter students enrolled in a specific class
+- **By Subject**: Filter students enrolled in a specific subject
+- **Combined Filters**: Use both class_name and subject filters together
+- **Pagination**: All filtering works with pagination (skip/limit)
+- **Sorting**: Results can be sorted while applying filters
+
+Example API calls:
 ```
-POST /auth/student-login
-```
-**Request Body:**
-```json
-{
-  "email": "student@example.com",
-  "password": "securepassword"
-}
+# Get all students in "Grade 10A" class
+GET /list-students?class_name=Grade%2010A
+
+# Get all students enrolled in "Mathematics" subject
+GET /list-students?subject=Mathematics
+
+# Get students in "Grade 10A" class enrolled in "Mathematics" subject
+GET /list-students?class_name=Grade%2010A&subject=Mathematics
+
+# Get students with pagination and sorting
+GET /list-students?class_name=Grade%2010A&skip=0&limit=50&sort_by=name&sort_order=asc
 ```
 
-**Response:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "bearer"
-}
-```
-*Note: Tokens are also set as HttpOnly cookies*
+## Duplicate Handling
+When registering students, the system gracefully handles duplicates:
+- Checks for existing students by email or index_number across all teachers
+- If student already exists, enrolls them in the teacher's course without creating duplicate account
+- No error messages for duplicate registrations
+- If subject is provided and student isn't already enrolled in that specific course, creates new enrollment
+- Bulk uploads enroll existing students and continue processing
 
-### Student Login (Index Number/Password)
-```
-POST /auth/student-id-login
-```
-**Request Body:**
-```json
-{
-  "student_id": "STU001234",  // This is the index_number, not the database ID
-  "password": "securepassword"
-}
-```
-
-### Student Registration
-```
-POST /auth/student-register
-```
-**Request Body:**
-```json
-{
-  "email": "student@example.com",
-  "password": "securepassword",
-  "index_number": "STU001",  // School-assigned identifier
-  "name": "John Doe"
-}
-```
-
-### Token Refresh
-```
-POST /auth/student-refresh
-```
-*Uses refresh token from HttpOnly cookie*
-
-### Student Logout
-```
-POST /auth/student-logout
-```
-*Clears HttpOnly cookies*
-
-### Get Student Profile
-```
-GET /auth/student-profile?student_id=uuid-here
-```
-
-## JWT Token Claims
-
-The access token contains the following claims:
-- `sub`: Student ID (UUID) - the database primary key
-- `role`: "student"
-- `index_number`: Student's index number from the student table
-- `email`: Student's email from the student table
+## Selective Deletion
+The student deletion endpoint implements selective deletion:
+- When a teacher deletes a student, only removes the enrollment in the teacher's courses
+- If student has enrollments with other teachers, their account remains
+- Only deletes the student's entire account if they have no remaining enrollments
+- Returns information about what was deleted
 
 ## Security Features
-
-1. **Argon2 Password Hashing**: Industry-standard password hashing algorithm
-2. **Separate Access and Refresh Tokens**: Improved security with token rotation
-3. **Token Expiration**: Access tokens expire in 30 minutes by default, refresh tokens in 7 days
-4. **HttpOnly Cookie Storage**: Tokens stored in HttpOnly cookies to prevent XSS attacks
-5. **Secure Flag**: Cookies marked as secure in production
-6. **SameSite Protection**: Cookies use SameSite=strict to prevent CSRF attacks
-7. **Proper Error Handling**: Secure error responses that don't leak sensitive information
+1. HttpOnly cookies for token storage
+2. Argon2 password hashing
+3. JWT token expiration and refresh
+4. Teacher authorization for student management
+5. Student authentication for profile access
+6. CORS configuration for frontend integration
 
 ## Implementation Details
-
-### Files
-
-1. **model.py**: Contains the [Student](file:///c%3A/Users/HP/tmdl5/model.py#L173-L182) model for database storage
-2. **schemas.py**: Contains Pydantic models for request/response validation
-3. **student_auth.py**: Core authentication logic including password hashing and token creation
-4. **auths_routes.py**: FastAPI endpoints for student authentication
-5. **dependencies.py**: Dependency functions for extracting student information from tokens
-
-### Key Functions
-
-1. `verify_password()`: Verifies a plain password against a hashed password
-2. `get_password_hash()`: Hashes a password using Argon2
-3. `create_access_token()`: Creates a JWT access token with custom claims
-4. `create_refresh_token()`: Creates a JWT refresh token
-5. `authenticate_student()`: Authenticates a student by email and password
-6. `authenticate_student_by_id()`: Authenticates a student by index number and password
-7. `create_student_tokens()`: Creates access and refresh tokens for a student
-
-## Usage Example
-
-### Backend Usage (Protected Routes)
-```python
-from fastapi import Depends
-from dependencies import get_current_student
-
-@app.get("/api/student/dashboard")
-async def student_dashboard(current_student = Depends(get_current_student)):
-    return {
-        "message": f"Welcome {current_student.name}!",
-        "student_id": str(current_student.id),  // Database UUID
-        "index_number": current_student.index_number,  // School-assigned ID
-        "email": current_student.email
-    }
-```
-
-### Frontend Usage (Making Authenticated Requests)
-```javascript
-// Login with email/password
-async function loginWithEmail(credentials) {
-  const response = await fetch('/api/auth/student-login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: credentials.email,
-      password: credentials.password
-    }),
-  });
-  
-  if (response.ok) {
-    // Tokens are automatically stored in HttpOnly cookies
-    console.log('Login successful');
-  }
-}
-
-// Login with index number/password
-async function loginWithIndexNumber(credentials) {
-  const response = await fetch('/api/auth/student-id-login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      student_id: credentials.index_number,  // This is the school-assigned ID
-      password: credentials.password
-    }),
-  });
-  
-  if (response.ok) {
-    // Tokens are automatically stored in HttpOnly cookies
-    console.log('Login successful');
-  }
-}
-
-// Make authenticated requests (browser automatically includes cookies)
-async function getDashboard() {
-  // No need to manually include Authorization header
-  // Browser automatically sends HttpOnly cookies
-  const response = await fetch('/api/student/dashboard');
-  const data = await response.json();
-  return data;
-}
-
-// Refresh token (happens automatically)
-async function refreshToken() {
-  // Browser automatically includes refresh token cookie
-  const response = await fetch('/api/auth/student-refresh', {
-    method: 'POST',
-  });
-  // New access token is set in cookie automatically
-}
-
-// Logout
-async function logout() {
-  await fetch('/api/auth/student-logout', {
-    method: 'POST',
-  });
-  // Cookies are cleared automatically
-}
-```
-
-## Dependencies
-
-- `passlib[argon2]`: For Argon2 password hashing
-- `python-jose`: For JWT token creation and validation
-- `sqlalchemy`: For database operations
-- `sqlmodel`: For ORM operations
-- `fastapi`: For API endpoints
-
-## Security Recommendations
-
-1. **Use HTTPS in Production**: Always use HTTPS to protect tokens in transit
-2. **Set Secure Flag**: Ensure cookies have the secure flag set in production
-3. **Implement CSRF Protection**: Add CSRF tokens for state-changing operations
-4. **Token Rotation**: Consider implementing token rotation for enhanced security
-5. **Rate Limiting**: Implement rate limiting on authentication endpoints
-6. **Logging**: Log authentication attempts for security monitoring
+- Built with FastAPI
+- PostgreSQL database with SQLModel ORM
+- Passlib for password hashing
+- PyJWT for token management
+- HttpOnly cookies for secure token storage
+- Comprehensive logging for debugging
