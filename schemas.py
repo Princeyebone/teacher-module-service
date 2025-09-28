@@ -522,7 +522,6 @@ class StudentProfileResponse(BaseModel):
     email: Optional[str]
     index_number: Optional[str]
     name: str
-    class_name: Optional[str] = None
     created_at: datetime
 
     class Config:
@@ -544,7 +543,6 @@ class StudentRegistrationResponse(BaseModel):
     name: str
     email: str
     index_number: str
-    class_name: str
     login_id: str
     created_at: Optional[str] = None
     enrollment: Optional[Dict[str, Any]] = None
@@ -783,11 +781,15 @@ class AssessmentAssignmentResponse(BaseModel):
     instructions: Optional[str] = None  # New field for teacher instructions
     created_at: datetime
     updated_at: datetime
+    # Add the new fields for subject and class_name
+    subject: str
+    class_name: str
 
 class SecuritySettingCreateWithoutAssignment(BaseModel):
     strict_mode: bool = False
     open_mode: bool = False
     free_mode: bool = False
+    review: bool = False
 
 
 class StudentAccessRuleCreateWithoutAssignment(BaseModel):
@@ -860,6 +862,7 @@ class SecuritySettingUpdate(BaseModel):
     strict_mode: Optional[bool] = None
     open_mode: Optional[bool] = None
     free_mode: Optional[bool] = None
+    review: Optional[bool] = None
 
 class SecuritySettingResponse(BaseModel):
     id: int
@@ -867,6 +870,7 @@ class SecuritySettingResponse(BaseModel):
     strict_mode: bool
     open_mode: bool
     free_mode: bool
+    review: bool
     created_at: datetime
     updated_at: datetime
 
@@ -911,7 +915,6 @@ class StudentAvailableAssessmentResponse(BaseModel):
     created_at: datetime
 
 class StudentQuestionResponse(BaseModel):
-    """Question data for students (excluding answers, explanations, and marking guidelines)"""
     id: int
     subject: str
     class_name: str
@@ -920,6 +923,8 @@ class StudentQuestionResponse(BaseModel):
     type: str
     question_text: str
     points: int
+    created_at: datetime
+    parent_id: Optional[int] = None  # Add parent_id field
     options: Optional[List[dict]] = None  # For multiple choice and true/false
     matching_pairs: Optional[List[dict]] = None  # For matching questions (left side only)
     sub_questions: Optional[List[dict]] = None  # For essay and short answer (without answers)
@@ -985,6 +990,7 @@ class StudentSubQuestion(BaseModel):
     question_text: str
     points: int = 1
 
+
 class StudentQuestionResponse(BaseModel):
     id: int
     subject: str
@@ -995,6 +1001,7 @@ class StudentQuestionResponse(BaseModel):
     question_text: str
     points: int
     created_at: datetime
+    parent_id: Optional[int] = None  # Add parent_id field
     
     # Type-specific fields (without answers/explanations)
     options: Optional[List[StudentQuestionOption]] = None
@@ -1051,3 +1058,101 @@ class AssessmentCountResponse(BaseModel):
     total_assessments: int
     daily_challenges: int
     enrolled_courses: int
+
+class StudentAssessmentAccessResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int]
+    show_results_timing: str
+    instructions: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+class StudentAssessmentDetailResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    teacher_id: str  # Teacher ID as string
+    current_page: int
+    total_pages: int
+    total_questions: int
+    page_size: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int]
+    show_results_timing: str
+    instructions: Optional[str]
+    security_settings: dict  # Will contain the security settings
+    created_at: datetime
+    updated_at: datetime
+    
+    # Include assessment questions (without answers/explanations)
+    assessment_questions: List[StudentAssessmentQuestionResponse] = []
+    
+    # Include sections for exams
+    sections: Optional[List[StudentAssessmentSectionResponse]] = []
+
+class StudentAssessmentInitialDetailResponse(BaseModel):
+    """Simplified assessment detail response for initial assessment data"""
+    id: int
+    title: str
+    description: Optional[str]
+    subject: str
+    class_name: str
+    assessment_type: str
+    total_points: int
+    available_from: datetime
+    available_until: datetime
+    time_limit_minutes: Optional[int]
+    show_results_timing: str
+    instructions: Optional[str]
+    teacher_id: str
+    security_settings: dict
+    created_at: datetime
+    updated_at: datetime
+
+class SubmissionAnswerResponse(BaseModel):
+    id: int
+    submission_id: int
+    question_id: int
+    answer_data: Dict[str, Any]
+    is_correct: Optional[bool] = None
+    created_at: datetime
+    updated_at: datetime
+
+class StudentSubmissionResponse(BaseModel):
+    id: int
+    assignment_id: int
+    student_id: UUID
+    started_at: Optional[datetime] = None
+    submitted_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+class StudentAssessmentSubmissionCreate(BaseModel):
+    """Combined model for creating student submission with answers"""
+    started_at: Optional[datetime] = None
+    submitted_at: Optional[datetime] = None
+    answers: Dict[str, Any] = {}  # Dictionary with question_id as keys and answer_data as values
+
+class StudentAssessmentSubmissionUpdate(BaseModel):
+    """Combined model for updating student submission with answers"""
+    started_at: Optional[datetime] = None
+    submitted_at: Optional[datetime] = None
+    answers: Optional[Dict[str, Any]] = None  # Dictionary with question_id as keys and answer_data as values
+
+
+class StudentSubmissionWithAnswersResponse(BaseModel):
+    submission: StudentSubmissionResponse
+    answers: List[SubmissionAnswerResponse]

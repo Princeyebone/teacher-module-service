@@ -240,8 +240,6 @@ class AssessmentScores(SQLModel, table=True):
 # Add the Student model for authentication
 class Student(SQLModel, table=True):
     id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
-    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
-    class_name: str = Field(index=True)
     email: Optional[str] = Field(index=True, unique=True)
     index_number: Optional[str] = Field(index=True, unique=True)
     hashed_password: str
@@ -260,6 +258,7 @@ class StudentEnrollment(SQLModel, table=True):
     """Table for student enrollments in subjects/courses"""
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     student_id: UUID = Field(foreign_key="student.id", index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     subject: str = Field(index=True)
     class_name: str = Field(index=True)
     teacher_display_name: Optional[str] = Field(default=None)
@@ -387,6 +386,9 @@ class AssessmentAssignment(SQLModel, table=True):
     instructions: Optional[str] = Field(default=None)  # New field for teacher instructions
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)  # Added updated_at field
+    # New fields for class_name and subject
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
     
     # Relationship fields
     access_rules: List["StudentAccessRule"] = Relationship(back_populates="assignment")
@@ -412,6 +414,7 @@ class SecuritySetting(SQLModel, table=True):
     strict_mode: bool = Field(default=False) 
     open_mode: bool = Field(default=False)
     free_mode: bool = Field(default=False)
+    review: bool = Field(default=False)  # Added review field
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)  # Added updated_at field
     # Relationship fields
@@ -428,17 +431,44 @@ class AssignmentStatus(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
  
-class StudentLog(SQLModel, table=True):
-    """Table for storing student activity logs"""
+class SurveillanceLog(SQLModel, table=True):
+    """Logging table for surveillance dashboard"""
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
-    student_id: UUID = Field(foreign_key="student.id", index=True)
-    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
-    activity_type: str = Field()  # started, answered, submitted, navigated, security_breach, heartbeat, etc.
-    question_id: Optional[int] = Field(default=None, foreign_key="question.id")
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    assignment_id: int = Field(index=True)  # Added assignment_id
+    student_id: Optional[str] = Field(default=None, index=True)
+    student_name: Optional[str] = Field(default=None)
+    log_type: str = Field(index=True)  # e.g., "security_breach", "activity", "status_change"
+    log_info: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    is_began: bool = Field(default=False)
+    is_completed: bool = Field(default=False)
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    additional_data: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    time_spent: Optional[int] = Field(default=None)  # Time spent in seconds
+    question_id: Optional[int] = Field(default=None, index=True)  # For question-specific logs
+    event_category: Optional[str] = Field(default=None)  # e.g., "assessment_start", "question_answer", "assessment_complete"
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
+class StudentSubmission(SQLModel, table=True):
+    """Table for storing student assessment submissions"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    assignment_id: int = Field(foreign_key="assessmentassignment.id", index=True)
+    student_id: UUID = Field(foreign_key="student.id", index=True)
+    started_at: Optional[datetime] = Field(default=None)
+    submitted_at: Optional[datetime] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+class SubmissionAnswer(SQLModel, table=True):
+    """Table for storing individual student answers to questions"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    submission_id: int = Field(foreign_key="studentsubmission.id", index=True)
+    question_id: int = Field(foreign_key="question.id", index=True)
+    answer_data: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    is_correct: Optional[bool] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
 

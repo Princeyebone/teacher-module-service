@@ -3,6 +3,7 @@
 Test script to verify publishing functionality
 """
 import asyncio
+from datetime import datetime  # Added datetime import
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlmodel import select
 from model import TeacherProfile, Assessment, AssessmentAssignment, SecuritySetting, StudentAccessRule
@@ -84,11 +85,12 @@ async def test_publishing():
             # Create security settings
             security_setting = SecuritySetting(
                 assignment_id=assignment.id,
-                allow_copy_paste=True,
-                lock_navigation=False,
-                require_fullscreen=False,
-                allowed_ip_ranges=[],
-                browser_lockdown=False
+                strict_mode=True,
+                open_mode=False,
+                free_mode=False,
+                review=False,  # Added review field
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
             )
             
             db.add(security_setting)

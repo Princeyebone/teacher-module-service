@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, EmailStr
 from schemas import AssessmentCountResponse
 import io
+import csv
 import secrets
 import string
 from logger import logger

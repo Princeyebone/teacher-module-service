@@ -149,17 +149,12 @@ async def create_student(student_data: dict, db: AsyncSession) -> Student:
     # Hash the name as temporary password
     hashed_password = get_password_hash(student_data["name"])  # Use name as temporary password
     
-    # Use provided class_name or default
-    class_name = student_data.get("class_name", "Not assigned")
-    
-    # Create student object
+    # Create student object (without teacher_id and class_name as they're no longer in the model)
     student = Student(
-        teacher_id=student_data["teacher_id"],
         email=student_data["email"] or '',  # Empty string if no email
         index_number=student_data["index_number"],
         hashed_password=hashed_password,
         name=student_data["name"],
-        class_name=class_name,
         password_changed=False  # Password not changed yet
     )
     
@@ -172,8 +167,9 @@ async def create_student(student_data: dict, db: AsyncSession) -> Student:
     if "subject" in student_data and student_data["subject"]:
         enrollment = StudentEnrollment(
             student_id=student.id,
+            teacher_id=student_data["teacher_id"],
             subject=student_data["subject"],
-            class_name=class_name,
+            class_name=student_data.get("class_name", "Not assigned"),
             teacher_display_name=student_data.get("teacher_display_name") or getattr(student_data.get("teacher"), 'display_name', None),
             is_active=True
         )
@@ -436,11 +432,9 @@ async def list_students(
     
     try:
         # Build the base query for filtering
-        teacher_display_name = getattr(current_teacher, 'display_name', None)
-        
-        # Build count query with optional filters
+        # Use teacher_id instead of display name for filtering
         count_query = select(func.count(Student.id.distinct())).select_from(Student).join(StudentEnrollment)
-        count_conditions = [StudentEnrollment.teacher_display_name == teacher_display_name]
+        count_conditions = [StudentEnrollment.teacher_id == current_teacher.id]
         
         # Add search filter if provided
         if search:
@@ -798,7 +792,7 @@ async def bulk_create_students(
                         "name": existing_student.name,
                         "email": existing_student.email,
                         "index_number": existing_student.index_number,
-                        "class_name": existing_student.class_name,
+                        "class_name": "",  # No longer stored in Student model
                         "login_id": login_id,
                         "created_at": existing_student.created_at.isoformat() if existing_student.created_at else None,
                         "enrolled": True,
@@ -820,6 +814,7 @@ async def bulk_create_students(
                         student_class_name = class_name or student_data.get('class_name') or getattr(current_teacher, 'work_institution', 'Not assigned')
                         enrollment = StudentEnrollment(
                             student_id=existing_student.id,
+                            teacher_id=current_teacher.id,
                             subject=student_subject,
                             class_name=student_class_name,
                             teacher_display_name=teacher_display_name or getattr(current_teacher, 'display_name', None),
@@ -858,14 +853,12 @@ async def bulk_create_students(
                 # Hash the name as temporary password
                 hashed_password = get_password_hash(student_data['name'])  # Use name as temporary password
                 
-                # Create student object
+                # Create student object (without teacher_id and class_name as they're no longer in the model)
                 student = Student(
-                    teacher_id=current_teacher.id,
                     email=student_data['email'] or '',  # Empty string if no email
                     index_number=student_data['index_number'],
                     hashed_password=hashed_password,
                     name=student_data['name'],
-                    class_name=student_class_name,
                     password_changed=False  # Password not changed yet
                 )
                 
@@ -885,7 +878,7 @@ async def bulk_create_students(
                     "name": student.name,
                     "email": student.email,
                     "index_number": student.index_number,
-                    "class_name": student.class_name,
+                    "class_name": "",  # No longer stored in Student model
                     "login_id": login_id,
                     "created_at": student.created_at.isoformat() if student.created_at else None
                 }
@@ -895,6 +888,7 @@ async def bulk_create_students(
                 if student_subject:
                     enrollment = StudentEnrollment(
                         student_id=student.id,
+                        teacher_id=current_teacher.id,
                         subject=student_subject,
                         class_name=student_class_name,
                         teacher_display_name=teacher_display_name or getattr(current_teacher, 'display_name', None),
@@ -993,7 +987,7 @@ async def register_single_student(
                 "name": existing_student.name,
                 "email": existing_student.email,
                 "index_number": existing_student.index_number,
-                "class_name": existing_student.class_name,
+                "class_name": "",  # No longer stored in Student model
                 "login_id": login_id,
                 "created_at": existing_student.created_at.isoformat() if existing_student.created_at else None
             }
@@ -1012,7 +1006,7 @@ async def register_single_student(
                 enrollment = StudentEnrollment(
                     student_id=existing_student.id,
                     subject=student_data.subject,
-                    class_name=student_data.class_name or existing_student.class_name or getattr(current_teacher, 'work_institution', 'Not assigned'),
+                    class_name=student_data.class_name or getattr(current_teacher, 'work_institution', 'Not assigned'),
                     teacher_display_name=student_data.teacher_display_name or getattr(current_teacher, 'display_name', None),
                     is_active=True
                 )
@@ -1055,14 +1049,12 @@ async def register_single_student(
         # Hash the name as temporary password
         hashed_password = get_password_hash(student_data.name)  # Use name as temporary password
         
-        # Create student object
+        # Create student object (without teacher_id and class_name as they're no longer in the model)
         student = Student(
-            teacher_id=current_teacher.id,
             email=student_data.email or '',  # Empty string if no email
             index_number=student_data.index_number,
             hashed_password=hashed_password,
             name=student_data.name,
-            class_name=class_name,
             password_changed=False  # Password not changed yet
         )
         
@@ -1077,7 +1069,7 @@ async def register_single_student(
             "name": student.name,
             "email": student.email,
             "index_number": student.index_number,
-            "class_name": student.class_name,
+            "class_name": "",
             "login_id": login_id,
             "created_at": student.created_at.isoformat() if student.created_at else None
         }
@@ -1086,6 +1078,7 @@ async def register_single_student(
         if student_data.subject:
             enrollment = StudentEnrollment(
                 student_id=student.id,
+                teacher_id=current_teacher.id,
                 subject=student_data.subject,
                 class_name=class_name,
                 teacher_display_name=student_data.teacher_display_name or getattr(current_teacher, 'display_name', None),

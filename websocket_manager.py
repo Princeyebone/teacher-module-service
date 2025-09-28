@@ -120,3 +120,4 @@ async def redis_listener():
                     await send_websocket_message(recipient_id, payload)
                 elif recipient_type == "student":
                     await send_student_websocket_message(recipient_id, payload)
+                    print(f"📢 Forwarded message to student {recipient_id}: {payload}")

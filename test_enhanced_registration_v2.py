@@ -50,7 +50,7 @@ async def test_enhanced_registration_v2():
         existing_student = result.scalar_one_or_none()
         assert existing_student is not None, "Student should exist"
         print(f"Verified student exists: {existing_student.email}")
-        print(f"Student class_name: {existing_student.class_name}")
+        print(f"Student created successfully: {existing_student.email}")
         
         # Verify enrollment was created
         enrollment_statement = select(StudentEnrollment).where(StudentEnrollment.student_id == student1.id)
@@ -78,7 +78,7 @@ async def test_enhanced_registration_v2():
         existing_student2 = result2.scalar_one_or_none()
         assert existing_student2 is not None, "Student should exist"
         print(f"Verified student exists: {existing_student2.email}")
-        print(f"Student class_name: {existing_student2.class_name}")
+        print(f"Student created successfully: {existing_student2.email}")
         
         # Verify no enrollment was created
         enrollment_statement2 = select(StudentEnrollment).where(StudentEnrollment.student_id == student2.id)

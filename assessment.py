@@ -8,6 +8,7 @@ from uuid import UUID
 from datetime import datetime
 import uuid
 from model import TeacherProfile, Question, QuestionDetail, Assessment, AssessmentQuestion, AssessmentSection, AssessmentSectionQuestion
+from model import AssessmentAssignment, StudentAccessRule  # Add these imports
 from dependencies import get_current_teacher
 from database import get_db
 from logger import logger
@@ -15,6 +16,8 @@ from schemas import QuestionOption, QuestionCreate, MatchingPair, QuestionUpdate
 from schemas import QuestionResponse, AssessmentCreate, AssessmentUpdate, AssessmentResponse
 from schemas import AssessmentQuestionCreate, AssessmentQuestionUpdate, AssessmentQuestionResponse
 from schemas import AssessmentWithSectionsCreate, AssessmentWithSectionsUpdate, AssessmentSectionCreate
+# Import the student WebSocket message function
+from sch_ground.background import publish_student_ws_message
 
 router = APIRouter(tags=["Assessment Builder"])
 
@@ -805,17 +808,31 @@ async def create_assessment(
                 logger.error(f"Question {question_id} not found or doesn't belong to teacher")
                 raise HTTPException(status_code=404, detail=f"Question {question_id} not found or doesn't belong to teacher")
             
+            # Calculate points for this question including subquestions if any
+            question_points = question.points
+            
+            # Get question details to check for subquestions
+            detail_query = select(QuestionDetail).where(QuestionDetail.question_id == question_id)
+            detail_result = await db.execute(detail_query)
+            detail = detail_result.scalars().first()
+            
+            # If question has subquestions, add their points
+            if detail and detail.sub_questions:
+                subquestion_points = sum(sub["points"] for sub in detail.sub_questions if "points" in sub)
+                question_points += subquestion_points
+            
             # Create assessment question link
             assessment_question = AssessmentQuestion(
                 assessment_id=assessment.id,
                 question_id=question_id,
                 question_order=i,
-                points=question.points
+                points=question_points,
+                section_id=None  # For non-sectioned assessments
             )
             
             db.add(assessment_question)
             assessment_questions.append(assessment_question)
-            total_points += question.points
+            total_points += question_points
         
         # Update total points
         assessment.total_points = total_points
@@ -1025,26 +1042,39 @@ async def create_assessment_with_sections(
                     logger.error(f"Question {question_id} not found or doesn't belong to teacher")
                     raise HTTPException(status_code=404, detail=f"Question {question_id} not found or doesn't belong to teacher")
                 
+                # Calculate points for this question including subquestions if any
+                question_points = question.points
+                
+                # Get question details to check for subquestions
+                detail_query = select(QuestionDetail).where(QuestionDetail.question_id == question_id)
+                detail_result = await db.execute(detail_query)
+                detail = detail_result.scalars().first()
+                
+                # If question has subquestions, add their points
+                if detail and detail.sub_questions:
+                    subquestion_points = sum(sub["points"] for sub in detail.sub_questions if "points" in sub)
+                    question_points += subquestion_points
+                
                 # Create assessment question link
                 assessment_question = AssessmentQuestion(
                     assessment_id=assessment.id,
                     question_id=question_id,
                     question_order=j,  # Order within the entire assessment
-                    points=question.points,
+                    points=question_points,
                     section_id=section.id  # Link to the specific section
                 )
                 
                 db.add(assessment_question)
                 assessment_questions.append(assessment_question)
-                total_points += question.points
-                section_total_points += question.points
+                total_points += question_points
+                section_total_points += question_points
                 
                 # Create section question link
                 section_question = AssessmentSectionQuestion(
                     section_id=section.id,
                     question_id=question_id,
                     question_order=j,  # Order within the section
-                    points=question.points
+                    points=question_points
                 )
                 
                 db.add(section_question)
@@ -1549,6 +1579,9 @@ async def update_assessment(
             logger.error(f"Assessment {assessment_id} not found for teacher {current_teacher.id}")
             raise HTTPException(status_code=404, detail=f"Assessment {assessment_id} not found")
         
+        # Store original is_published status
+        original_is_published = assessment.is_published
+        
         # Update assessment fields
         if assessment_data.title is not None:
             if not assessment_data.title.strip():
@@ -1585,6 +1618,8 @@ async def update_assessment(
         if assessment_data.is_published is not None:
             assessment.is_published = assessment_data.is_published
         
+        assessment.updated_at = datetime.utcnow()
+        
         # Handle question_ids update if provided
         if assessment_data.question_ids is not None:
             # Delete existing assessment questions
@@ -1612,17 +1647,456 @@ async def update_assessment(
                     logger.error(f"Question {question_id} not found for teacher {current_teacher.id}")
                     raise HTTPException(status_code=404, detail=f"Question {question_id} not found")
                 
+                # Calculate points for this question including subquestions if any
+                question_points = question.points
+                
+                # Get question details to check for subquestions
+                detail_query = select(QuestionDetail).where(QuestionDetail.question_id == question_id)
+                detail_result = await db.execute(detail_query)
+                detail = detail_result.scalars().first()
+                
+                # If question has subquestions, add their points
+                if detail and detail.sub_questions:
+                    subquestion_points = sum(sub["points"] for sub in detail.sub_questions if "points" in sub)
+                    question_points += subquestion_points
+                
                 # Create new assessment question
                 assessment_question = AssessmentQuestion(
                     assessment_id=assessment_id,
                     question_id=question_id,
                     question_order=i,
-                    points=question.points,
+                    points=question_points,
                     section_id=None  # For non-exam assessments, section_id is None
                 )
                 
                 db.add(assessment_question)
-                total_points += question.points
+                total_points += question_points
+            
+            # Update total points
+            assessment.total_points = total_points
+        
+        assessment.updated_at = datetime.utcnow()
+        
+        await db.commit()
+        await db.refresh(assessment)
+        
+        logger.debug(f"Successfully updated assessment with sections: id={assessment.id}")
+        
+        # Check if the assessment is published and update the corresponding AssessmentAssignment
+        if assessment.is_published:
+            # Get the assessment assignment to update it
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            if assignment:
+                # Update the assignment with the latest assessment data
+                assignment.subject = assessment.subject
+                assignment.class_name = assessment.class_name
+                assignment.updated_at = datetime.utcnow()
+                
+                db.add(assignment)
+                await db.commit()
+                await db.refresh(assignment)
+                
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UPDATE_PUBLISHING",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "available_from": assignment.available_from.isoformat() if assignment.available_from else None,
+                        "available_until": assignment.available_until.isoformat() if assignment.available_until else None,
+                        "assigned_at": assignment.assigned_at.isoformat() if assignment.assigned_at else None,
+                        "time_limit_minutes": assignment.time_limit_minutes,
+                        "is_active": assignment.is_active,
+                        "message": f"Assessment '{assessment.title}' has been updated"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
+            elif original_is_published != assessment.is_published:
+                # If assessment is now published but there was no existing assignment,
+                # this might be an edge case - log for debugging
+                logger.warning(f"Assessment {assessment_id} is published but no assignment found")
+        elif original_is_published and not assessment.is_published:
+            # If assessment was published but is now unpublished, send WebSocket notifications
+            # Get the assessment assignment to get student access information
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            if assignment:
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UNPUBLISHED_ASSESSMENT",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "message": f"Assessment '{assessment.title}' has been unpublished"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
+        
+        # Prepare response with assessment questions and their details
+        # Get assessment questions for response
+        aq_query = select(AssessmentQuestion).where(AssessmentQuestion.assessment_id == assessment.id)
+        aq_result = await db.execute(aq_query)
+        assessment_questions = aq_result.scalars().all()
+        
+        # Get all unique question IDs
+        question_ids = [aq.question_id for aq in assessment_questions]
+        question_map = {}  # Map question_id to question
+        detail_map = {}    # Map question_id to question detail
+        
+        if question_ids:
+            # Get questions
+            question_query = select(Question).where(Question.id.in_(question_ids))
+            question_result = await db.execute(question_query)
+            for question in question_result.scalars().all():
+                question_map[question.id] = question
+            
+            # Get question details
+            detail_query = select(QuestionDetail).where(QuestionDetail.question_id.in_(question_ids))
+            detail_result = await db.execute(detail_query)
+            for detail in detail_result.scalars().all():
+                detail_map[detail.question_id] = detail
+        
+        # Prepare assessment questions with question details
+        response_assessment_questions = []
+        for aq in assessment_questions:
+            question = question_map.get(aq.question_id)
+            detail = detail_map.get(aq.question_id)
+            
+            if question:
+                # Prepare question response
+                response_options = None
+                if detail and detail.options:
+                    response_options = [
+                        QuestionOption(
+                            id=opt["id"],
+                            text=opt["text"],
+                            is_correct=opt["is_correct"]
+                        )
+                        for opt in detail.options
+                    ]
+                
+                response_matching_pairs = None
+                if detail and detail.matching_pairs:
+                    response_matching_pairs = [
+                        MatchingPair(
+                            id=pair["id"],
+                            left=pair["left"],
+                            right=pair["right"]
+                        )
+                        for pair in detail.matching_pairs
+                    ]
+                
+                response_sub_questions = None
+                if detail and detail.sub_questions:
+                    response_sub_questions = [
+                        SubQuestion(
+                            id=sub["id"],
+                            type=sub["type"],
+                            question_text=sub["question_text"],
+                            correct_answer=sub["correct_answer"],
+                            explanation=sub["explanation"],
+                            marking_guidelines=sub["marking_guidelines"],
+                            points=sub["points"]
+                        )
+                        for sub in detail.sub_questions
+                    ]
+                
+                question_response = QuestionResponse(
+                    id=question.id,
+                    teacher_id=question.teacher_id,
+                    subject=question.subject,
+                    class_name=question.class_name,
+                    strand=question.strand,
+                    topic=question.topic,
+                    type=question.type,
+                    question_text=question.question_text,
+                    points=question.points,
+                    tags=question.tags,
+                    created_at=question.created_at,
+                    updated_at=question.updated_at,
+                    options=response_options,
+                    correct_answer=detail.correct_answer if detail else None,
+                    explanation=detail.explanation if detail else None,
+                    marking_guidelines=detail.marking_guidelines if detail else None,
+                    matching_pairs=response_matching_pairs,
+                    sub_questions=response_sub_questions
+                )
+                
+                response_assessment_questions.append(AssessmentQuestionResponse(
+                    id=aq.id,
+                    assessment_id=aq.assessment_id,
+                    question_id=aq.question_id,
+                    question_order=aq.question_order,
+                    points=aq.points,
+                    section_id=aq.section_id,  # Include section_id in response
+                    created_at=aq.created_at,
+                    question=question_response
+                ))
+        
+            detail_query = select(QuestionDetail).where(QuestionDetail.question_id.in_(question_ids))
+            detail_result = await db.execute(detail_query)
+            for detail in detail_result.scalars().all():
+                detail_map[detail.question_id] = detail
+        
+        # Prepare assessment questions with question details
+        response_assessment_questions = []
+        for aq in assessment_questions:
+            question = question_map.get(aq.question_id)
+            detail = detail_map.get(aq.question_id)
+            
+            if question:
+                # Prepare question response
+                response_options = None
+                if detail and detail.options:
+                    response_options = [
+                        QuestionOption(
+                            id=opt["id"],
+                            text=opt["text"],
+                            is_correct=opt["is_correct"]
+                        )
+                        for opt in detail.options
+                    ]
+                
+                response_matching_pairs = None
+                if detail and detail.matching_pairs:
+                    response_matching_pairs = [
+                        MatchingPair(
+                            id=pair["id"],
+                            left=pair["left"],
+                            right=pair["right"]
+                        )
+                        for pair in detail.matching_pairs
+                    ]
+                
+                response_sub_questions = None
+                if detail and detail.sub_questions:
+                    response_sub_questions = [
+                        SubQuestion(
+                            id=sub["id"],
+                            type=sub["type"],
+                            question_text=sub["question_text"],
+                            correct_answer=sub["correct_answer"],
+                            explanation=sub["explanation"],
+                            marking_guidelines=sub["marking_guidelines"],
+                            points=sub["points"]
+                        )
+                        for sub in detail.sub_questions
+                    ]
+                
+                question_response = QuestionResponse(
+                    id=question.id,
+                    teacher_id=question.teacher_id,
+                    subject=question.subject,
+                    class_name=question.class_name,
+                    strand=question.strand,
+                    topic=question.topic,
+                    type=question.type,
+                    question_text=question.question_text,
+                    points=question.points,
+                    tags=question.tags,
+                    created_at=question.created_at,
+                    updated_at=question.updated_at,
+                    options=response_options,
+                    correct_answer=detail.correct_answer if detail else None,
+                    explanation=detail.explanation if detail else None,
+                    marking_guidelines=detail.marking_guidelines if detail else None,
+                    matching_pairs=response_matching_pairs,
+                    sub_questions=response_sub_questions
+                )
+                
+                response_assessment_questions.append(AssessmentQuestionResponse(
+                    id=aq.id,
+                    assessment_id=aq.assessment_id,
+                    question_id=aq.question_id,
+                    question_order=aq.question_order,
+                    points=aq.points,
+                    section_id=aq.section_id,  # Include section_id in response
+                    created_at=aq.created_at,
+                    question=question_response
+                ))
+        
+        return AssessmentResponse(
+            id=assessment.id,
+            teacher_id=assessment.teacher_id,
+            title=assessment.title,
+            description=assessment.description,
+            subject=assessment.subject,
+            class_name=assessment.class_name,
+            assessment_type=assessment.assessment_type,
+            total_points=assessment.total_points,
+            tags=assessment.tags,
+            is_published=assessment.is_published,
+            created_at=assessment.created_at,
+            updated_at=assessment.updated_at,
+            assessment_questions=response_assessment_questions
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating assessment: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error updating assessment: {str(e)}")
+
+@router.put("/update-assessment/{assessment_id}", response_model=AssessmentResponse, status_code=status.HTTP_200_OK)
+async def update_assessment(
+    assessment_id: int,
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    assessment_data: AssessmentUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    """Update an assessment"""
+    logger.debug(f"Updating assessment: assessment_id={assessment_id}, teacher_id={current_teacher.id}")
+    try:
+        # Get the assessment
+        query = select(Assessment).where(
+            Assessment.id == assessment_id,
+            Assessment.teacher_id == current_teacher.id
+        )
+        result = await db.execute(query)
+        assessment = result.scalars().first()
+        
+        if not assessment:
+            logger.error(f"Assessment {assessment_id} not found for teacher {current_teacher.id}")
+            raise HTTPException(status_code=404, detail=f"Assessment {assessment_id} not found")
+        
+        # Store original is_published status
+        original_is_published = assessment.is_published
+        
+        # Update assessment fields
+        if assessment_data.title is not None:
+            if not assessment_data.title.strip():
+                logger.error("Assessment title cannot be empty")
+                raise HTTPException(status_code=400, detail="Assessment title cannot be empty")
+            assessment.title = assessment_data.title.strip()
+        
+        if assessment_data.description is not None:
+            assessment.description = assessment_data.description.strip() if assessment_data.description.strip() else None
+        
+        if assessment_data.subject is not None:
+            if not assessment_data.subject.strip():
+                logger.error("Subject cannot be empty")
+                raise HTTPException(status_code=400, detail="Subject cannot be empty")
+            assessment.subject = assessment_data.subject.strip()
+        
+        if assessment_data.class_name is not None:
+            if not assessment_data.class_name.strip():
+                logger.error("Class name cannot be empty")
+                raise HTTPException(status_code=400, detail="Class name cannot be empty")
+            assessment.class_name = assessment_data.class_name.strip()
+        
+        if assessment_data.assessment_type is not None:
+            # Validate assessment type
+            valid_types = ["quiz", "test", "exercise", "exam", "assignment", "project"]
+            if assessment_data.assessment_type not in valid_types:
+                logger.error(f"Invalid assessment type: {assessment_data.assessment_type}")
+                raise HTTPException(status_code=400, detail=f"Invalid assessment type. Must be one of: {valid_types}")
+            assessment.assessment_type = assessment_data.assessment_type.strip()
+        
+        if assessment_data.tags is not None:
+            assessment.tags = assessment_data.tags
+        
+        if assessment_data.is_published is not None:
+            assessment.is_published = assessment_data.is_published
+        
+        assessment.updated_at = datetime.utcnow()
+        
+        # Handle question_ids update if provided
+        if assessment_data.question_ids is not None:
+            # Delete existing assessment questions
+            existing_aq_query = select(AssessmentQuestion).where(AssessmentQuestion.assessment_id == assessment_id)
+            existing_aq_result = await db.execute(existing_aq_query)
+            existing_assessment_questions = existing_aq_result.scalars().all()
+            
+            for aq in existing_assessment_questions:
+                await db.delete(aq)
+            
+            await db.flush()  # Ensure deletions are processed
+            
+            # Add new assessment questions
+            total_points = 0
+            for i, question_id in enumerate(assessment_data.question_ids):
+                # Verify the question exists and belongs to the teacher
+                question_query = select(Question).where(
+                    Question.id == question_id,
+                    Question.teacher_id == current_teacher.id
+                )
+                question_result = await db.execute(question_query)
+                question = question_result.scalars().first()
+                
+                if not question:
+                    logger.error(f"Question {question_id} not found for teacher {current_teacher.id}")
+                    raise HTTPException(status_code=404, detail=f"Question {question_id} not found")
+                
+                # Calculate points for this question including subquestions if any
+                question_points = question.points
+                
+                # Get question details to check for subquestions
+                detail_query = select(QuestionDetail).where(QuestionDetail.question_id == question_id)
+                detail_result = await db.execute(detail_query)
+                detail = detail_result.scalars().first()
+                
+                # If question has subquestions, add their points
+                if detail and detail.sub_questions:
+                    subquestion_points = sum(sub["points"] for sub in detail.sub_questions if "points" in sub)
+                    question_points += subquestion_points
+                
+                # Create new assessment question
+                assessment_question = AssessmentQuestion(
+                    assessment_id=assessment_id,
+                    question_id=question_id,
+                    question_order=i,
+                    points=question_points,
+                    section_id=None  # For non-exam assessments, section_id is None
+                )
+                
+                db.add(assessment_question)
+                total_points += question_points
             
             # Update total points
             assessment.total_points = total_points
@@ -1634,6 +2108,106 @@ async def update_assessment(
         
         logger.debug(f"Successfully updated assessment: id={assessment.id}")
         
+        # Handle WebSocket notifications for published assessments
+        if assessment.is_published:
+            # Get or create the assessment assignment
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            # If no assignment exists and assessment is now published, we might need to create one
+            # But for updates, we should only work with existing assignments
+            if assignment:
+                # Update the assignment with the latest assessment data
+                assignment.subject = assessment.subject
+                assignment.class_name = assessment.class_name
+                assignment.updated_at = datetime.utcnow()
+                
+                db.add(assignment)
+                await db.commit()
+                await db.refresh(assignment)
+                
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UPDATE_PUBLISHING",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "available_from": assignment.available_from.isoformat() if assignment.available_from else None,
+                        "available_until": assignment.available_until.isoformat() if assignment.available_until else None,
+                        "assigned_at": assignment.assigned_at.isoformat() if assignment.assigned_at else None,
+                        "time_limit_minutes": assignment.time_limit_minutes,
+                        "is_active": assignment.is_active,
+                        "message": f"Assessment '{assessment.title}' has been updated"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
+            elif original_is_published != assessment.is_published and assessment.is_published:
+                # If assessment is now published but there was no existing assignment,
+                # this might be an edge case - log for debugging
+                logger.warning(f"Assessment {assessment_id} is published but no assignment found")
+        elif original_is_published and not assessment.is_published:
+            # If assessment was published but is now unpublished, send WebSocket notifications
+            # Get the assessment assignment to get student access information
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            if assignment:
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UNPUBLISHED_ASSESSMENT",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "message": f"Assessment '{assessment.title}' has been unpublished"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
+        
+        # Prepare response with assessment questions and their details
         # Get assessment questions for response
         aq_query = select(AssessmentQuestion).where(AssessmentQuestion.assessment_id == assessment.id)
         aq_result = await db.execute(aq_query)
@@ -1776,6 +2350,9 @@ async def update_assessment_with_sections(
         if not assessment:
             logger.error(f"Assessment {assessment_id} not found for teacher {current_teacher.id}")
             raise HTTPException(status_code=404, detail=f"Assessment {assessment_id} not found")
+        
+        # Store original is_published status
+        original_is_published = assessment.is_published
         
         # Update assessment fields if provided
         if assessment_data.title is not None:
@@ -1937,26 +2514,39 @@ async def update_assessment_with_sections(
                         logger.error(f"Question {question_id} not found or doesn't belong to teacher")
                         raise HTTPException(status_code=404, detail=f"Question {question_id} not found or doesn't belong to teacher")
                     
+                    # Calculate points for this question including subquestions if any
+                    question_points = question.points
+                    
+                    # Get question details to check for subquestions
+                    detail_query = select(QuestionDetail).where(QuestionDetail.question_id == question_id)
+                    detail_result = await db.execute(detail_query)
+                    detail = detail_result.scalars().first()
+                    
+                    # If question has subquestions, add their points
+                    if detail and detail.sub_questions:
+                        subquestion_points = sum(sub["points"] for sub in detail.sub_questions if "points" in sub)
+                        question_points += subquestion_points
+                    
                     # Create assessment question link
                     assessment_question = AssessmentQuestion(
                         assessment_id=assessment_id,
                         question_id=question_id,
                         question_order=j,  # Order within the entire assessment
-                        points=question.points,
+                        points=question_points,
                         section_id=section.id  # Link to the specific section
                     )
                     
                     db.add(assessment_question)
                     assessment_questions.append(assessment_question)
-                    total_points += question.points
-                    section_total_points += question.points
+                    total_points += question_points
+                    section_total_points += question_points
                     
                     # Create section question link
                     section_question = AssessmentSectionQuestion(
                         section_id=section.id,
                         question_id=question_id,
                         question_order=j,  # Order within the section
-                        points=question.points
+                        points=question_points
                     )
                     
                     db.add(section_question)
@@ -1969,6 +2559,105 @@ async def update_assessment_with_sections(
         await db.refresh(assessment)
         
         logger.debug(f"Successfully updated assessment with sections: id={assessment.id}")
+        
+        # Handle WebSocket notifications for published assessments
+        if assessment.is_published:
+            # Get or create the assessment assignment
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            # If no assignment exists and assessment is now published, we might need to create one
+            # But for updates, we should only work with existing assignments
+            if assignment:
+                # Update the assignment with the latest assessment data
+                assignment.subject = assessment.subject
+                assignment.class_name = assessment.class_name
+                assignment.updated_at = datetime.utcnow()
+                
+                db.add(assignment)
+                await db.commit()
+                await db.refresh(assignment)
+                
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UPDATE_PUBLISHING",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "available_from": assignment.available_from.isoformat() if assignment.available_from else None,
+                        "available_until": assignment.available_until.isoformat() if assignment.available_until else None,
+                        "assigned_at": assignment.assigned_at.isoformat() if assignment.assigned_at else None,
+                        "time_limit_minutes": assignment.time_limit_minutes,
+                        "is_active": assignment.is_active,
+                        "message": f"Assessment '{assessment.title}' has been updated"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
+            elif original_is_published != assessment.is_published and assessment.is_published:
+                # If assessment is now published but there was no existing assignment,
+                # this might be an edge case - log for debugging
+                logger.warning(f"Assessment {assessment_id} is published but no assignment found")
+        elif original_is_published and not assessment.is_published:
+            # If assessment was published but is now unpublished, send WebSocket notifications
+            # Get the assessment assignment to get student access information
+            assignment_query = select(AssessmentAssignment).where(
+                AssessmentAssignment.assessment_id == assessment_id
+            )
+            assignment_result = await db.execute(assignment_query)
+            assignment = assignment_result.scalars().first()
+            
+            if assignment:
+                # Get student IDs who have access to this assignment
+                student_ids = []
+                access_rules_query = select(StudentAccessRule).where(
+                    StudentAccessRule.assignment_id == assignment.id
+                )
+                access_rules_result = await db.execute(access_rules_query)
+                access_rules = access_rules_result.scalars().all()
+                for access_rule in access_rules:
+                    if access_rule.student_id:
+                        student_ids.append(str(access_rule.student_id))
+                
+                # Send WebSocket notifications to students who have access to this assignment
+                if student_ids:
+                    websocket_message = {
+                        "type": "UNPUBLISHED_ASSESSMENT",
+                        "assignment_id": assignment.id,
+                        "assessment_id": assessment.id,
+                        "title": assessment.title,
+                        "subject": assignment.subject,
+                        "class_name": assignment.class_name,
+                        "message": f"Assessment '{assessment.title}' has been unpublished"
+                    }
+                    
+                    # Send WebSocket message to each student
+                    for student_id in student_ids:
+                        try:
+                            await publish_student_ws_message(student_id, websocket_message)
+                        except Exception as e:
+                            logger.error(f"Failed to send WebSocket message to student {student_id}: {str(e)}")
         
         # Prepare response with assessment questions and their details
         # Get assessment questions for response
