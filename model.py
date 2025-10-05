@@ -1,12 +1,13 @@
-from sqlmodel import SQLModel, Field, Column
-from typing import Optional, List, Dict, Any, Union
-from sqlmodel import SQLModel, Field, select, Column, Relationship
+from sqlmodel import Field, Relationship, SQLModel, Column, JSON, ARRAY
+from sqlalchemy import event
+from sqlalchemy.types import UserDefinedType
 from sqlalchemy.dialects.postgresql import JSONB
-from uuid import UUID
+from typing import Optional, List, Dict, Any
+from datetime import date, time, datetime
 import uuid
+from uuid import UUID, uuid4
 from enum import Enum
-from datetime import date, time,datetime,timezone
-from uuid import uuid4
+
 
 
 class UserRole(str, Enum):
@@ -38,13 +39,28 @@ class AcademicCalendar(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     semester_name: str
-    academic_level: Optional[str] = None
     semester_start_date: date
     midsem_exams_date:Optional[date] = None
     mid_semester_break_start_date:Optional[date] = None
     mid_semester_break_end_date:Optional[date] =None
     revision_start_date:Optional[date] = None
     semester_end_date: date
+
+    @classmethod
+    def validate_empty_strings_to_none(cls, mapper, connection, target):
+        """Convert empty strings to None for optional date fields before saving to database"""
+        date_fields = ['midsem_exams_date', 'mid_semester_break_start_date', 'mid_semester_break_end_date', 'revision_start_date']
+        for field in date_fields:
+            if hasattr(target, field):
+                value = getattr(target, field)
+                if isinstance(value, str) and value.strip() == "":
+                    setattr(target, field, None)
+
+# Attach the validator to the model
+@event.listens_for(AcademicCalendar, 'before_insert')
+@event.listens_for(AcademicCalendar, 'before_update')
+def validate_academic_calendar(mapper, connection, target):
+    AcademicCalendar.validate_empty_strings_to_none(mapper, connection, target)
 
 class CalendarEvent(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True , index=True)
@@ -57,6 +73,21 @@ class CalendarEvent(SQLModel, table=True):
     is_holiday: Optional[bool] = None
     requires_no_classes: Optional[bool] = None
 
+    @classmethod
+    def validate_empty_strings_to_none(cls, mapper, connection, target):
+        """Convert empty strings to None for optional date fields before saving to database"""
+        date_fields = ['event_start_date', 'event_end_date']
+        for field in date_fields:
+            if hasattr(target, field):
+                value = getattr(target, field)
+                if isinstance(value, str) and value.strip() == "":
+                    setattr(target, field, None)
+
+# Attach the validator to the model
+@event.listens_for(CalendarEvent, 'before_insert')
+@event.listens_for(CalendarEvent, 'before_update')
+def validate_calendar_event(mapper, connection, target):
+    CalendarEvent.validate_empty_strings_to_none(mapper, connection, target)
 
 class WeeklyTimeTable(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True , index=True)
@@ -120,6 +151,21 @@ class Calendar(SQLModel, table=True):
     Location:Optional[str] = None
     is_completed: bool = False
 
+    @classmethod
+    def validate_empty_strings_to_none(cls, mapper, connection, target):
+        """Convert empty strings to None for optional time fields before saving to database"""
+        time_fields = ['start_time', 'end_time']
+        for field in time_fields:
+            if hasattr(target, field):
+                value = getattr(target, field)
+                if isinstance(value, str) and value.strip() == "":
+                    setattr(target, field, None)
+
+# Attach the validator to the model
+@event.listens_for(Calendar, 'before_insert')
+@event.listens_for(Calendar, 'before_update')
+def validate_calendar(mapper, connection, target):
+    Calendar.validate_empty_strings_to_none(mapper, connection, target)
 
 class Strand(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True, index=True)
@@ -191,14 +237,18 @@ class UploadedFile(SQLModel, table=True):
     gcs_path: Optional[str] = None   # permanent bucket path
     extracted_text: str | None 
 
- 
-class SemesterMaterials(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True, index=True)
-    teacher_id: uuid.UUID = Field(foreign_key="teacherprofile.id", index=True)
-    strand_id: int = Field(foreign_key="strand.id", index=True)
-    material:str = Field
-    url: str = Field
 
+class TempExtract(SQLModel, table=True):
+    """Temporary storage for extracted data before user confirmation"""
+    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    type: str = Field(index=True)  # e.g., "timetable", "academic_calendar"
+    data: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    class Config:
+        from_attributes = True
 
 
 class AssessmentWeights(SQLModel, table=True):
@@ -213,8 +263,7 @@ class AssessmentWeights(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
- 
-
+    
 class GradeSystem(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     name: str = Field(index=True)

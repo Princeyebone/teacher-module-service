@@ -1,0 +1,72 @@
+Summary of What We’ve Done So Far:
+Set the Goal: We’re building an ERP system using Python with Django as the backend framework. The first feature we aim to create is a chat forum for teachers and administrators.
+
+Chose the Environment: We decided to develop the ERP on your Kali Linux virtual machine (VM) to expand your knowledge and keep the development environment isolated.
+
+Updated the VM: Ensured that the Kali Linux VM is up to date with:
+
+bash
+Copy code
+sudo apt update && sudo apt upgrade -y
+Installed Tools:
+
+Installed Python 3 and pip, Python’s package manager.
+Installed python3-venv to create virtual environments for Python projects.
+Set Up a Virtual Environment:
+
+Created a project folder (~/school-erp) for the ERP.
+Created a virtual environment using:
+bash
+Copy code
+python3 -m venv venv
+Activated the virtual environment:
+bash
+Copy code
+source venv/bin/activate
+Upgraded pip in the virtual environment:
+bash
+Copy code
+pip install --upgrade pip
+Installed Django:
+
+Installed Django inside the virtual environment:
+bash
+Copy code
+pip install django
+Verified the installation with:
+bash
+Copy code
+django-admin --version
+What’s Next?
+Now that your environment is set up, here’s what we’ll do next:
+
+Create the Django Project:
+
+Initialize the school_erp Django project and test the development server.
+Build the Authentication System:
+
+Set up user roles (admin, teachers, students).
+Create login and registration pages.
+Design the Chat/Forum Module:
+
+Create the models for storing messages.
+Build the views and templates for sending and viewing messages.
+Next Step: Create the Django Project
+Let’s start by creating your Django project. Run the following commands in your virtual environment:
+
+Navigate to your project folder:
+
+bash
+Copy code
+cd ~/school-erp
+Start the Django project:
+
+bash
+Copy code
+django-admin startproject school_erp .
+Run the development server to test everything:
+
+bash
+Copy code
+python manage.py runserver
+Open your browser and go to http://127.0.0.1:8000 to see the Django welcome page.

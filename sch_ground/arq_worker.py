@@ -22,6 +22,8 @@ import sys
 from pathlib import Path
 from arq import create_pool
 from arq.worker import run_worker
+import nest_asyncio  # Add this import to handle nested event loops
+
 try:
     from .background import worker_config, arq_redis_settings
 except ImportError:
@@ -102,6 +104,28 @@ def print_worker_info():
     print("="*50)
 
 
+def run_worker_safely():
+    """Run worker with proper event loop handling"""
+    try:
+        # Apply nest_asyncio to allow nested event loops
+        nest_asyncio.apply()
+        print_worker_info()
+        asyncio.run(start_worker())
+    except RuntimeError as e:
+        if "already running" in str(e):
+            # If event loop is already running, run the worker directly
+            print("[INFO] Event loop already running, using alternative startup method")
+            import uvloop
+            if sys.platform != 'win32':
+                uvloop.install()
+            # Create a new event loop and run the worker
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(start_worker())
+        else:
+            raise
+
+
 if __name__ == "__main__":
     """
     Command line interface for ARQ worker management
@@ -119,8 +143,7 @@ if __name__ == "__main__":
     command = sys.argv[1] if len(sys.argv) > 1 else "start"
     
     if command == "start":
-        print_worker_info()
-        asyncio.run(start_worker())
+        run_worker_safely()
     elif command == "test":
         asyncio.run(test_connection())
     elif command == "info":

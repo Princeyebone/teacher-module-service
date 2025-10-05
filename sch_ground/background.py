@@ -68,8 +68,14 @@ async def save_notification(teacher_id: str, title: str, message: str, type_: st
             for attempt in range(max_attempts):
                 try:
                     async with session.begin():
+                        # Handle both string and UUID inputs for teacher_id
+                        if isinstance(teacher_id, str):
+                            teacher_uuid = UUID(teacher_id)
+                        else:
+                            teacher_uuid = teacher_id
+                            
                         notification = TeacherNotification(
-                            teacher_id=UUID(teacher_id),
+                            teacher_id=teacher_uuid,
                             title=title,
                             message=message,
                             type=type_,
@@ -105,8 +111,11 @@ async def publish_ws_message(teacher_id: str, message: dict):
             message=message.get("message", "Notification"),
             type_="error" if message.get("status") == "error" else "info"
         )
-        await redis_client.publish(f"ws:{teacher_id}", json.dumps(message))
-        logger.info(f"[Redis] Published to ws:{teacher_id}: {message}")
+        # Publish to the correct channel format
+        channel = f"ws:teacher:{teacher_id}"
+        await redis_client.publish(channel, json.dumps(message))
+        logger.info(f"[Redis] Published to {channel}: {message}")
+        print(f"[DEBUG] Published WebSocket message to {channel}")
     except Exception as e:
         logger.error(f"Failed to publish WebSocket message: {str(e)}\n{traceback.format_exc()}")
         raise
@@ -200,110 +209,10 @@ async def populate_teacher_planner_events(teacher_id, calendar_data, events_data
         async with AsyncSession(async_engine) as session:
             try:
                 async with session.begin():
-                    milestones = [
-                        {
-                            "date": calendar_data["semester_start_date"],
-                            "title": "Semester Begins",
-                            "description": f"Start of {calendar_data['semester_name']}",
-                            "event_type": "academic",
-                            "is_required": True,
-                            "start_time": None,
-                            "end_time": None
-                        },
-                        {
-                            "date": calendar_data["semester_end_date"],
-                            "title": "Semester Ends",
-                            "description": f"End of {calendar_data['semester_name']}",
-                            "event_type": "academic",
-                            "is_required": True,
-                            "start_time": None,
-                            "end_time": None
-                        }
-                    ]
-                    if calendar_data.get("mid_semester_break_start_date") and calendar_data.get("mid_semester_break_end_date"):
-                        current = calendar_data["mid_semester_break_start_date"]
-                        while current <= calendar_data["mid_semester_break_end_date"]:
-                            milestones.append({
-                                "date": current,
-                                "title": "Mid-Semester Break",
-                                "description": "No classes (mid-semester break)",
-                                "event_type": "break",
-                                "is_required": False,
-                                "start_time": None,
-                                "end_time": None
-                            })
-                            current += timedelta(days=1)
-                    if calendar_data.get("midsem_exams_date"):
-                        milestones.append({
-                            "date": calendar_data["midsem_exams_date"],
-                            "title": "Mid-Semester Exam",
-                            "description": "Mid-semester examinations",
-                            "event_type": "exam",
-                            "is_required": False,
-                            "start_time": None,
-                            "end_time": None
-                        })
-                    if calendar_data.get("revision_start_date"):
-                        milestones.append({
-                            "date": calendar_data["revision_start_date"],
-                            "title": "Revision Period Begins",
-                            "description": "Start of revision, no regular classes",
-                            "event_type": "revision",
-                            "is_required": False,
-                            "start_time": None,
-                            "end_time": None
-                        })
-                    academic_event_entries = []
-                    for e in events_data:
-                        start = e.get("event_start_date")
-                        end = e.get("event_end_date", start)
-                        current = start
-                        while current <= end:
-                            academic_event_entries.append({
-                                "date": current,
-                                "title": e.get("event_name", "Academic Event"),
-                                "description": f"Event: {e.get('event_name', 'Academic Event')}",
-                                "event_type": "academic_event",
-                                "is_required": not (e.get("requires_no_classes", False) or e.get("is_holiday", False)),
-                                "start_time": e.get("event_start_time"),
-                                "end_time": e.get("event_end_time")
-                            })
-                            current += timedelta(days=1)
-                    holiday_entries = [
-                        {
-                            "date": date.fromisoformat(h["date"]),
-                            "title": h["name"],
-                            "description": h.get("description", ""),
-                            "event_type": "holiday",
-                            "is_required": not h.get("requires_no_classes", True),
-                            "start_time": None,
-                            "end_time": None
-                        }
-                        for h in holidays
-                    ]
-                    all_entries = milestones + academic_event_entries + holiday_entries
-                    for ev in all_entries:
-                        logger.debug(f"Checking for existing event: {ev['title']} on {ev['date']}")
-                        existing = (await session.execute(
-                            select(TeacherPlannerEvent).where(
-                                TeacherPlannerEvent.teacher_id == teacher_id,
-                                TeacherPlannerEvent.date == ev["date"],
-                                TeacherPlannerEvent.title == ev["title"]
-                            )
-                        )).scalar_one_or_none()
-                        if not existing:
-                            session.add(TeacherPlannerEvent(
-                                teacher_id=teacher_id,
-                                date=ev["date"],
-                                start_time=ev["start_time"],
-                                end_time=ev["end_time"],
-                                title=ev["title"],
-                                description=ev["description"],
-                                event_type=ev["event_type"],
-                                is_required=ev["is_required"]
-                            ))
+                    # Use the new atomic function for consistency
+                    entries_processed = await populate_teacher_planner_events_atomic(session, teacher_id, calendar_data, events_data, holidays)
                     await asyncio.wait_for(session.commit(), timeout=5.0)
-                    logger.info(f"{len(all_entries)} events saved/updated in TeacherPlannerEvent.")
+                    logger.info(f"{entries_processed} events saved/updated in TeacherPlannerEvent.")
             except (ClientCannotConnectError, InterfaceError, ConnectionFailureError, asyncio.TimeoutError) as e:
                 await session.rollback()
                 logger.error(f"Connection error saving TeacherPlannerEvents: {str(e)}\n{traceback.format_exc()}")
@@ -423,15 +332,19 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
                         logger.debug("Filtering sessions...")
                         filtered_sessions = filter_sessions(deterministic_sessions, events_data, holidays, calendar_data)
                         logger.info(f"{len(filtered_sessions)} sessions remain after filtering")
+                        
+                        # ROBUST IMPLEMENTATION: Atomic transaction for both table operations
                         # Clear existing sessions
-                        logger.debug("Clearing existing sessions...")
+                        logger.debug("Clearing existing ClassSession entries...")
                         existing_sessions = (await session.execute(
                             select(ClassSession).where(ClassSession.teacher_id == teacher_id)
                         )).scalars().all()
                         for session_obj in existing_sessions:
                             await session.delete(session_obj)
-                        # Save new sessions
-                        logger.debug("Saving new sessions...")
+                        
+                        # Save new sessions to ClassSession table
+                        logger.debug("Saving new ClassSession entries...")
+                        class_sessions_saved = 0
                         for cs in filtered_sessions:
                             session.add(ClassSession(
                                 teacher_id=teacher_id,
@@ -445,23 +358,31 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
                                 resource_generated=False,
                                 location=cs["location"]
                             ))
+                            class_sessions_saved += 1
+                        
+                        logger.info(f"{class_sessions_saved} sessions prepared for ClassSession table")
+                        
+                        # Populate planner events with update/insert logic
+                        logger.debug("Populating TeacherPlannerEvent entries...")
+                        planner_events_saved = await populate_teacher_planner_events_atomic(session, teacher_id, calendar_data, events_data, holidays)
+                        logger.info(f"{planner_events_saved} events prepared for TeacherPlannerEvent table")
+                        
+                        # Commit both operations atomically
                         await asyncio.wait_for(session.commit(), timeout=5.0)
-                        logger.info(f"{len(filtered_sessions)} sessions saved to ClassSession")
-                    # Populate planner events with a new session
-                    logger.debug("Populating planner events...")
-                    await populate_teacher_planner_events(teacher_id, calendar_data, events_data, holidays)
-                    logger.info("Planner events populated")
-                    success_msg = f"Schedule generation complete! {len(filtered_sessions)} sessions created"
+                        logger.info(f"Atomic transaction committed: {class_sessions_saved} ClassSession entries, {planner_events_saved} TeacherPlannerEvent entries")
+                    
+                    success_msg = f"Schedule generation complete! {class_sessions_saved} sessions and {planner_events_saved} events created"
                     logger.info(success_msg)
                     await publish_ws_message(teacher_id, {
                         "status": "completed",
                         "message": success_msg,
                         "teacher_id": teacher_id,
                         "details": {
-                            "sessions_saved": len(filtered_sessions),
+                            "sessions_saved": class_sessions_saved,
+                            "events_saved": planner_events_saved
                         }
                     })
-                    return {"status": "success", "class_sessions_saved": len(filtered_sessions)}
+                    return {"status": "success", "class_sessions_saved": class_sessions_saved, "events_saved": planner_events_saved}
                 except (ClientCannotConnectError, InterfaceError, ConnectionFailureError, asyncio.TimeoutError) as e:
                     await session.rollback()
                     error_msg = f"Connection error in async task: {str(e)}\n{traceback.format_exc()}"
@@ -489,6 +410,153 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
         error_msg = f"Task failed: {str(e)}\n{traceback.format_exc()}"
         logger.error(error_msg)
         # Arq retries are handled in worker config
+
+
+async def populate_teacher_planner_events_atomic(session, teacher_id, calendar_data, events_data, holidays):
+    """
+    Populates TeacherPlannerEvent table with milestones, events & holidays using atomic operations.
+    Updates existing entries if they exist, creates new ones if they don't.
+    Returns the number of entries processed.
+    """
+    logger.debug(f"Populating planner events atomically for teacher {teacher_id}")
+    
+    try:
+        # Generate all entries
+        milestones = [
+            {
+                "date": calendar_data["semester_start_date"],
+                "title": "Semester Begins",
+                "description": f"Start of {calendar_data['semester_name']}",
+                "event_type": "academic",
+                "is_required": True,
+                "start_time": None,
+                "end_time": None
+            },
+            {
+                "date": calendar_data["semester_end_date"],
+                "title": "Semester Ends",
+                "description": f"End of {calendar_data['semester_name']}",
+                "event_type": "academic",
+                "is_required": True,
+                "start_time": None,
+                "end_time": None
+            }
+        ]
+        
+        if calendar_data.get("mid_semester_break_start_date") and calendar_data.get("mid_semester_break_end_date"):
+            current = calendar_data["mid_semester_break_start_date"]
+            while current <= calendar_data["mid_semester_break_end_date"]:
+                milestones.append({
+                    "date": current,
+                    "title": "Mid-Semester Break",
+                    "description": "No classes (mid-semester break)",
+                    "event_type": "break",
+                    "is_required": False,
+                    "start_time": None,
+                    "end_time": None
+                })
+                current += timedelta(days=1)
+                
+        if calendar_data.get("midsem_exams_date"):
+            milestones.append({
+                "date": calendar_data["midsem_exams_date"],
+                "title": "Mid-Semester Exam",
+                "description": "Mid-semester examinations",
+                "event_type": "exam",
+                "is_required": False,
+                "start_time": None,
+                "end_time": None
+            })
+            
+        if calendar_data.get("revision_start_date"):
+            milestones.append({
+                "date": calendar_data["revision_start_date"],
+                "title": "Revision Period Begins",
+                "description": "Start of revision, no regular classes",
+                "event_type": "revision",
+                "is_required": False,
+                "start_time": None,
+                "end_time": None
+            })
+        
+        academic_event_entries = []
+        for e in events_data:
+            start = e.get("event_start_date")
+            end = e.get("event_end_date", start)
+            if start and end:
+                current = start
+                while current <= end:
+                    academic_event_entries.append({
+                        "date": current,
+                        "title": e.get("event_name", "Academic Event"),
+                        "description": f"Event: {e.get('event_name', 'Academic Event')}",
+                        "event_type": "academic_event",
+                        "is_required": not (e.get("requires_no_classes", False) or e.get("is_holiday", False)),
+                        "start_time": e.get("event_start_time"),
+                        "end_time": e.get("event_end_time")
+                    })
+                    current += timedelta(days=1)
+        
+        holiday_entries = [
+            {
+                "date": date.fromisoformat(h["date"]),
+                "title": h["name"],
+                "description": h.get("description", ""),
+                "event_type": "holiday",
+                "is_required": not h.get("requires_no_classes", True),
+                "start_time": None,
+                "end_time": None
+            }
+            for h in holidays
+        ]
+        
+        all_entries = milestones + academic_event_entries + holiday_entries
+        entries_processed = 0
+        
+        # Process each entry with upsert logic (update if exists, insert if not)
+        for ev in all_entries:
+            logger.debug(f"Processing event: {ev['title']} on {ev['date']}")
+            
+            # Check if event already exists
+            existing = (await session.execute(
+                select(TeacherPlannerEvent).where(
+                    TeacherPlannerEvent.teacher_id == teacher_id,
+                    TeacherPlannerEvent.date == ev["date"],
+                    TeacherPlannerEvent.title == ev["title"]
+                )
+            )).scalar_one_or_none()
+            
+            if existing:
+                # Update existing entry
+                logger.debug(f"Updating existing event: {ev['title']} on {ev['date']}")
+                existing.description = ev["description"]
+                existing.event_type = ev["event_type"]
+                existing.is_required = ev["is_required"]
+                existing.start_time = ev["start_time"]
+                existing.end_time = ev["end_time"]
+                session.add(existing)
+            else:
+                # Create new entry
+                logger.debug(f"Creating new event: {ev['title']} on {ev['date']}")
+                new_event = TeacherPlannerEvent(
+                    teacher_id=teacher_id,
+                    date=ev["date"],
+                    start_time=ev["start_time"],
+                    end_time=ev["end_time"],
+                    title=ev["title"],
+                    description=ev["description"],
+                    event_type=ev["event_type"],
+                    is_required=ev["is_required"]
+                )
+                session.add(new_event)
+            
+            entries_processed += 1
+        
+        logger.info(f"Processed {entries_processed} TeacherPlannerEvent entries (updates and inserts)")
+        return entries_processed
+        
+    except Exception as e:
+        logger.error(f"Error in populate_teacher_planner_events_atomic: {str(e)}")
         raise
 
 # ---------------- ARQ WORKER CONFIG ---------------- #

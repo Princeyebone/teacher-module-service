@@ -63,20 +63,20 @@ POST /timetable/confirm/{teacher_id}
 ## 🔗 Integration Points
 
 ### Background Processing
-- [`tm_file_handler.py`](c:\Users\HP\tmdl5\file_handler\tm_file_handler.py) integrates with [`enque_task.py`](c:\Users\HP\tmdl5\enque_task.py) for background processing
-- Uses [`t_ground/table_back.py`](c:\Users\HP\tmdl5\t_ground\table_back.py) for actual file processing tasks
+- [`tm_file_handler.py`](file:///c:/Users/HP/tmdl5/file_handler/tm_file_handler.py) integrates with [`enque_task.py`](file:///c:/Users/HP/tmdl5/enque_task.py) for background processing
+- Uses [`t_ground/table_back.py`](file:///c:/Users/HP/tmdl5/t_ground/table_back.py) for actual file processing tasks
 
 ### Main Application
-- All handlers are imported in [`main.py`](c:\Users\HP\tmdl5\main.py) and registered as FastAPI routers
+- All handlers are imported in [`main.py`](file:///c:/Users/HP/tmdl5/main.py) and registered as FastAPI routers
 - Each handler provides a router with appropriate tags and prefixes
 
 ### Authentication
-- All handlers use [`dependencies.py`](c:\Users\HP\tmdl5\dependencies.py) for authentication via `get_current_teacher`
+- All handlers use [`dependencies.py`](file:///c:/Users/HP/tmdl5/dependencies.py) for authentication via `get_current_teacher`
 - Teacher ID extraction from JWT tokens
 
 ### Database Integration
-- All handlers use [`database.py`](c:\Users\HP\tmdl5\database.py) for database sessions
-- Integration with various models from [`model.py`](c:\Users\HP\tmdl5\model.py)
+- All handlers use [`database.py`](file:///c:/Users/HP/tmdl5/database.py) for database sessions
+- Integration with various models from [`model.py`](file:///c:/Users/HP/tmdl5/model.py)
 
 ## 📂 File Storage
 
@@ -119,13 +119,19 @@ from file_handler import tm_file_handler, ca_file_handler, sem_file_handler
 4. **Queue:** Background processing task enqueued
 5. **Processing:** Text extraction and AI parsing (in background)
 6. **Notification:** Real-time WebSocket updates
-7. **Confirmation:** Optional confirmation endpoint for manual verification
+7. **Confirmation:** Data stored in TempExtract for review, confirmed via save endpoint
 
 ### Calendar Processing Flow
 1. **Upload:** File uploaded via `/calendar/upload`
-2. **Storage:** File saved to uploads directory
-3. **Extraction:** Immediate data extraction (mock for now)
-4. **Response:** Extracted calendar data returned
+2. **Storage:** File saved to uploads directory with naming convention `academic_calendar/{teacher_id}.{extension}`
+3. **Queue:** Background processing task enqueued with additional context data
+4. **Processing:** Text extraction using appropriate methods (PDF, OCR, DOCX, etc.)
+5. **AI Processing:** AI parsing of calendar data with additional context
+6. **Storage:** Extracted data saved to TempExtract table (NOT AcademicCalendar table) for user review
+7. **WebSocket:** Real-time updates sent throughout the process with type "COMPLETED_ACADEMIC_CALENDER"
+8. **Cleanup:** Temporary file automatically deleted after processing
+9. **Review:** Teacher reviews data through frontend
+10. **Save:** Confirmed data saved to main AcademicCalendar and CalendarEvent tables through save endpoint
 
 ### Semester Mapping Flow
 1. **Query:** Available weeks requested for subject/class
@@ -146,7 +152,7 @@ from file_handler import tm_file_handler, ca_file_handler, sem_file_handler
 
 ### Error Handling
 - Comprehensive exception handling with appropriate HTTP status codes
-- Logging via [`logger.py`](c:\Users\HP\tmdl5\logger.py)
+- Logging via [`logger.py`](file:///c:/Users/HP/tmdl5/logger.py)
 - Detailed error messages for debugging
 
 ## 📋 Benefits of Organization
@@ -161,7 +167,7 @@ from file_handler import tm_file_handler, ca_file_handler, sem_file_handler
 ## 🔄 Migration Notes
 
 - All existing API endpoints remain unchanged
-- Import paths updated in [`main.py`](c:\Users\HP\tmdl5\main.py)
+- Import paths updated in [`main.py`](file:///c:/Users/HP/tmdl5/main.py)
 - No database schema changes required
 - File storage locations remain the same
 - Background processing integration maintained

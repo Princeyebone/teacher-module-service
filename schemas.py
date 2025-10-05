@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 from datetime import date, time, datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 from uuid import UUID
@@ -95,6 +95,7 @@ class TimeTableItem(BaseModel):
     start_time: time
     end_time: time
     location: Optional[str] = None
+    data_source: Optional[str] = None  # Added to indicate data source (temp_extract or weekly_timetable)
 
 class TimeTableEntry(BaseModel):
     items:List[TimeTableItem]
@@ -105,9 +106,8 @@ class AcademicCalendarEntry(BaseModel):
     semester_name: str
     start_date: date
     mid_semester_break_start_date:Optional[date] = None
-    mid_semester_break_start_date:Optional[date] = None
+    mid_semester_break_end_date:Optional[date] = None
     end_date: date
-    academic_level: Optional[str] = None
     event_name: Optional[str] = None
     event_start_day: Optional[date] = None
     event_end_date: Optional[date] = None
@@ -116,16 +116,38 @@ class AcademicCalendarEntry(BaseModel):
     is_holiday: Optional[bool] = None
     requires_no_classes: Optional[bool] = None
 
+    @model_validator(mode='before')
+    @classmethod
+    def convert_empty_strings_to_none(cls, data: Any) -> Any:
+        """Convert empty strings or whitespace-only strings to None for optional date fields"""
+        if isinstance(data, dict):
+            date_fields = ['mid_semester_break_start_date', 'mid_semester_break_end_date', 'event_start_day', 'event_end_date']
+            for field in date_fields:
+                if field in data and isinstance(data[field], str) and data[field].strip() == "":
+                    data[field] = None
+        return data
+
 class AcademicCalendarPublic(BaseModel):
+    id: Optional[int] = None
     teacher_id: Optional[UUID] = None
     semester_name: str
-    academic_level: Optional[str] = None
     midsem_exams_date: Optional[date] = None
     revision_start_date: Optional[date] = None
     semester_start_date: date
     mid_semester_break_start_date: Optional[date] = None
     mid_semester_break_end_date:Optional[date] = None
     semester_end_date: date
+
+    @model_validator(mode='before')
+    @classmethod
+    def convert_empty_strings_to_none(cls, data: Any) -> Any:
+        """Convert empty strings or whitespace-only strings to None for optional date fields"""
+        if isinstance(data, dict):
+            date_fields = ['midsem_exams_date', 'revision_start_date', 'mid_semester_break_start_date', 'mid_semester_break_end_date']
+            for field in date_fields:
+                if field in data and isinstance(data[field], str) and data[field].strip() == "":
+                    data[field] = None
+        return data
 
 class CalendarEventPublic(BaseModel):
     event_name: Optional[str] = None
@@ -135,6 +157,17 @@ class CalendarEventPublic(BaseModel):
     event_end_time: Optional[time] = None
     is_holiday: Optional[bool] = None
     requires_no_classes: Optional[bool] = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def convert_empty_strings_to_none(cls, data: Any) -> Any:
+        """Convert empty strings or whitespace-only strings to None for optional date fields"""
+        if isinstance(data, dict):
+            date_fields = ['event_start_date', 'event_end_date']
+            for field in date_fields:
+                if field in data and isinstance(data[field], str) and data[field].strip() == "":
+                    data[field] = None
+        return data
 
 class UpdateCalendarResponse(BaseModel):
     academic_calendar: AcademicCalendarPublic

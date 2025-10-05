@@ -1,114 +1,58 @@
-# Background Processing Organization
+# Background Task Organization
 
-This document describes the reorganization of background processing files into dedicated folders for better maintainability and clarity.
+This document describes the organization of background tasks in the TMDL5 system.
 
-## Folder Structure
+## Directory Structure
 
-### 📅 `sch_ground/` - Schedule Background Processing
-Contains all background task processing related to **schedule generation**, academic calendar operations, and intelligent class session creation.
+### sch_ground/
+Contains the schedule generation worker and related background processing tasks.
 
-**Files:**
-- `background.py` - Main schedule generation tasks and worker configuration
-- `arq_worker.py` - ARQ worker startup and management utilities  
-- `worker_manager.py` - Production worker management for scaling
-- `__init__.py` - Package initialization
+- `background.py` - Main background task for schedule generation
+- `arq_worker.py` - ARQ worker configuration and startup
+- `worker_manager.py` - Worker management utilities
+- `run_schedule_worker.py` - Script to run the schedule worker
+- `test_saved_schedules.py` - Tests for schedule generation
 
-**Usage:**
-```python
-# Import schedule generation functions
-from sch_ground.background import generate_schedule_task, arq_redis_settings
+### t_ground/
+Contains the timetable processing worker and related background processing tasks.
 
-# Start ARQ worker for schedule processing
-from sch_ground.arq_worker import start_worker
-await start_worker()
+- `table_back.py` - Main background task for timetable file processing
+- `run_timetable_worker.py` - Script to run the timetable worker
+- `test_timetable_processing.py` - Tests for timetable processing
+- `test_uploaded_files_db.py` - Tests for uploaded files database operations
 
-# Manage multiple workers in production
-from sch_ground.worker_manager import WorkerManager
-manager = WorkerManager(num_workers=3)
-manager.start_workers()
-```
+### ca_ground/
+Contains the academic calendar processing worker and related background processing tasks.
 
-### 📄 `t_ground/` - Timetable Background Processing  
-Contains all background task processing related to **timetable file uploads**, text extraction, and file processing operations.
+- `calendar_back.py` - Main background task for academic calendar file processing
+- `run_calendar_worker.py` - Script to run the calendar worker
+- `test_calendar_processing.py` - Tests for calendar processing
+- `CAL_PROCESSING_README.md` - Documentation for calendar processing
 
-**Files:**
-- `table_back.py` - Timetable file processing tasks and text extraction
-- `run_timetable_worker.py` - Dedicated timetable worker runner
-- `__init__.py` - Package initialization
+## Task Types
 
-**Usage:**
-```python
-# Import timetable processing functions
-from t_ground.table_back import process_timetable_file_task, FileExtractor
+### Schedule Generation
+Generates intelligent class schedules based on timetable and calendar data.
 
-# Start dedicated timetable worker
-python t_ground/run_timetable_worker.py
+### Timetable Processing
+Processes uploaded timetable files and extracts structured data.
 
-# Or use ARQ directly
-python -m arq t_ground.table_back.timetable_worker_config
-```
+### Calendar Processing
+Processes uploaded academic calendar files and extracts structured data with support for additional context information.
 
-### 🔗 Shared Components
-- `enque_task.py` - Remains in root directory, contains both schedule and timetable task enqueueing functions
-- `websocket_manager.py` - Handles real-time communication for both types of tasks
+## Worker Configuration
+
+Each worker has specific configuration for:
+- Retry policies
+- Timeout settings
+- Concurrent job limits
+- Result retention
 
 ## Running Workers
 
-### Development
+Workers can be started using the respective run scripts:
 ```bash
-# Option 1: Use convenient runner from root directory
-python run_schedule_worker.py         # Start worker
-python run_schedule_worker.py info     # Show configuration
-python run_schedule_worker.py test     # Test Redis connection
-
-# Option 2: Direct ARQ command
-python -m arq sch_ground.background.worker_config
-
-# Option 3: Run from sch_ground directory
-cd sch_ground
-python arq_worker.py
-
-# Start timetable processing worker  
+python sch_ground/run_schedule_worker.py
 python t_ground/run_timetable_worker.py
+python ca_ground/run_calendar_worker.py
 ```
-
-### Production
-```bash
-# Start multiple schedule workers
-python sch_ground/worker_manager.py start -n 3
-
-# Start dedicated timetable worker
-python t_ground/run_timetable_worker.py
-```
-
-## Import Path Changes
-
-All imports have been updated to reflect the new structure:
-
-**Before:**
-```python
-from background import arq_redis_settings
-from table_back import process_timetable_file_task
-```
-
-**After:**
-```python
-from sch_ground.background import arq_redis_settings
-from t_ground.table_back import process_timetable_file_task
-```
-
-## Benefits
-
-1. **Clear Separation** - Schedule and timetable processing are now clearly separated
-2. **Better Organization** - Related files are grouped together
-3. **Easier Maintenance** - Each folder has a specific purpose and scope
-4. **Scalable Architecture** - Can run different workers independently
-5. **Documentation** - Each package has clear documentation of its purpose
-
-## Migration Notes
-
-- All existing APIs continue to work without changes
-- Import paths have been updated throughout the codebase
-- Both worker types can run independently or together
-- No database schema changes required
-- Configuration files remain in root directory

@@ -1,5 +1,6 @@
 # logger.py
 import logging
+import sys
 from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
@@ -22,13 +23,14 @@ def setup_logging():
     file_handler = RotatingFileHandler(
         log_dir / "tmdl.log",
         maxBytes=1024*1024,  # 1MB
-        backupCount=5
+        backupCount=5,
+        encoding='utf-8'  # Add UTF-8 encoding to handle emojis and special characters
     )
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     
-    # Console handler
-    console_handler = logging.StreamHandler()
+    # Console handler with UTF-8 encoding
+    console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     

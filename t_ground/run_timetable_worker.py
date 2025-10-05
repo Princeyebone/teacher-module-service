@@ -26,13 +26,13 @@ except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from t_ground.table_back import timetable_worker_config
 
-# Configure logging
+# Configure logging with UTF-8 encoding to prevent Unicode errors
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler('timetable_worker.log')
+        logging.FileHandler('timetable_worker.log', encoding='utf-8')
     ]
 )
 

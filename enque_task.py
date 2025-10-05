@@ -4,15 +4,19 @@ This module provides utilities to enqueue background tasks for the TMDL5 system.
 Main tasks:
 - generate_schedule_task: Creates intelligent class schedules
 - process_timetable_file_task: Processes uploaded timetable files with text extraction
+- process_calendar_file_task: Processes uploaded calendar files with text extraction
 
 Usage:
-    from enque_task import enqueue_schedule_generation, enqueue_timetable_processing
+    from enque_task import enqueue_schedule_generation, enqueue_timetable_processing, enqueue_calendar_processing
     
     # Schedule generation
     job_id = await enqueue_schedule_generation(teacher_id, "Ghana")
     
     # Timetable file processing
-    job_id = await enqueue_timetable_processing(teacher_id, file_path)
+    job_id = await enqueue_timetable_processing(teacher_id, file_path, gcs_file_name)
+    
+    # Calendar file processing
+    job_id = await enqueue_calendar_processing(teacher_id, file_path, gcs_file_name, additional_data)
 """
 
 import asyncio
@@ -25,13 +29,54 @@ from uuid import UUID, uuid4
 logger = logging.getLogger(__name__)
 
 
-async def enqueue_timetable_processing(teacher_id: str, file_path: str) -> Optional[str]:
+async def enqueue_calendar_processing(teacher_id: str, file_path: str, gcs_file_name: str, additional_data: str = "") -> Optional[str]:
+    """
+    Enqueue a calendar file processing task for a teacher.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+        file_path: Path to the uploaded calendar file
+        gcs_file_name: File name to be used in GCS
+        additional_data: Additional context or data that may contain multiple calendar info
+        
+    Returns:
+        Job ID string if successful, None if failed
+    """
+    try:
+        # Validate teacher_id is a valid UUID
+        UUID(teacher_id)
+        
+        redis = await create_pool(arq_redis_settings)
+        job = await redis.enqueue_job(
+            'process_calendar_file_task', 
+            str(teacher_id), 
+            file_path,
+            gcs_file_name,
+            additional_data
+        )
+        
+        logger.info(f"✅ Calendar processing queued for teacher {teacher_id}: {job.job_id}")
+        print(f"📅 Calendar job ID for teacher {teacher_id}: {job.job_id}")
+        
+        await redis.aclose()
+        return job.job_id
+        
+    except ValueError as e:
+        logger.error(f"❌ Invalid teacher_id format: {teacher_id} - {e}")
+        return None
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue calendar task for {teacher_id}: {e}")
+        return None
+
+
+async def enqueue_timetable_processing(teacher_id: str, file_path: str, gcs_file_name: str) -> Optional[str]:
     """
     Enqueue a timetable file processing task for a teacher.
     
     Args:
         teacher_id: UUID string of the teacher
         file_path: Path to the uploaded timetable file
+        gcs_file_name: File name to be used in GCS
         
     Returns:
         Job ID string if successful, None if failed
@@ -44,7 +89,8 @@ async def enqueue_timetable_processing(teacher_id: str, file_path: str) -> Optio
         job = await redis.enqueue_job(
             'process_timetable_file_task', 
             str(teacher_id), 
-            file_path
+            file_path,
+            gcs_file_name
         )
         
         logger.info(f"✅ Timetable processing queued for teacher {teacher_id}: {job.job_id}")
@@ -195,13 +241,26 @@ async def main():
     # Test timetable processing
     print("\n📄 Testing Timetable Processing:")
     test_file_path = "./uploads/test_timetable.pdf"
+    gcs_file_name = "timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf"
     
     for teacher_id in test_teacher_ids[:1]:  # Test with first teacher only
-        timetable_job_id = await enqueue_timetable_processing(teacher_id, test_file_path)
+        timetable_job_id = await enqueue_timetable_processing(teacher_id, test_file_path, gcs_file_name)
         if timetable_job_id:
             print(f"   ✅ Timetable job for {teacher_id}: {timetable_job_id}")
         else:
             print(f"   ❌ Failed to enqueue timetable job for {teacher_id}")
+    
+    # Test calendar processing
+    print("\n📅 Testing Calendar Processing:")
+    test_calendar_file_path = "./uploads/test_calendar.pdf"
+    calendar_gcs_file_name = "academic_calendar/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf"
+    
+    for teacher_id in test_teacher_ids[:1]:  # Test with first teacher only
+        calendar_job_id = await enqueue_calendar_processing(teacher_id, test_calendar_file_path, calendar_gcs_file_name)
+        if calendar_job_id:
+            print(f"   ✅ Calendar job for {teacher_id}: {calendar_job_id}")
+        else:
+            print(f"   ❌ Failed to enqueue calendar job for {teacher_id}")
     
     # Check job status for successful ones
     if results["successful"]:

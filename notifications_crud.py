@@ -22,6 +22,24 @@ async def get_notifications(
     notifications = (await db.execute(query.order_by(TeacherNotification.created_at.desc()))).scalars().all()
     return notifications
 
+@router.get("/notifications/latest", response_model=List[TeacherNotification])
+async def get_latest_notifications(
+    current_teacher=Depends(get_current_teacher),
+    db: AsyncSession = Depends(get_db),
+    limit: int = 10
+):
+    """
+    Get the latest notifications for the current teacher.
+    By default, returns the 10 most recent notifications.
+    """
+    query = select(TeacherNotification)\
+        .where(TeacherNotification.teacher_id == current_teacher.id)\
+        .order_by(TeacherNotification.created_at.desc())\
+        .limit(limit)
+    
+    notifications = (await db.execute(query)).scalars().all()
+    return notifications
+
 @router.post("/notifications/mark-read/{notification_id}")
 async def mark_notification_read(
     notification_id: UUID,

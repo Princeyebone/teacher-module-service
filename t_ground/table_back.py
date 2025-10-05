@@ -9,10 +9,11 @@ Supported file types:
 - Images (JPG/PNG): pytesseract OCR
 - DOCX: python-docx
 - XLSX: openpyxl
+- TXT: plain text
 
 Usage:
     from table_back import process_timetable_file_task
-    job_id = await enqueue_timetable_processing(teacher_id, file_path)
+    job_id = await enqueue_timetable_processing(teacher_id, file_path, gcs_file_name)
 """
 
 import os
@@ -22,7 +23,7 @@ import logging
 import traceback
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-from datetime import datetime
+from datetime import datetime, time
 from uuid import UUID
 
 
@@ -92,7 +93,7 @@ import redis.asyncio as redis
 
 # Project imports
 from config import settings
-from model import WeeklyTimeTable, TeacherProfile, TeacherNotification, UploadedFile
+from model import WeeklyTimeTable, TeacherProfile, TeacherNotification, UploadedFile, TempExtract
 from sch_ground.background import arq_redis_settings, async_engine, publish_ws_message, save_notification
 from external_service import get_holidays_from_ai  # For potential AI parsing integration
 
@@ -106,7 +107,8 @@ SUPPORTED_EXTENSIONS = {
     'pdf': 'pdf',
     'jpg': 'image', 'jpeg': 'image', 'png': 'image', 'bmp': 'image', 'tiff': 'image',
     'docx': 'docx',
-    'xlsx': 'excel', 'xls': 'excel'
+    'xlsx': 'excel', 'xls': 'excel',
+    'txt': 'text'
 }
 
 class FileExtractor:
@@ -119,9 +121,31 @@ class FileExtractor:
         return SUPPORTED_EXTENSIONS.get(extension, 'unknown')
     
     @staticmethod
+    def extract_from_text(file_path: str) -> str:
+        """Extract text from plain text files"""
+        logger.info(f"Extracting text from plain text file: {file_path}")
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                text_content = f.read()
+            logger.info(f"✅ Text extraction successful: {len(text_content)} characters")
+            return text_content
+        except Exception as e:
+            logger.error(f"❌ Text extraction failed: {e}")
+            # Try with different encoding
+            try:
+                with open(file_path, 'r', encoding='latin-1') as f:
+                    text_content = f.read()
+                logger.info(f"✅ Text extraction with latin-1 successful: {len(text_content)} characters")
+                return text_content
+            except Exception as e2:
+                logger.error(f"❌ Text extraction with latin-1 also failed: {e2}")
+                raise
+    
+    @staticmethod
     def extract_from_pdf(file_path: str) -> str:
         """Extract text from PDF using pdfplumber with pytesseract fallback"""
-        logger.info(f"Extracting text from PDF: {file_path}")
+        logger.info(f"📄 Extracting text from PDF: {file_path}")
         
         if not PDF_AVAILABLE:
             raise ImportError("pdfplumber not installed")
@@ -136,20 +160,20 @@ class FileExtractor:
                         text_content += page_text + "\n"
                 
                 if text_content.strip():
-                    logger.info(f"Successfully extracted text using pdfplumber: {len(text_content)} characters")
+                    logger.info(f"✅ Successfully extracted text using pdfplumber: {len(text_content)} characters")
                     return text_content
                 
         except Exception as e:
-            logger.warning(f"pdfplumber extraction failed: {e}")
+            logger.warning(f"⚠️ pdfplumber extraction failed: {e}")
         
         # Fallback to OCR for scanned PDFs
-        logger.info("Falling back to OCR extraction")
+        logger.info("🔄 Falling back to OCR extraction")
         return FileExtractor.extract_with_ocr(file_path)
     
     @staticmethod
     def extract_with_ocr(file_path: str) -> str:
         """Extract text using pytesseract OCR"""
-        logger.info(f"Extracting text using OCR: {file_path}")
+        logger.info(f"🔍 Extracting text using OCR: {file_path}")
         
         if not OCR_AVAILABLE:
             raise ImportError("pytesseract or PIL not installed")
@@ -167,27 +191,27 @@ class FileExtractor:
                         page_text = pytesseract.image_to_string(image)
                         text_content += f"Page {i+1}:\n{page_text}\n"
                     
-                    logger.info(f"OCR extraction from PDF successful: {len(text_content)} characters")
+                    logger.info(f"✅ OCR extraction from PDF successful: {len(text_content)} characters")
                     return text_content
                     
                 except ImportError:
-                    logger.error("pdf2image not installed - cannot OCR PDF files")
+                    logger.error("❌ pdf2image not installed - cannot OCR PDF files")
                     raise ImportError("pdf2image required for PDF OCR")
             else:
                 # Direct image OCR
                 image = Image.open(file_path)
                 text_content = pytesseract.image_to_string(image)
-                logger.info(f"OCR extraction successful: {len(text_content)} characters")
+                logger.info(f"✅ OCR extraction successful: {len(text_content)} characters")
                 return text_content
                 
         except Exception as e:
-            logger.error(f"OCR extraction failed: {e}")
+            logger.error(f"💥 OCR extraction failed: {e}")
             raise
     
     @staticmethod
     def extract_from_docx(file_path: str) -> str:
         """Extract text from DOCX files"""
-        logger.info(f"Extracting text from DOCX: {file_path}")
+        logger.info(f"📝 Extracting text from DOCX: {file_path}")
         
         if not DOCX_AVAILABLE:
             raise ImportError("python-docx not installed")
@@ -202,17 +226,17 @@ class FileExtractor:
                     row_text = "\t".join([cell.text for cell in row.cells])
                     text_content += f"\n{row_text}"
             
-            logger.info(f"DOCX extraction successful: {len(text_content)} characters")
+            logger.info(f"✅ DOCX extraction successful: {len(text_content)} characters")
             return text_content
             
         except Exception as e:
-            logger.error(f"DOCX extraction failed: {e}")
+            logger.error(f"💥 DOCX extraction failed: {e}")
             raise
     
     @staticmethod
     def extract_from_excel(file_path: str) -> str:
         """Extract text from Excel files"""
-        logger.info(f"Extracting text from Excel: {file_path}")
+        logger.info(f"📊 Extracting text from Excel: {file_path}")
         
         if not XLSX_AVAILABLE:
             raise ImportError("openpyxl not installed")
@@ -230,11 +254,11 @@ class FileExtractor:
                     if row_text.strip():
                         text_content += f"{row_text}\n"
             
-            logger.info(f"Excel extraction successful: {len(text_content)} characters")
+            logger.info(f"✅ Excel extraction successful: {len(text_content)} characters")
             return text_content
             
         except Exception as e:
-            logger.error(f"Excel extraction failed: {e}")
+            logger.error(f"💥 Excel extraction failed: {e}")
             raise
 
 class TimetableParser:
@@ -246,7 +270,7 @@ class TimetableParser:
         Parse extracted text to identify timetable entries.
         This is a basic implementation - can be enhanced with AI/ML.
         """
-        logger.info("Parsing timetable data from extracted text")
+        logger.info("📋 Parsing timetable data from extracted text")
         
         # Basic parsing logic - can be enhanced with AI
         timetable_entries = []
@@ -294,7 +318,7 @@ class TimetableParser:
         
         # If no entries found, create a sample entry for testing
         if not timetable_entries:
-            logger.warning("No timetable entries parsed - creating sample entry")
+            logger.warning("⚠️ No timetable entries parsed - creating sample entry")
             timetable_entries = [{
                 "weekday": "Monday",
                 "start_time": "09:00",
@@ -304,10 +328,10 @@ class TimetableParser:
                 "note": "Extracted from uploaded file"
             }]
         
-        logger.info(f"Parsed {len(timetable_entries)} timetable entries")
+        logger.info(f"📈 Parsed {len(timetable_entries)} timetable entries")
         return timetable_entries
 
-async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str):
+async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str, gcs_file_name: str):
     """
     Background task to process timetable files with intelligent text extraction.
     
@@ -315,12 +339,57 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
         ctx: ARQ context
         teacher_id: UUID of the teacher
         file_path: Path to the uploaded file
+        gcs_file_name: File name to be used in GCS
     """
-    logger.info(f"Starting timetable file processing for teacher: {teacher_id}, file: {file_path}")
+    logger.info(f"🚀 Starting timetable file processing for teacher: {teacher_id}, file: {file_path}")
+    
+    # Global set to track sent messages across all function instances
+    GLOBAL_SENT_MESSAGES = set()
+    
+    # Track sent messages to prevent duplicates
+    sent_messages = set()
+    
+    async def send_unique_ws_message(teacher_id: str, message: dict):
+        """Send WebSocket message only if it hasn't been sent before"""
+        # Create a more robust hash of the message content to identify duplicates
+        # Include more fields to make the hash more unique
+        status = message.get('status', '')
+        type_ = message.get('type', '')
+        msg_text = message.get('message', '')
+        entry_count = str(message.get('entry_count', ''))  # Convert to string for consistency
+        
+        message_key = f"{status}_{type_}_{msg_text}_{entry_count}"
+        
+        # Use a more robust deduplication approach
+        import hashlib
+        message_hash = hashlib.md5(message_key.encode()).hexdigest()
+        
+        # Check both local and global deduplication
+        logger.info(f"🔍 [DEDUPLICATION] Checking message hash: {message_hash} for key: {message_key}")
+        logger.info(f"🔍 [DEDUPLICATION] Local sent_messages set size: {len(sent_messages)}")
+        logger.info(f"🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: {len(GLOBAL_SENT_MESSAGES)}")
+        
+        if message_hash not in sent_messages and message_hash not in GLOBAL_SENT_MESSAGES:
+            sent_messages.add(message_hash)
+            GLOBAL_SENT_MESSAGES.add(message_hash)
+            logger.info(f"➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: {message_hash}")
+            logger.info(f"➕ [DEDUPLICATION] Local set now contains {len(sent_messages)} items")
+            logger.info(f"➕ [DEDUPLICATION] Global set now contains {len(GLOBAL_SENT_MESSAGES)} items")
+            await publish_ws_message(teacher_id, message)
+            logger.info(f"✅ [DEDUPLICATION] Sent unique WebSocket message with hash: {message_hash}")
+            return True
+        else:
+            logger.info(f"⏭️ [DEDUPLICATION] SKIPPING DUPLICATE MESSAGE with hash: {message_hash}")
+            logger.info(f"⏭️ [DEDUPLICATION] Message already sent, not sending again")
+            if message_hash in sent_messages:
+                logger.info(f"⏭️ [DEDUPLICATION] Message found in local sent_messages")
+            if message_hash in GLOBAL_SENT_MESSAGES:
+                logger.info(f"⏭️ [DEDUPLICATION] Message found in global SENT_MESSAGES")
+            return False
     
     try:
-        # Send initial status
-        await publish_ws_message(teacher_id, {
+        # Send initial status - always send this
+        await send_unique_ws_message(teacher_id, {
             "status": "started",
             "message": "Processing timetable file...",
             "teacher_id": teacher_id,
@@ -330,30 +399,30 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
         # Validate file exists
         if not os.path.exists(file_path):
             error_msg = f"File not found: {file_path}"
-            logger.error(error_msg)
-            await publish_ws_message(teacher_id, {
+            logger.error(f"❌ {error_msg}")
+            await send_unique_ws_message(teacher_id, {
                 "status": "error",
                 "message": error_msg,
-                "teacher_id": teacher_id
+                "teacher_id": teacher_id,
             })
             return {"error": error_msg}
         
         # Detect file type
         file_type = FileExtractor.detect_file_type(file_path)
-        logger.info(f"Detected file type: {file_type}")
+        logger.info(f"🔍 Detected file type: {file_type}")
         
         if file_type == 'unknown':
             error_msg = f"Unsupported file type: {Path(file_path).suffix}"
-            logger.error(error_msg)
-            await publish_ws_message(teacher_id, {
+            logger.error(f"❌ {error_msg}")
+            await send_unique_ws_message(teacher_id, {
                 "status": "error", 
                 "message": error_msg,
                 "teacher_id": teacher_id
             })
             return {"error": error_msg}
         
-        # Update progress
-        await publish_ws_message(teacher_id, {
+        # Text Extraction Progress
+        await send_unique_ws_message(teacher_id, {
             "status": "processing",
             "message": f"Extracting text from {file_type} file...",
             "teacher_id": teacher_id
@@ -370,131 +439,278 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
                 extracted_text = FileExtractor.extract_from_docx(file_path)
             elif file_type == 'excel':
                 extracted_text = FileExtractor.extract_from_excel(file_path)
+            elif file_type == 'text':
+                extracted_text = FileExtractor.extract_from_text(file_path)
             
-        except ImportError as e:
-            error_msg = f"Required library not installed: {str(e)}"
-            logger.error(error_msg)
-            await publish_ws_message(teacher_id, {
-                "status": "error",
-                "message": error_msg,
-                "teacher_id": teacher_id
-            })
-            return {"error": error_msg}
-        
+            logger.info(f"📄 Extracted {len(extracted_text)} characters from file")
+            
+            # If text extraction failed, return error
+            if not extracted_text:
+                error_msg = "Text extraction returned empty result"
+                logger.error(f"❌ {error_msg}")
+                await send_unique_ws_message(teacher_id, {
+                    "status": "error",
+                    "message": error_msg,
+                    "teacher_id": teacher_id
+                })
+                return {"error": error_msg}
+                
         except Exception as e:
             error_msg = f"Text extraction failed: {str(e)}"
-            logger.error(f"{error_msg}\n{traceback.format_exc()}")
-            await publish_ws_message(teacher_id, {
+            logger.error(f"❌ {error_msg}")
+            logger.error(f"🔍 Full traceback: {traceback.format_exc()}")
+            await send_unique_ws_message(teacher_id, {
                 "status": "error",
                 "message": error_msg,
                 "teacher_id": teacher_id
             })
             return {"error": error_msg}
         
-        if not extracted_text.strip():
-            error_msg = "No text could be extracted from the file"
-            logger.error(error_msg)
-            await publish_ws_message(teacher_id, {
-                "status": "error",
-                "message": error_msg,
-                "teacher_id": teacher_id
-            })
-            return {"error": error_msg}
-        
-        logger.info(f"Successfully extracted {len(extracted_text)} characters")
-        
-        # Update progress
-        await publish_ws_message(teacher_id, {
+        # AI Processing Progress
+        await send_unique_ws_message(teacher_id, {
             "status": "processing",
-            "message": "Parsing timetable data...",
-            "teacher_id": teacher_id
+            "message": "Processing extracted text with AI...",
+            "teacher_id": teacher_id,
+            "extracted_text_length": len(extracted_text)
         })
         
-        # Parse timetable data
-        timetable_entries = TimetableParser.parse_timetable_text(extracted_text)
-        
-        # Save extracted data to database 
-        uploaded_file_id = None
+        # Process with AI (if available)
+        ai_result = None
         try:
-            async with AsyncSession(async_engine) as session:
-                # Save uploaded file record to UploadedFile table
-                logger.debug("Saving uploaded file record to database...")
-                
-                # Extract original filename from path
-                file_name = Path(file_path).name
-                
-                # Create UploadedFile record
-                uploaded_file = UploadedFile(
-                    teacher_id=UUID(teacher_id),
-                    file_name=file_name,
-                    file_type=file_type,
-                    purpose="timetable",  # Since this is for timetable processing
-                    gcs_path=None,  # Leave blank as requested
-                    extracted_text=extracted_text
+            from external_service import send_timetable_to_ai
+            if hasattr(settings, 'GEMINI_API_KEY') and settings.GEMINI_API_KEY:
+                logger.info("🤖 Sending extracted text to AI for processing")
+                ai_result = send_timetable_to_ai(
+                    extracted_text, 
+                    f"gs:#{settings.GCS_BUCKET_NAME}/{gcs_file_name}",
+                    settings.GEMINI_API_KEY
                 )
                 
-                session.add(uploaded_file)
-                await session.flush()  # Flush to get the ID
-                
-                # Get the ID while the session is still active
-                uploaded_file_id = uploaded_file.id
-                logger.info(f"Uploaded file record saved with ID: {uploaded_file_id}")
-                
-                # Commit the transaction
-                await session.commit()
+                if "error" in ai_result:
+                    logger.warning(f"⚠️ AI processing failed: {ai_result['error']}")
+                    # Fall back to basic parsing
+                    logger.info("🔄 Falling back to basic parsing")
+                    timetable_data = TimetableParser.parse_timetable_text(extracted_text)
+                else:
+                    logger.info("🎉 AI processing successful")
+                    timetable_data = ai_result.get("extracted_data", {}).get("timetables", [])
+            else:
+                logger.info("⏭️ Skipping AI processing - no API key configured")
+                # Fall back to basic parsing
+                timetable_data = TimetableParser.parse_timetable_text(extracted_text)
                 
         except Exception as e:
-            error_msg = f"Database error: {str(e)}"
-            logger.error(f"{error_msg}\n{traceback.format_exc()}")
-            await publish_ws_message(teacher_id, {
+            logger.error(f"💥 AI processing failed: {e}")
+            # Fall back to basic parsing
+            logger.info("🔄 Falling back to basic parsing")
+            timetable_data = TimetableParser.parse_timetable_text(extracted_text)
+        
+        # Validate timetable data
+        if not timetable_data:
+            error_msg = "No timetable data found in file"
+            logger.error(f"❌ {error_msg}")
+            await send_unique_ws_message(teacher_id, {
                 "status": "error",
                 "message": error_msg,
                 "teacher_id": teacher_id
             })
-            raise
+            return {"error": error_msg}
         
-        # Send success message after database operations are complete
-        success_msg = f"File processed successfully! Extracted {len(timetable_entries)} timetable entries."
-        logger.info(success_msg)
+        logger.info(f"📊 Found {len(timetable_data)} timetable entries")
         
-        # Send success message with extracted data
-        await publish_ws_message(teacher_id, {
-            "status": "completed",
-            "message": success_msg,
+        # Update progress before saving
+        await send_unique_ws_message(teacher_id, {
+            "status": "processing",
+            "message": f"Saving {len(timetable_data)} timetable entries...",
             "teacher_id": teacher_id,
-            "uploaded_file_id": str(uploaded_file_id),
-            "extracted_data": {
-                "timetables": timetable_entries,
-                "raw_text": extracted_text[:500] + "..." if len(extracted_text) > 500 else extracted_text,
-                "file_type": file_type,
-                "entries_count": len(timetable_entries),
-                "file_name": Path(file_path).name
-            }
+            "entry_count": len(timetable_data)
         })
         
-        return {
-            "status": "success",
-            "uploaded_file_id": str(uploaded_file_id),
-            "timetable_entries": timetable_entries,
-            "extracted_text": extracted_text,
-            "file_type": file_type
-        }
-    
-    except Exception as e:
-        error_msg = f"Timetable processing failed: {str(e)}"
-        logger.error(f"{error_msg}\n{traceback.format_exc()}")
-        
-        # Send error notification
+        # Save to database
         try:
-            await publish_ws_message(teacher_id, {
+            from model import WeeklyTimeTable
+            from sqlalchemy import select
+            
+            # Create database session
+            async with AsyncSession(async_engine) as session:
+                # Get teacher profile
+                stmt = select(TeacherProfile).where(TeacherProfile.id == UUID(teacher_id))
+                result = await session.execute(stmt)
+                teacher = result.scalar_one_or_none()
+                
+                if not teacher:
+                    error_msg = f"Teacher not found: {teacher_id}"
+                    logger.error(f"❌ {error_msg}")
+                    await send_unique_ws_message(teacher_id, {
+                        "status": "error",
+                        "message": error_msg,
+                        "teacher_id": teacher_id
+                    })
+                    return {"error": error_msg}
+                
+                # Delete existing timetable entries for this teacher
+                delete_stmt = select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == UUID(teacher_id))
+                delete_result = await session.execute(delete_stmt)
+                existing_entries = delete_result.scalars().all()
+                
+                for entry in existing_entries:
+                    await session.delete(entry)
+                
+                await session.commit()
+                logger.info(f"🗑️ Deleted {len(existing_entries)} existing timetable entries")
+                
+                # ONLY save to TempExtract table for user review
+                # Create or update TempExtract entry for this teacher
+                # First check if there's already an entry for this teacher and type
+                existing_temp = (await session.execute(
+                    select(TempExtract).where(
+                        TempExtract.teacher_id == UUID(teacher_id),
+                        TempExtract.type == "timetable"
+                    )
+                )).scalar_one_or_none()
+                
+                # Prepare the data to be stored - convert to JSON-serializable format
+                temp_data = {
+                    "entries": [],
+                    "entry_count": len(timetable_data),
+                    "extracted_at": datetime.utcnow().isoformat()
+                }
+                
+                # Convert each entry to a dictionary and ensure UUID fields are strings
+                for entry_data in timetable_data:
+                    # Validate required fields
+                    if not all(k in entry_data for k in ["weekday", "start_time", "end_time", "subject", "pupils"]):
+                        logger.warning(f"⚠️ Skipping invalid timetable entry: {entry_data}")
+                        continue
+                        
+                    entry_dict = entry_data.copy()
+                    # Ensure all UUID fields are converted to strings
+                    if 'teacher_id' in entry_dict and isinstance(entry_dict['teacher_id'], UUID):
+                        entry_dict['teacher_id'] = str(entry_dict['teacher_id'])
+                    # Convert time objects to strings for JSON serialization
+                    if 'start_time' in entry_dict and isinstance(entry_dict['start_time'], time):
+                        entry_dict['start_time'] = entry_dict['start_time'].isoformat()
+                    if 'end_time' in entry_dict and isinstance(entry_dict['end_time'], time):
+                        entry_dict['end_time'] = entry_dict['end_time'].isoformat()
+                    temp_data["entries"].append(entry_dict)
+                
+                if existing_temp:
+                    # Update existing entry
+                    existing_temp.data = temp_data
+                    existing_temp.updated_at = datetime.utcnow()
+                    session.add(existing_temp)
+                    logger.info(f"🔄 Updated existing TempExtract entry for teacher {teacher_id}")
+                else:
+                    # Create new entry
+                    temp_extract = TempExtract(
+                        teacher_id=UUID(teacher_id),
+                        type="timetable",
+                        data=temp_data
+                    )
+                    session.add(temp_extract)
+                    logger.info(f"🆕 Created new TempExtract entry for teacher {teacher_id}")
+                
+                await session.commit()
+                
+                # Create success notification
+                notification_msg = f"Successfully processed timetable with {len(timetable_data)} entries"
+                await save_notification(
+                    teacher_id=UUID(teacher_id),  # Pass UUID object directly
+                    title="Timetable Processing Complete",
+                    message=notification_msg,
+                    type_="success"
+                )
+                
+                # Completion Message
+                # Convert entries to JSON-serializable format
+                serializable_entries = []
+                for entry_data in timetable_data:
+                    # Validate required fields
+                    if not all(k in entry_data for k in ["weekday", "start_time", "end_time", "subject", "pupils"]):
+                        logger.warning(f"⚠️ Skipping invalid timetable entry: {entry_data}")
+                        continue
+                        
+                    entry_dict = entry_data.copy()
+                    # Ensure all UUID fields are converted to strings
+                    if 'teacher_id' in entry_dict and isinstance(entry_dict['teacher_id'], UUID):
+                        entry_dict['teacher_id'] = str(entry_dict['teacher_id'])
+                    # Convert time objects to strings for JSON serialization
+                    if 'start_time' in entry_dict and isinstance(entry_dict['start_time'], time):
+                        entry_dict['start_time'] = entry_dict['start_time'].isoformat()
+                    if 'end_time' in entry_dict and isinstance(entry_dict['end_time'], time):
+                        entry_dict['end_time'] = entry_dict['end_time'].isoformat()
+                    serializable_entries.append(entry_dict)
+                
+                await send_unique_ws_message(teacher_id, {
+                    "status": "complete",
+                    "type": "COMPLETE_TIMETABLE",  # New type as requested
+                    "message": notification_msg,
+                    "teacher_id": teacher_id,
+                    "entry_count": len(timetable_data)
+                })
+                
+                # Clean up temporary file
+                try:
+                    os.remove(file_path)
+                    logger.info(f"🧹 Cleaned up temporary file: {file_path}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to clean up temporary file: {e}")
+                
+                # Convert entries to JSON-serializable format for return
+                serializable_entries = []
+                for entry_data in timetable_data:
+                    # Validate required fields
+                    if not all(k in entry_data for k in ["weekday", "start_time", "end_time", "subject", "pupils"]):
+                        logger.warning(f"⚠️ Skipping invalid timetable entry: {entry_data}")
+                        continue
+                        
+                    entry_dict = entry_data.copy()
+                    # Ensure all UUID fields are converted to strings
+                    if 'teacher_id' in entry_dict and isinstance(entry_dict['teacher_id'], UUID):
+                        entry_dict['teacher_id'] = str(entry_dict['teacher_id'])
+                    # Convert time objects to strings for JSON serialization
+                    if 'start_time' in entry_dict and isinstance(entry_dict['start_time'], time):
+                        entry_dict['start_time'] = entry_dict['start_time'].isoformat()
+                    if 'end_time' in entry_dict and isinstance(entry_dict['end_time'], time):
+                        entry_dict['end_time'] = entry_dict['end_time'].isoformat()
+                    serializable_entries.append(entry_dict)
+                
+                return {
+                    "status": "success",
+                    "message": notification_msg,
+                    "entry_count": len(timetable_data)
+                }
+                
+        except Exception as e:
+            error_msg = f"Database operation failed: {str(e)}"
+            logger.error(f"❌ {error_msg}")
+            logger.error(f"🔍 Full traceback: {traceback.format_exc()}")
+            await send_unique_ws_message(teacher_id, {
                 "status": "error",
                 "message": error_msg,
                 "teacher_id": teacher_id
             })
-        except Exception as ws_error:
-            logger.error(f"Failed to send WebSocket error message: {ws_error}")
-        
-        raise
+            return {"error": error_msg}
+            
+    except Exception as e:
+        error_msg = f"Unexpected error in timetable processing: {str(e)}"
+        logger.error(f"💥 {error_msg}")
+        logger.error(f"🔍 Full traceback: {traceback.format_exc()}")
+        await send_unique_ws_message(teacher_id, {
+            "status": "error",
+            "message": error_msg,
+            "teacher_id": teacher_id
+        })
+        return {"error": error_msg}
+    finally:
+        # Clean up global sent messages for this function instance
+        try:
+            for message_hash in sent_messages:
+                if message_hash in GLOBAL_SENT_MESSAGES:
+                    GLOBAL_SENT_MESSAGES.remove(message_hash)
+            logger.info(f"🧹 Cleaned up {len(sent_messages)} message hashes from global set")
+        except Exception as e:
+            logger.warning(f"⚠️ Error cleaning up global sent messages: {e}")
 
 # ARQ Worker Configuration
 async def startup(ctx):
@@ -530,7 +746,8 @@ if __name__ == "__main__":
         try:
             teacher_id = "7bed2b69-8000-4b36-8e91-7fe0b70c9d82"
             test_file = "./uploads/test_timetable.pdf"
-            job = await redis.enqueue_job('process_timetable_file_task', teacher_id, test_file)
+            gcs_file_name = "timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf"
+            job = await redis.enqueue_job('process_timetable_file_task', teacher_id, test_file, gcs_file_name)
             print(f"[SUCCESS] Timetable processing job queued: {job.job_id}")
         finally:
             await redis.aclose()

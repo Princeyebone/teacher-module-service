@@ -5,11 +5,11 @@ from dependencies import get_current_teacher
 from database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
-from enque_task import enqueue_schedule_generation, check_job_status
 
 
 router = APIRouter(tags=["Productivity"])
 
+# This endpoint can be kept for manual triggering if needed
 @router.post("/generate-schedule")
 async def generate_schedule(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
@@ -22,17 +22,27 @@ async def generate_schedule(
         if not teacher:
             raise HTTPException(status_code=404, detail="Teacher not found")
         
-        # Use ARQ to enqueue the task
-        job_id = await enqueue_schedule_generation(str(teacher.id), teacher.country or "Ghana")
+        # Check if both timetable and academic calendar exist
+        timetable_exists = (await db.execute(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )).scalars().first() is not None
         
-        if job_id:
-            return {
-                "status": "processing",
-                "message": f"Schedule generation started for teacher {teacher.id}.",
-                "job_id": job_id
-            }
-        else:
-            raise HTTPException(status_code=500, detail="Failed to queue schedule generation task")
+        academic_calendar_exists = (await db.execute(
+            select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
+        )).scalar_one_or_none() is not None
+        
+        if not timetable_exists:
+            raise HTTPException(status_code=400, detail="No timetable found. Please create a timetable first.")
+            
+        if not academic_calendar_exists:
+            raise HTTPException(status_code=400, detail="No academic calendar found. Please create an academic calendar first.")
+        
+        # For manual triggering, we can return a message indicating that
+        # the automatic trigger should have already handled this
+        return {
+            "status": "info",
+            "message": "Session generation is automatically triggered when both timetable and academic calendar are saved. No manual action needed."
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -65,33 +75,20 @@ async def confirm_and_generate_schedule(
                 "message": "No timetable or academic calendar found, please create one first"
             }
 
-        # Use ARQ to enqueue the task
-        job_id = await enqueue_schedule_generation(str(current_teacher.id), current_teacher.country or "Ghana")
-        
-        if job_id:
-            return {
-                "status": "processing",
-                "message": f"No existing schedule found. Started generation for teacher {current_teacher.id}.",
-                "job_id": job_id
-            }
-        else:
-            raise HTTPException(status_code=500, detail="Failed to queue schedule generation task")
+        # For manual confirmation, we can return a message indicating that
+        # the automatic trigger should have already handled this
+        return {
+            "status": "info",
+            "message": "Session generation is automatically triggered when both timetable and academic calendar are saved. No manual action needed."
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/task-status/{job_id}")
 async def get_task_status(job_id: str):
-    """Check the status of an ARQ background job"""
-    try:
-        status = await check_job_status(job_id)
-        return {
-            "job_id": job_id,
-            "status": status.get("status", "unknown"),
-            "details": status
-        }
-    except Exception as e:
-        return {
-            "job_id": job_id,
-            "status": "error",
-            "error": str(e)
-        }
+    """This endpoint can be removed if not needed, as the automatic trigger doesn't return job IDs"""
+    return {
+        "job_id": job_id,
+        "status": "deprecated",
+        "message": "Session generation is now automatically triggered. This endpoint is deprecated."
+    }

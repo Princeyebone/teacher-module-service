@@ -8,13 +8,23 @@ integrates with the UploadedFile database table.
 
 import asyncio
 import os
+import sys
 from pathlib import Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from uuid import UUID
 
+# Handle imports for both direct execution and module import
+try:
+    # Try absolute import first
+    from sch_ground.background import async_engine
+except ImportError:
+    # If running directly, add parent directory to path
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, parent_dir)
+    from sch_ground.background import async_engine
+
 # Import necessary models and utilities
-from sch_ground.background import async_engine
 from model import UploadedFile, TeacherProfile
 from enque_task import enqueue_timetable_processing, check_job_status
 
