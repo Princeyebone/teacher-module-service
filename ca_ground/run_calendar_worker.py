@@ -51,6 +51,7 @@ def main():
         logger.info(f"   - Job Timeout: {calendar_worker_config['job_timeout']} seconds")
         logger.info(f"   - Concurrent Jobs: {calendar_worker_config['concurrent_jobs']}")
         logger.info(f"   - Retry Delay: {calendar_worker_config['retry_delay']} seconds")
+        logger.info(f"   - Queue Name: calendar_queue")
         
         # Run the worker
         run_worker(calendar_worker_config)

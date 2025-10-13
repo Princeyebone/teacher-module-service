@@ -23,8 +23,13 @@ import asyncio
 import logging
 from typing import Optional
 from arq import create_pool
-from sch_ground.background import arq_redis_settings
 from uuid import UUID, uuid4
+
+# Import Redis settings for each worker type
+from sch_ground.background import arq_redis_settings as schedule_redis_settings
+from t_ground.table_back import timetable_redis_settings
+from ca_ground.calendar_back import calendar_redis_settings
+from semplan_ground.semplan_back import semplan_redis_settings
 
 logger = logging.getLogger(__name__)
 
@@ -46,13 +51,14 @@ async def enqueue_calendar_processing(teacher_id: str, file_path: str, gcs_file_
         # Validate teacher_id is a valid UUID
         UUID(teacher_id)
         
-        redis = await create_pool(arq_redis_settings)
+        redis = await create_pool(calendar_redis_settings)
         job = await redis.enqueue_job(
             'process_calendar_file_task', 
             str(teacher_id), 
             file_path,
             gcs_file_name,
-            additional_data
+            additional_data,
+            _queue_name='calendar_queue'  # Use queue name without arq:queue: prefix
         )
         
         logger.info(f"✅ Calendar processing queued for teacher {teacher_id}: {job.job_id}")
@@ -85,12 +91,13 @@ async def enqueue_timetable_processing(teacher_id: str, file_path: str, gcs_file
         # Validate teacher_id is a valid UUID
         UUID(teacher_id)
         
-        redis = await create_pool(arq_redis_settings)
+        redis = await create_pool(timetable_redis_settings)
         job = await redis.enqueue_job(
             'process_timetable_file_task', 
             str(teacher_id), 
             file_path,
-            gcs_file_name
+            gcs_file_name,
+            _queue_name='timetable_queue'  # Use queue name without arq:queue: prefix
         )
         
         logger.info(f"✅ Timetable processing queued for teacher {teacher_id}: {job.job_id}")
@@ -122,11 +129,12 @@ async def enqueue_schedule_generation(teacher_id: str, country: str = "Ghana") -
         # Validate teacher_id is a valid UUID
         UUID(teacher_id)
         
-        redis = await create_pool(arq_redis_settings)
+        redis = await create_pool(schedule_redis_settings)
         job = await redis.enqueue_job(
             'generate_schedule_task', 
             str(teacher_id), 
-            country
+            country,
+            _queue_name='schedule_queue'  # Use queue name without arq:queue: prefix
         )
         
         logger.info(f"✅ Schedule generation queued for teacher {teacher_id}: {job.job_id}")
@@ -143,6 +151,51 @@ async def enqueue_schedule_generation(teacher_id: str, country: str = "Ghana") -
         return None
 
 
+async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_name: str, subject: str = None, class_name: str = None, session_data: dict = None) -> Optional[str]:
+    """
+    Enqueue a semester plan processing task for a teacher.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+        file_path: Path to the uploaded semester plan file
+        gcs_file_name: File name to be used in GCS
+        subject: Subject name (optional)
+        class_name: Class name (optional)
+        session_data: Session data (optional)
+        
+    Returns:
+        Job ID string if successful, None if failed
+    """
+    try:
+        # Validate teacher_id is a valid UUID
+        UUID(teacher_id)
+        
+        redis = await create_pool(semplan_redis_settings)
+        job = await redis.enqueue_job(
+            'process_semplan_file_task', 
+            str(teacher_id), 
+            file_path,
+            gcs_file_name,
+            subject,
+            class_name,
+            session_data,
+            _queue_name='semplan_queue'  # Use queue name without arq:queue: prefix
+        )
+        
+        logger.info(f"✅ Semester plan processing queued for teacher {teacher_id}: {job.job_id}")
+        print(f"📚 Semester plan job ID for teacher {teacher_id}: {job.job_id}")
+        
+        await redis.aclose()
+        return job.job_id
+        
+    except ValueError as e:
+        logger.error(f"❌ Invalid teacher_id format: {teacher_id} - {e}")
+        return None
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue semester plan task for {teacher_id}: {e}")
+        return None
+
+
 async def check_job_status(job_id: str) -> dict:
     """
     Check the status of an ARQ job.
@@ -154,11 +207,31 @@ async def check_job_status(job_id: str) -> dict:
         Dictionary with job status information
     """
     try:
-        redis = await create_pool(arq_redis_settings)
+        # We need to check all possible queues since we don't know which one the job is in
+        # Try schedule queue first (most common)
+        redis = await create_pool(schedule_redis_settings, default_queue_name='schedule_queue')
         job = await redis.get_job(job_id)
         
         if job is None:
-            result = {"status": "not_found", "message": "Job not found"}
+            # Try timetable queue
+            await redis.aclose()
+            redis = await create_pool(timetable_redis_settings, default_queue_name='timetable_queue')
+            job = await redis.get_job(job_id)
+            
+        if job is None:
+            # Try calendar queue
+            await redis.aclose()
+            redis = await create_pool(calendar_redis_settings, default_queue_name='calendar_queue')
+            job = await redis.get_job(job_id)
+            
+        if job is None:
+            # Try semplan queue
+            await redis.aclose()
+            redis = await create_pool(semplan_redis_settings, default_queue_name='semplan_queue')
+            job = await redis.get_job(job_id)
+        
+        if job is None:
+            result = {"status": "not_found", "message": "Job not found in any queue"}
         else:
             result = {
                 "status": job.status,

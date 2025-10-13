@@ -20,7 +20,7 @@ import os
 import logging
 import traceback
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from uuid import UUID  # Add this import for UUID class
 from logger import logger
 from datetime import datetime
@@ -108,16 +108,27 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy import select
 import redis.asyncio as redis
 
-# Import from sch_ground.background which contains shared utilities
+# Project imports
+from config import settings
+from logger import logger  # Use the imported logger
+from model import (
+    AcademicCalendar, CalendarEvent, TeacherProfile, TeacherNotification, UploadedFile, TempExtract
+)
+from external_service import get_holidays_from_ai
+
+# Import from sch_ground.background which contains shared utilities, but create separate Redis settings
 try:
-    from sch_ground.background import arq_redis_settings, async_engine, publish_ws_message, save_notification
+    from sch_ground.background import async_engine, publish_ws_message, save_notification
 except ImportError:
     # If running as script directly, add parent directory to path
     import sys
     import os
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.insert(0, parent_dir)
-    from sch_ground.background import arq_redis_settings, async_engine, publish_ws_message, save_notification
+    from sch_ground.background import async_engine, publish_ws_message, save_notification
+
+# Create separate Redis settings (without queue_name parameter)
+calendar_redis_settings = RedisSettings(host="localhost", port=6379, database=0, conn_timeout=10, conn_retries=5, conn_retry_delay=1)
 
 # Initialize async Redis client
 redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
@@ -1137,38 +1148,22 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
 # ARQ Worker Configuration
 async def startup(ctx):
     """ARQ worker startup"""
-    logger.info("Starting academic calendar processing worker")
-    logger.info(f"Redis settings: {arq_redis_settings}")
-    logger.info(f"Database URL: {settings.DATABASE_URL}")
-    try:
-        ctx['redis'] = await create_pool(arq_redis_settings)
-        logger.info("Academic calendar processing worker started")
-    except Exception as e:
-        logger.error(f"Failed to start academic calendar processing worker: {e}")
-        logger.error(f"Full traceback: {traceback.format_exc()}")
-        raise
+    # Create pool with specific queue name
+    ctx['redis'] = await create_pool(calendar_redis_settings, default_queue_name='calendar_queue')
+    logger.info("Academic calendar processing worker started")
 
 async def shutdown(ctx):
     """ARQ worker shutdown"""
-    logger.info("Shutting down academic calendar processing worker")
-    logger.info(f"Context keys: {list(ctx.keys())}")
-    try:
-        if 'redis' in ctx:
-            logger.info("Closing Redis connection")
-            ctx['redis'].close()
-            await ctx['redis'].aclose()
-        logger.info("Disposing database engine")
-        await async_engine.dispose()
-        logger.info("Academic calendar processing worker shutdown")
-    except Exception as e:
-        logger.error(f"Error during worker shutdown: {e}")
-        logger.error(f"Full traceback: {traceback.format_exc()}")
-
+    ctx['redis'].close()
+    await ctx['redis'].aclose()
+    await async_engine.dispose()
+    logger.info("Academic calendar processing worker shutdown")
 
 # Worker configuration for this specific task
 calendar_worker_config = {
     'functions': [process_calendar_file_task],
-    'redis_settings': arq_redis_settings,
+    'redis_settings': calendar_redis_settings,
+    'queue_name': 'calendar_queue',  # Use just the queue name without arq:queue: prefix
     'on_startup': startup,
     'on_shutdown': shutdown,
     'max_tries': 3,           # Retry failed jobs 3 times
@@ -1192,7 +1187,8 @@ if __name__ == "__main__":
         logger.info(f"Files in current directory: {os.listdir('.')}")
         if os.path.exists('./uploads'):
             logger.info(f"Files in uploads directory: {os.listdir('./uploads')}")
-        redis = await create_pool(arq_redis_settings)
+        # Use calendar-specific Redis settings
+        redis = await create_pool(calendar_redis_settings)
         try:
             teacher_id = "7bed2b69-8000-4b36-8e91-7fe0b70c9d82"
             test_file = "./uploads/test_calendar.pdf"
@@ -1212,3 +1208,45 @@ if __name__ == "__main__":
             await redis.aclose()
     
     asyncio.run(test_enqueue())
+
+
+# Update the enqueue function to use the correct queue name
+async def enqueue_calendar_processing(teacher_id: str, file_path: str, gcs_file_name: str, additional_data: str = "") -> Optional[str]:
+    """
+    Enqueue a calendar file processing task for a teacher.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+        file_path: Path to the uploaded calendar file
+        gcs_file_name: File name to be used in GCS
+        additional_data: Additional context or data that may contain multiple calendar info
+        
+    Returns:
+        Job ID string if successful, None if failed
+    """
+    try:
+        # Validate teacher_id is a valid UUID
+        UUID(teacher_id)
+        
+        redis = await create_pool(calendar_redis_settings)
+        job = await redis.enqueue_job(
+            'process_calendar_file_task', 
+            str(teacher_id), 
+            file_path,
+            gcs_file_name,
+            additional_data,
+            _queue_name='calendar_queue'
+        )
+        
+        logger.info(f"✅ Calendar processing queued for teacher {teacher_id}: {job.job_id}")
+        print(f"📅 Calendar job ID for teacher {teacher_id}: {job.job_id}")
+        
+        await redis.aclose()
+        return job.job_id
+        
+    except ValueError as e:
+        logger.error(f"❌ Invalid teacher_id format: {teacher_id} - {e}")
+        return None
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue calendar task for {teacher_id}: {e}")
+        return None

@@ -29,6 +29,7 @@ import semester_mapper
 import file_handler.tm_file_handler as tm_file_handler
 import file_handler.ca_file_handler as ca_file_handler
 import file_handler.sem_file_handler as sem_file_handler
+import file_handler.curri_file_handler as curri_file_handler
 import grade_crud
 import gradeweights
 import score
@@ -100,6 +101,7 @@ app.include_router(semester_mapper.router, prefix="/api/teacher")
 app.include_router(tm_file_handler.router, prefix="/api/teacher")
 app.include_router(ca_file_handler.router, prefix="/api/teacher")
 app.include_router(sem_file_handler.router, prefix="/api/teacher")
+app.include_router(curri_file_handler.router, prefix="/api/teacher")
 app.include_router(grade_crud.router, prefix="/api/teacher")
 app.include_router(gradeweights.router, prefix="/api/teacher")
 app.include_router(score.router, prefix="/api/teacher")

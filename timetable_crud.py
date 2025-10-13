@@ -100,24 +100,60 @@ async def save_timetable(
             )
         )).scalar_one_or_none()
         
-        # ALWAYS clear all existing timetable entries for this teacher before saving new ones
-        # This ensures we don't have duplicate or conflicting entries
-        delete_result = await db.execute(
-            delete(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-        )
-        # logger.info(f"🗑️ Deleted {delete_result.rowcount} existing timetable entries for teacher {current_teacher.id}")
+        # Check if existing timetable entries exist for this teacher
+        existing_entries = (await db.execute(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )).scalars().all()
         
-        # Create new entries from the provided data
-        timetable_entries = [
-            WeeklyTimeTable(
-                teacher_id=current_teacher.id,
-                **item.model_dump(exclude_unset=True)
-            )
-            for item in data.items
-        ]
+        operation_type = "create"
+        
+        if existing_entries:
+            # Update existing entries instead of deleting all and recreating
+            operation_type = "update"
+            
+            # Create a mapping of existing entries by their unique characteristics
+            existing_map = {(entry.weekday, entry.start_time, entry.subject): entry for entry in existing_entries}
+            
+            # Track which existing entries have been updated
+            updated_entries = set()
+            
+            # Update or create entries
+            for item in data.items:
+                item_dict = item.model_dump(exclude_unset=True)
+                key = (item.weekday, item.start_time, item.subject)
+                
+                if key in existing_map:
+                    # Update existing entry
+                    entry = existing_map[key]
+                    for field, value in item_dict.items():
+                        if field != 'id' and hasattr(entry, field):
+                            setattr(entry, field, value)
+                    db.add(entry)
+                    updated_entries.add(key)
+                else:
+                    # Create new entry
+                    new_entry = WeeklyTimeTable(
+                        teacher_id=current_teacher.id,
+                        **item_dict
+                    )
+                    db.add(new_entry)
+            
+            # Delete entries that weren't in the new data
+            for key, entry in existing_map.items():
+                if key not in updated_entries:
+                    await db.delete(entry)
+        else:
+            # Create new entries from the provided data
+            timetable_entries = [
+                WeeklyTimeTable(
+                    teacher_id=current_teacher.id,
+                    **item.model_dump(exclude_unset=True)
+                )
+                for item in data.items
+            ]
 
-        for entry in timetable_entries:
-            db.add(entry)
+            for entry in timetable_entries:
+                db.add(entry)
         
         # If there was temporary data, delete it
         if temp_extract:
@@ -130,21 +166,25 @@ async def save_timetable(
             select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
         )).scalars().all()
         
-        # Check if we should trigger session generation
-        await check_and_trigger_session_generation(str(current_teacher.id), db)
-        
         # Add source indicator for frontend
         result = []
         for entry in final_entries:
             entry_dict = entry.model_dump()
             result.append(entry_dict)
             
-        return {
+        response_data = {
             "items": result,
-            "operation": "create",  # Always create since we're replacing all entries
+            "operation": operation_type,
             "data_source": "weekly_timetable",
             "temp_data_cleaned": temp_extract is not None  # Indicates if temp data was cleaned up
         }
+        
+        # Trigger session generation after successful save
+        # We do this after the main transaction is complete to avoid session issues
+        from schedule_utils import trigger_session_generation_after_save
+        await trigger_session_generation_after_save(str(current_teacher.id))
+        
+        return response_data
     except Exception as e:
         await db.rollback()
         raise HTTPException(

@@ -108,10 +108,7 @@ async def create_or_update_calendar(
             select(CalendarEvent).where(CalendarEvent.calender_id == new_calendar.id)
         )).scalars().all()
         
-        # Check if we should trigger session generation
-        await check_and_trigger_session_generation(str(current_teacher.id), db)
-
-        return {
+        response_data = {
             "academic_calendar": AcademicCalendarPublic(
                 id=new_calendar.id,
                 teacher_id=new_calendar.teacher_id,
@@ -138,6 +135,13 @@ async def create_or_update_calendar(
                 for e in final_events
             ]
         }
+        
+        # Trigger session generation after successful save
+        # We do this after the main transaction is complete to avoid session issues
+        from schedule_utils import trigger_session_generation_after_save
+        await trigger_session_generation_after_save(str(current_teacher.id))
+        
+        return response_data
 
     except Exception as e:
         await db.rollback()

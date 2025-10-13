@@ -252,25 +252,31 @@ class SessionDetail(BaseModel):
 class StrandCreate(BaseModel):
     strand_name: str
     subject: str
+    class_name:str
     weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
 
 class StrandUpdate(BaseModel):
     strand_name: str
     original_strand_name: str | None = None
     subject: str
+    class_name: str
     weeks_sessions: Dict[str, List[int]]  # e.g., {"Week 1": [53, 54], "Week 2": [55]}
 
 class StrandResponse(BaseModel):
     strand_name: str
     subject: str
+    class_name: str
     teacher_id: UUID
     weeks_sessions: Dict[str, List[SessionDetail]]
     created_at: datetime
     updated_at: datetime
+    data_source: Optional[str] = None  # Added to indicate data source (temp_extract or strand_table)
+    file: Optional[str] = None  # Added to include signed URL for the file
 
 class SubstrandCreate(BaseModel):
     substrand_name: str
     strand_name: str
+    class_name: str
     subject: str
     weeks_sessions: dict[str, List[int]]  # e.g., {"Week 1": [1, 2], "Week 2": [3]}
 
@@ -278,6 +284,7 @@ class SubstrandUpdate(BaseModel):
     substrand_name: str
     original_substrand_name: str | None = None
     strand_name: str
+    class_name: str
     subject: str
     weeks_sessions: dict[str, List[int]]
 

@@ -13,6 +13,9 @@ from dependencies import get_current_teacher
 from typing import Annotated
 from model import AcademicCalendar, ClassSession, Strand
 import json
+from config import settings
+from gcs_utils import generate_signed_url, generate_file_name, get_file_from_gcs
+from semplan_ground.semplan_back import enqueue_semplan_processing
 
 
 router = APIRouter(tags=["Semester Mapper File Handler"])
@@ -306,76 +309,222 @@ async def generate_ai_planning_response(file_path: str, teacher_id: str, availab
     return ai_generated_plan
 
 
-@router.post("/semester-mapper/upload")
-async def upload_semester_mapper(
-    file: UploadFile, 
-    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+@router.post("/sem-plan/upload")
+async def upload_semester_plan(
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)], 
+    subject: str = Form(...),  # Add subject parameter
+    class_name: str = Form(...),  # Add class_name parameter
+    file: UploadFile = Form(...), 
     session: AsyncSession = Depends(get_db)
 ):
     """
-    Upload semester mapper file and return mock curriculum data.
+    Upload semester plan file endpoint.
+    Renames the file to sem_plan/teacher_id/class_name/subject.file_extension, generates a signed URL for GCS,
+    and returns the signed URL to the frontend for direct upload to Google Cloud Storage.
+    Teacher ID is extracted from the access token.
     """
     try:
         teacher_id = str(current_teacher.id)
-        logger.info(f"Processing upload for teacher: {teacher_id}")
+        logger.info(f"🚀 Processing semester plan upload for teacher: {teacher_id}")
         
         # Log file details
-        logger.info(f"Received file: {file.filename}, size: {file.size}, content_type: {file.content_type}")
+        logger.info(f"📁 Received file: {file.filename}, size: {file.size}, content_type: {file.content_type}")
+        logger.info(f"📚 Subject: {subject}, Class: {class_name}")
         
-        # Save the uploaded file
-        file_path = await save_file(file, teacher_id)
-        logger.info(f"File saved to: {file_path}")
+        # Validate file type
+        if not file.filename:
+            raise HTTPException(status_code=400, detail="No filename provided")
         
-        # Extract data using mock data
-        logger.info("Using mock data for curriculum planning")
-        data = await extract_semester_mapper_data(file_path)
+        file_ext = file.filename.split(".")[-1].lower() if "." in file.filename else ""
+        supported_types = ['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff', 'docx', 'xlsx', 'xls', 'txt', 'pptx', 'ppt']
         
-        logger.info(f"Semester mapper upload successful for teacher {teacher_id}")
-        logger.info(f"Final extracted data: {data}")
+        if file_ext not in supported_types:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Unsupported file type: .{file_ext}. Supported types: {', '.join(supported_types)}"
+            )
+        
+        # Generate file name for GCS in the format: sem_plan/teacher_id/class_name/subject.extension
+        gcs_file_name = f"sem_plan/{teacher_id}/{class_name}/{subject}.{file_ext}"
+        logger.info(f"📂 Generated GCS file name: {gcs_file_name}")
+        
+        # Use the content_type from the uploaded file or default to application/octet-stream
+        content_type = file.content_type if file.content_type else "application/octet-stream"
+        logger.info(f"🏷️ File content type: {content_type}")
+        
+        # Generate signed URL for frontend to upload to GCS with correct content type
+        # For file uploads, we need to use PUT method
+        signed_url = generate_signed_url(
+            settings.GCS_BUCKET_NAME, 
+            gcs_file_name, 
+            method="PUT",
+            content_type=content_type
+        )
+        logger.info(f"🔗 Generated signed URL for GCS upload")
         
         return {
-            "file_path": file_path, 
-            "extracted_data": data,
-            "used_available_sessions": False
+            "status": "success",
+            "message": "Signed URL generated successfully. Use it to upload file to GCS.", 
+            "signed_url": signed_url,
+            "gcs_file_name": gcs_file_name,
+            "content_type": content_type,
+            "teacher_id": teacher_id,
+            "subject": subject,
+            "class_name": class_name,
+            "note": "Use the signed_url to upload your file directly to Google Cloud Storage."
         }
+        
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Semester mapper upload failed: {e}")
+        logger.error(f"💥 Semester plan upload failed: {e}")
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
-
 @router.post("/semester-mapper/ai-plan")
-async def ai_planning_endpoint(
-    file: UploadFile, 
+async def ai_semester_planning(
+    subject: str,
+    class_name: str,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
     session: AsyncSession = Depends(get_db)
 ):
     """
-    AI-powered planning endpoint that analyzes uploaded curriculum and returns a complete semester plan.
+    AI planning endpoint that checks GCS for semester plan files, downloads it,
+    and sets up background text extraction with session data.
+    Accepts subject and class_name to fetch relevant session information.
     """
     try:
         teacher_id = str(current_teacher.id)
-        logger.info(f"Processing AI planning request for teacher: {teacher_id}")
+        logger.info(f"🚀 Starting AI semester planning for teacher: {teacher_id}, subject: {subject}, class: {class_name}")
         
-        # Log file details
-        logger.info(f"Received curriculum file: {file.filename}, size: {file.size}, content_type: {file.content_type}")
+        # Check for semester plan files in sem_plan/ path first (preferred location)
+        # If not found, then check curriculum/ path
+        file_search_patterns = [
+            {"type": "sem_plan", "pattern": f"sem_plan/{teacher_id}/{class_name}/{subject}"},
+            {"type": "curriculum", "pattern": f"curriculum/{teacher_id}/{class_name}/{subject}"}
+        ]
         
-        # Save the uploaded file
-        file_path = await save_file(file, teacher_id)
-        logger.info(f"Curriculum file saved to: {file_path}")
+        logger.info(f"🔍 Checking for semester plan files in paths: {[p['pattern'] for p in file_search_patterns]}")
         
-        # Generate AI planning response using available sessions
-        logger.info("Generating AI-powered semester plan...")
-        ai_response = await generate_ai_planning_response(file_path, teacher_id)
+        # For simplicity, we'll check common file extensions
+        common_extensions = ['pdf', 'docx', 'txt', 'jpg', 'png']
         
-        logger.info(f"AI planning successful for teacher {teacher_id}")
+        # Variables to store the found file
+        found_file = None
+        
+        # Search in order of preference - stop at first found file
+        for search_pattern in file_search_patterns:
+            if found_file:
+                break  # Stop searching if we already found a file
+                
+            pattern_type = search_pattern["type"]
+            pattern_name = search_pattern["pattern"]
+            
+            logger.info(f"🔍 Searching for files in {pattern_type} path: {pattern_name}")
+            
+            for ext in common_extensions:
+                if found_file:
+                    break  # Stop searching if we already found a file
+                    
+                file_path = f"{pattern_name}.{ext}"
+                
+                # Check if file exists
+                file_content = get_file_from_gcs(settings.GCS_BUCKET_NAME, file_path)
+                if file_content is not None:
+                    found_file = {
+                        "path": file_path,
+                        "type": pattern_type,
+                        "content": file_content
+                    }
+                    logger.info(f"✅ Found {pattern_type} file: {file_path}")
+                    # Stop searching - we found the first file in preferred location
+                    break
+        
+        # If no files found in either location
+        if not found_file:
+            logger.warning(f"❌ No semester plan or curriculum files found for teacher: {teacher_id}")
+            raise HTTPException(
+                status_code=404, 
+                detail="Please upload a semester plan or curriculum file to proceed"
+            )
+        
+        # Use the found file
+        selected_file_path = found_file["path"]
+        selected_file_content = found_file["content"]
+        selected_file_type = found_file["type"]
+        
+        logger.info(f"🎯 Selected {selected_file_type} file: {selected_file_path}")
+        
+        # Download the selected file
+        if selected_file_content is None:
+            logger.error(f"❌ Failed to download {selected_file_type} file: {selected_file_path}")
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Failed to download {selected_file_type} file: {selected_file_path}"
+            )
+        
+        # Create semplan_ground directory if it doesn't exist
+        semplan_ground_dir = "./semplan_ground"
+        os.makedirs(semplan_ground_dir, exist_ok=True)
+        
+        # Save the downloaded file locally
+        local_file_path = os.path.join(semplan_ground_dir, f"{teacher_id}_{uuid.uuid4().hex}_{os.path.basename(selected_file_path)}")
+        with open(local_file_path, "wb") as f:
+            f.write(selected_file_content)
+        
+        logger.info(f"💾 {selected_file_type} file saved locally: {local_file_path}")
+        
+        # Get academic calendar data (semester start and end dates)
+        acc = (await session.execute(
+            select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
+        )).scalar_one_or_none()
+        
+        if not acc:
+            logger.error("Academic calendar not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Academic calendar not found for this teacher"
+            )
+        
+        semester_start_date = acc.semester_start_date
+        semester_end_date = acc.semester_end_date
+        logger.info(f"📅 Academic calendar: start_date={semester_start_date}, end_date={semester_end_date}")
+        
+        # Set up background task for text extraction with session data
+        # Pass subject and class_name to background task for session data extraction
+        job_id = await enqueue_semplan_processing(
+            teacher_id, 
+            local_file_path, 
+            selected_file_path,  # This is the GCS file name that was found
+            subject,
+            class_name,
+            {
+                "semester_start_date": str(semester_start_date),
+                "semester_end_date": str(semester_end_date),
+                "file_type": selected_file_type  # Include file type in session data
+            }
+        )
+        
+        if not job_id:
+            raise HTTPException(status_code=500, detail="Failed to enqueue processing task")
+        
+        logger.info(f"[JOB] Semester plan processing job queued for teacher {teacher_id}: {job_id}")
         
         return {
-            "file_path": file_path,
-            "ai_response": ai_response,
-            "success": True,
-            "message": "AI planning completed successfully"
+            "status": "success",
+            "message": f"{selected_file_type} file downloaded and processing started with session data.",
+            "selected_file": selected_file_path,
+            "selected_file_type": selected_file_type,
+            "local_file_path": local_file_path,
+            "gcs_bucket": settings.GCS_BUCKET_NAME,
+            "teacher_id": teacher_id,
+            "subject": subject,
+            "class_name": class_name,
+            "job_id": job_id,
+            "note": "Connect to WebSocket for real-time updates on processing progress."
         }
-        
+            
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"AI planning failed: {e}")
+        logger.error(f"💥 AI semester planning failed: {e}")
         raise HTTPException(status_code=500, detail=f"AI planning failed: {str(e)}")

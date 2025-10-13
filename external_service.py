@@ -60,7 +60,6 @@ def get_holidays_from_ai(country: str, year: int):
             ],
             "generation_config": {
                 "temperature": 0,
-                "maxOutputTokens": 2048,
                 "topP": 1,
                 "responseMimeType": "application/json"
             },
@@ -72,6 +71,14 @@ def get_holidays_from_ai(country: str, year: int):
                 }
             ]
         }
+        
+        # Add detailed logging of what is sent to AI
+        logger.info("=====START OF WHAT IS SENT TO AI=====")
+        logger.info(f"URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={settings.API_KEY[:8]}...{settings.API_KEY[-4:]}")
+        logger.info("HEADERS: {'Content-Type': 'application/json'}")
+        logger.info("PAYLOAD:")
+        logger.info(json.dumps(payload, indent=2))
+        logger.info("=====END OF WHAT IS SENT TO AI=====")
         
         # ✅ Set headers
         headers = {
@@ -269,11 +276,11 @@ def send_academic_calendar_to_ai(extracted_text: str, gcs_source_path: str, api_
         prompt = build_academic_calendar_prompt(extracted_text, gcs_source_path, additional_data)
         logger.info(f"📝 Prompt Length: {len(prompt)} characters")
         
-        # Prepare the request for Google Vertex AI API (Gemini) - Use generateContent instead of streamGenerateContent
-        url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY}"
-        logger.info(f"🔗 Sending request to AI API")
-        
-        # Create the request payload
+        # Add detailed logging of what is sent to AI
+        logger.info("=====START OF WHAT IS SENT TO AI=====")
+        logger.info(f"URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY[:8]}...{settings.API_KEY[-4:]}")
+        logger.info("HEADERS: {'Content-Type': 'application/json'}")
+        logger.info("PAYLOAD:")
         payload = {
             "contents": [
                 {
@@ -287,10 +294,15 @@ def send_academic_calendar_to_ai(extracted_text: str, gcs_source_path: str, api_
             ],
             "generation_config": {
                 "temperature": 0.2,
-                "maxOutputTokens": 8192,
                 "responseMimeType": "application/json"
             }
         }
+        logger.info(json.dumps(payload, indent=2))
+        logger.info("=====END OF WHAT IS SENT TO AI=====")
+        
+        # Prepare the request for Google Vertex AI API (Gemini) - Use generateContent instead of streamGenerateContent
+        url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY}"
+        logger.info(f"🔗 Sending request to AI API")
         
         # Set headers
         headers = {
@@ -306,8 +318,8 @@ def send_academic_calendar_to_ai(extracted_text: str, gcs_source_path: str, api_
             response_data = response.json()
             logger.info(f"✅ AI API Response Received Successfully")
             
-            # Log the full response for debugging (first 1000 chars)
-            logger.info(f"📋 AI Response (first 1000 chars): {str(response_data)[:1000]}...")
+            # Log the full response for debugging
+            logger.info(f"📋 AI Response: {str(response_data)}")
             
             # Extract the generated content
             if "candidates" in response_data and len(response_data["candidates"]) > 0:
@@ -387,11 +399,11 @@ def send_timetable_to_ai(extracted_text: str, gcs_source_path: str, api_key: str
         prompt = build_timetable_prompt(extracted_text, gcs_source_path)
         logger.info(f"📝 Prompt Length: {len(prompt)} characters")
         
-        # Prepare the request for Google Vertex AI API (Gemini) - Use generateContent instead of streamGenerateContent
-        url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY}"
-        logger.info(f"🔗 Sending request to AI API")
-        
-        # Create the request payload
+        # Add detailed logging of what is sent to AI
+        logger.info("=====START OF WHAT IS SENT TO AI=====")
+        logger.info(f"URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY[:8]}...{settings.API_KEY[-4:]}")
+        logger.info("HEADERS: {'Content-Type': 'application/json'}")
+        logger.info("PAYLOAD:")
         payload = {
             "contents": [
                 {
@@ -405,10 +417,15 @@ def send_timetable_to_ai(extracted_text: str, gcs_source_path: str, api_key: str
             ],
             "generation_config": {
                 "temperature": 0.2,
-                "maxOutputTokens": 8192,
                 "responseMimeType": "application/json"
             }
         }
+        logger.info(json.dumps(payload, indent=2))
+        logger.info("=====END OF WHAT IS SENT TO AI=====")
+        
+        # Prepare the request for Google Vertex AI API (Gemini) - Use generateContent instead of streamGenerateContent
+        url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY}"
+        logger.info(f"🔗 Sending request to AI API")
         
         # Set headers
         headers = {
@@ -424,8 +441,8 @@ def send_timetable_to_ai(extracted_text: str, gcs_source_path: str, api_key: str
             response_data = response.json()
             logger.info(f"✅ AI API Response Received Successfully")
             
-            # Log the full response for debugging (first 1000 chars)
-            logger.info(f"📋 AI Response (first 1000 chars): {str(response_data)[:1000]}...")
+            # Log the full response for debugging
+            logger.info(f"📋 AI Response: {str(response_data)}")
             
             # Extract the generated content
             if "candidates" in response_data and len(response_data["candidates"]) > 0:
@@ -466,5 +483,413 @@ def send_timetable_to_ai(extracted_text: str, gcs_source_path: str, api_key: str
         logger.error(f"💥 AI Timetable Processing Error: {e}", exc_info=True)
         return {"error": str(e)}
 
+
+def build_semester_plan_prompt(extracted_text: str, gcs_source_path: str, session_data: dict = None, class_name: str = None, subject: str = None) -> str:
+    """
+    Build a structured prompt for processing semester plan data using AI.
+    
+    Args:
+        extracted_text: The raw text extracted from the semester plan document
+        gcs_source_path: The Google Cloud Storage path to the original semester plan file
+        session_data: Session data including academic calendar and class sessions
+        class_name: The specific class name to focus on (optional)
+        subject: The specific subject to focus on (optional)
+        
+    Returns:
+        A structured prompt for the AI model
+    """
+    import json
+    
+    # Extract available weeks from session_data
+    available_weeks = []
+    week_details = []
+    
+    if session_data and 'weekly_sessions' in session_data:
+        available_weeks = sorted([int(w.replace('Week ', '')) for w in session_data['weekly_sessions'].keys()])
+        for week_key, week_data in sorted(session_data['weekly_sessions'].items()):
+            session_count = len(week_data.get('sessions', []))
+            week_details.append(f"{week_key}: {session_count} sessions")
+    
+    # Format session data for clarity
+    session_data_str = json.dumps(session_data, indent=2) if session_data else "No session data provided"
+    available_weeks_str = ', '.join([str(w) for w in available_weeks]) if available_weeks else "None"
+    
+    prompt = f"""You are an Educational Curriculum Mapping AI. Your task is to map curriculum elements (strands, substrands, content standards, indicators) to actual teaching sessions.
+
+TARGET CLASS AND SUBJECT:
+Class Name: {class_name or 'Not specified'}
+Subject: {subject or 'Not specified'}
+
+PROCESS ONLY data for this specific class and subject. Ignore all other classes/subjects in the document.
+
+INPUT DATA:
+ExtractedText:
+{extracted_text}
+
+GCSFileLocation: {gcs_source_path}
+
+Available Teaching Weeks: {available_weeks_str}
+Week Details:
+{chr(10).join(week_details) if week_details else 'No week information available'}
+
+Session Data Structure:
+{session_data_str}
+
+OUTPUT FORMAT:
+Return a single JSON object with these four arrays:
+
+{{
+  "strand_data": [
+    {{
+      "strand_name": "Strand Name",
+      "weeks": [1, 2, 3],
+      "sessions": [
+        {{"id": "s1", "date": "2024-01-15", "start_time": "09:00", "end_time": "10:00", "week_number": 1}},
+        {{"id": "s2", "date": "2024-01-22", "start_time": "09:00", "end_time": "10:00", "week_number": 2}}
+      ]
+    }}
+  ],
+  "substrand_data": [
+    {{
+      "strand_name": "Parent Strand Name",
+      "substrand_name": "Substrand Name",
+      "weeks": [1, 2],
+      "sessions": [...]
+    }}
+  ],
+  "content_standard_data": [
+    {{
+      "strand_name": "Parent Strand Name",
+      "substrand_name": "Parent Substrand Name",
+      "content_standard_code": "CODE.1",
+      "content_standard_text": "Full description of what students should know",
+      "sessions": [...]
+    }}
+  ],
+  "indicator_data": [
+    {{
+      "strand_name": "Parent Strand Name",
+      "substrand_name": "Parent Substrand Name",
+      "content_standard_code": "CODE.1",
+      "indicator_code": "CODE.1.1",
+      "indicator_text": "Specific measurable indicator",
+      "sessions": [...]
+    }}
+  ]
+}}
+
+CRITICAL REQUIREMENTS:
+
+1. Week Numbers:
+   - ONLY use weeks from the Available Teaching Weeks list above
+   - Format weeks as numeric arrays: [1, 2, 3] NOT ["Week 1", "Week 2"]
+   - Use document week references ONLY to understand strand duration
+   - Do not plan with the weeks in the document or the document's extract, except that week also is available in the teaching weeks list
+   - You must plan with the available teaching weeks
+   - Do not plan outside the available teaching weeks
+   - If i find out your are planning outside the available teaching weeks or using weeks in the document instead of the available teaching weeks, I will deduct points from your score
+
+
+2. Session Data:
+   - Copy session details EXACTLY from the provided session data
+   - Each session must have: id, date, start_time, end_time, week_number
+   - NEVER create or invent session data
+   - Sessions of each strand member, should be a session found in the weeks or week of the parent strand
+   - Each session of each substrand , should be a session found in the weeks or week of the parent strand
+   - Each session of a content standard, should be a session found in the weeks or week of the parent substrand
+   - Each session of an indicator, should be a session found in the weeks or week of the parent content standard
+
+3. Curriculum Structure:
+   - ALL four data arrays must be FLAT (not nested)
+   - Each element must reference its parent using: strand_name, substrand_name, content_standard_code
+   - Preserve or create(if not available) full text for content_standard_text and indicator_text (NOT just codes)
+   - The content_standard_text and indicator_text are the full text of the content standard and indicator, they are not codes
+   - Do not return codes as content_standard_text or indicator_text, if the document deosnt provide one, youre are free to generate one base on the strand and substrand
+
+4. Field Names (use EXACTLY as shown):
+   - strand_name (not "name" or "strand")
+   - substrand_name (not "name" or "substrand")
+   - content_standard_text (not "name" or "description")
+   - indicator_text (not "name" or "description")
+   - content_standard_code, indicator_code (use actual codes from document)
+
+5. Logical Mapping:
+   - Each strand defines its week boundary via the "weeks" field
+   - All substrands/content_standards/indicators of a strand MUST use weeks and sessions from that strand ONLY
+   - No cross-strand week usage
+   - Distribute indicators across sessions 
+
+6. Data Validation:
+   - Verify all references exist (substrand references strand, content standard references substrand, etc.)
+   - Verify all weeks referenced are in the Available Teaching Weeks list
+   - Verify all session IDs exist in the provided session data
+   - Do not return any data on revision, examination, or holiday or any other events 
+
+MAPPING WORKFLOW:
+1. Extract curriculum hierarchy from ExtractedText
+2. Identify which document weeks each strand spans (for reference only)
+3. Assign each strand to available teaching weeks
+4. Create flat array entries for each curriculum element
+5. Assign sessions to each element based on its assigned weeks
+6. Validate all references and data completeness
+
+Return ONLY valid JSON. Do not include explanations or markdown formatting."""
+    
+    return prompt
+
+
+def send_semester_plan_to_ai(extracted_text: str, gcs_source_path: str, api_key: str, session_data: dict = None, class_name: str = None, subject: str = None) -> dict:
+    """
+    Send semester plan data to AI for processing and return structured results.
+    
+    Args:
+        extracted_text: The raw text extracted from the semester plan document (may be incomplete)
+        gcs_source_path: The Google Cloud Storage path to the original semester plan file
+        api_key: The API key for the AI service (Google Gemini)
+        session_data: Session data including academic calendar and class sessions
+        class_name: The specific class name to focus on (optional)
+        subject: The specific subject to focus on (optional)
+        
+    Returns:
+        A dictionary with the AI-processed semester plan data
+    """
+    try:
+        logger.info(f"🚀 Sending semester plan data to AI for processing")
+        logger.info(f"📂 GCS Source Path: {gcs_source_path}")
+        logger.info(f"📊 Extracted Text Length: {len(extracted_text)} characters")
+        # Log a warning if extracted text is very short
+        if len(extracted_text) < 100:
+            logger.warning(f"⚠️ Extracted text is very short ({len(extracted_text)} characters). AI will rely heavily on the original GCS file for complete information.")
+        
+        # Log session data being sent to AI for debugging
+        if session_data:
+            logger.info(f"📅 SESSION DATA BEING SENT TO AI:")
+            logger.info(f"   Semester Start: {session_data.get('semester_start_date', 'Not provided')}")
+            logger.info(f"   Semester End: {session_data.get('semester_end_date', 'Not provided')}")
+            weekly_sessions = session_data.get('weekly_sessions', {})
+            logger.info(f"   Number of Weeks: {len(weekly_sessions)}")
+            for week_key, week_data in weekly_sessions.items():
+                logger.info(f"     {week_key}: {len(week_data.get('sessions', []))} sessions")
+            # Log the actual weeks available to make it clear to the AI
+            available_weeks = list(weekly_sessions.keys())
+            logger.info(f"   🔑 AVAILABLE WEEKS FOR MAPPING (AI MUST USE ONLY THESE): {', '.join(available_weeks)}")
+            logger.info(f"   📌 IMPORTANT: AI has been instructed to IGNORE any week numbers in the document/extracted text")
+        else:
+            logger.warning("⚠️ NO SESSION DATA PROVIDED TO AI")
+        
+        # Build the prompt
+        prompt = build_semester_plan_prompt(extracted_text, gcs_source_path, session_data, class_name, subject)
+        logger.info(f"📝 Prompt Length: {len(prompt)} characters")
+        # Log a sample of the prompt being sent to AI (first 1000 characters)
+        logger.info(f"📝 SAMPLE OF PROMPT BEING SENT TO AI: {prompt[:1000]}...")
+        
+        # Prepare the request for Google Vertex AI API (Gemini) - Use the same endpoint as timetable
+        url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY}"
+        logger.info(f"🔗 Sending request to AI API")
+        
+        # Create the payload with only the text prompt (no file data)
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            "generation_config": {
+                "temperature": 0.3,
+                "responseMimeType": "application/json"
+            }
+        }
+        
+        # Add detailed logging of what is sent to AI
+        logger.info("=====START OF WHAT IS SENT TO AI=====")
+        logger.info(f"URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key={settings.API_KEY[:8]}...{settings.API_KEY[-4:]}")
+        logger.info("HEADERS: {'Content-Type': 'application/json'}")
+        logger.info("PAYLOAD:")
+        logger.info(json.dumps(payload, indent=2))
+        logger.info("=====END OF WHAT IS SENT TO AI=====")
+        
+        # Set headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+        
+        # Send request to AI service
+        response = requests.post(url, headers=headers, json=payload)
+        logger.info(f"📡 AI API Response Status: {response.status_code}")
+        
+        # Check if request was successful
+        if response.status_code == 200:
+            response_data = response.json()
+            logger.info(f"✅ AI API Response Received Successfully")
+            
+            # Log the full response for debugging
+            logger.info(f"📋 AI Response: {str(response_data)}")
+            
+            # Extract the generated content
+            if "candidates" in response_data and len(response_data["candidates"]) > 0:
+                content = response_data["candidates"][0].get("content", {})
+                if "parts" in content and len(content["parts"]) > 0:
+                    result_text = content["parts"][0].get("text", "")
+                    logger.info(f"🔍 AI Generated Content Length: {len(result_text)} characters")
+                    
+                    # Try to parse as JSON with more robust error handling
+                    try:
+                        # Clean up the response text to extract JSON
+                        # First, try to find JSON object pattern
+                        json_match = re.search(r"\{[\s\S]*\}", result_text)
+                        if json_match:
+                            json_str = json_match.group(0)
+                            logger.info(f"📦 JSON Extracted from AI Response, Length: {len(json_str)} characters")
+                            
+                            # Try multiple JSON parsing strategies
+                            parsed_result = None
+                            parsing_errors = []
+                            
+                            # Strategy 1: Direct parsing
+                            try:
+                                parsed_result = json.loads(json_str)
+                                logger.info(f"🎉 AI Response Parsed Successfully (Direct)")
+                            except json.JSONDecodeError as e:
+                                parsing_errors.append(f"Direct parsing failed: {e}")
+                                logger.warning(f"⚠️ Direct parsing failed: {e}")
+                            
+                            # Strategy 2: If direct parsing fails, try to fix common issues
+                            if parsed_result is None:
+                                try:
+                                    # Fix common JSON issues
+                                    fixed_json = json_str
+                                    
+                                    # Fix trailing commas before closing braces/brackets
+                                    fixed_json = re.sub(r",(\s*[}\]])", r"\1", fixed_json)
+                                    
+                                    # Fix single quotes to double quotes (be careful not to mess up escaped quotes)
+                                    # This is a simple approach - more sophisticated handling might be needed
+                                    fixed_json = re.sub(r"'([^']*)':", r'"\1":', fixed_json)  # Keys
+                                    fixed_json = re.sub(r":\s*'([^']*)'", r': "\1"', fixed_json)  # String values
+                                    
+                                    parsed_result = json.loads(fixed_json)
+                                    logger.info(f"🎉 AI Response Parsed Successfully (With Fixes)")
+                                except json.JSONDecodeError as e:
+                                    parsing_errors.append(f"Fixed parsing failed: {e}")
+                                    logger.warning(f"⚠️ Fixed parsing failed: {e}")
+                            
+                            # Strategy 3: If still failing, try to extract and parse line by line
+                            if parsed_result is None:
+                                try:
+                                    lines = json_str.split('\n')
+                                    cleaned_lines = []
+                                    for line in lines:
+                                        # Remove comments (everything after //)
+                                        line = re.split(r'//', line)[0]
+                                        # Remove extra whitespace
+                                        line = line.strip()
+                                        if line:
+                                            cleaned_lines.append(line)
+                                    
+                                    cleaned_json = '\n'.join(cleaned_lines)
+                                    parsed_result = json.loads(cleaned_json)
+                                    logger.info(f"🎉 AI Response Parsed Successfully (Line-by-line cleaning)")
+                                except json.JSONDecodeError as e:
+                                    parsing_errors.append(f"Line-by-line parsing failed: {e}")
+                                    logger.warning(f"⚠️ Line-by-line parsing failed: {e}")
+                            
+                            # Strategy 4: More advanced JSON fixing for comma issues
+                            if parsed_result is None:
+                                try:
+                                    # Try to fix missing commas between object properties
+                                    fixed_json = json_str
+                                    
+                                    # Fix missing commas between object properties
+                                    # Look for patterns like }"key" and add comma: },"key"
+                                    fixed_json = re.sub(r'(\})\s*"', r'\1,"', fixed_json)
+                                    
+                                    # Fix missing commas between array elements
+                                    # Look for patterns like ]{ and add comma: ],{
+                                    fixed_json = re.sub(r'(\])\s*\{', r'\1,\{', fixed_json)
+                                    
+                                    # Fix missing commas between array elements
+                                    # Look for patterns like }{ and add comma: },{
+                                    fixed_json = re.sub(r'(\})\s*\{', r'\1,\{', fixed_json)
+                                    
+                                    # Try to parse the fixed JSON
+                                    parsed_result = json.loads(fixed_json)
+                                    logger.info(f"🎉 AI Response Parsed Successfully (Advanced comma fixes)")
+                                except json.JSONDecodeError as e:
+                                    parsing_errors.append(f"Advanced comma fixes failed: {e}")
+                                    logger.warning(f"⚠️ Advanced comma fixes failed: {e}")
+                            
+                            # Strategy 5: Brute force approach - try to parse with more aggressive cleaning
+                            if parsed_result is None:
+                                try:
+                                    # Aggressive cleaning approach
+                                    fixed_json = json_str
+                                    
+                                    # Remove any non-JSON text before the first {
+                                    first_brace = fixed_json.find('{')
+                                    if first_brace > 0:
+                                        fixed_json = fixed_json[first_brace:]
+                                    
+                                    # Remove any non-JSON text after the last }
+                                    last_brace = fixed_json.rfind('}')
+                                    if last_brace > 0:
+                                        fixed_json = fixed_json[:last_brace+1]
+                                    
+                                    # Try to fix common formatting issues
+                                    # Replace single quotes with double quotes more carefully
+                                    fixed_json = re.sub(r'([{,])\s*\'([^\']+)\'\s*:', r'\1"\2":', fixed_json)  # Keys
+                                    fixed_json = re.sub(r':\s*\'([^\']+)\'\s*([,}])', r':"\1"\2', fixed_json)  # String values
+                                    
+                                    # Fix unescaped quotes inside strings
+                                    # This is a heuristic - we'll try to balance quotes
+                                    parts = fixed_json.split('"')
+                                    if len(parts) % 2 == 0:  # Unbalanced quotes
+                                        # Try to fix by removing the last quote
+                                        fixed_json = '"'.join(parts[:-1])
+                                    
+                                    parsed_result = json.loads(fixed_json)
+                                    logger.info(f"🎉 AI Response Parsed Successfully (Aggressive cleaning)")
+                                except json.JSONDecodeError as e:
+                                    parsing_errors.append(f"Aggressive cleaning failed: {e}")
+                                    logger.warning(f"⚠️ Aggressive cleaning failed: {e}")
+                            
+                            if parsed_result is not None:
+                                # Log the complete parsed AI response for debugging
+                                logger.info(f"🤖 COMPLETE PARSED AI RESPONSE: {json.dumps(parsed_result, indent=2, default=str)}")
+                                return parsed_result
+                            else:
+                                logger.error(f"💥 All JSON parsing strategies failed:")
+                                for error in parsing_errors:
+                                    logger.error(f"   - {error}")
+                                logger.error(f"📄 Raw JSON string: {json_str}")
+                                # Log the raw response for debugging
+                                logger.error(f"📄 COMPLETE RAW AI RESPONSE: {json.dumps(result_text, indent=2, default=str)}")
+                                return {"error": "JSON parsing failed after multiple strategies", "raw_response": result_text, "parsing_errors": parsing_errors}
+                        else:
+                            logger.warning(f"⚠️ No JSON found in AI response: {result_text[:200]}...")
+                            return {"error": "No JSON found in AI response", "raw_response": result_text}
+                    except Exception as e:
+                        logger.error(f"💥 Unexpected error during JSON parsing: {e}")
+                        logger.error(f"📄 Raw response: {result_text[:500]}...")
+                        # Log the complete raw response for debugging
+                        logger.error(f"📄 COMPLETE RAW AI RESPONSE THAT FAILED PARSING: {json.dumps(result_text, indent=2, default=str)}")
+                        return {"error": f"Unexpected error during JSON parsing: {str(e)}", "raw_response": result_text}
+                else:
+                    logger.warning("No content parts found in AI response")
+                    return {"error": "No content parts found in AI response"}
+            else:
+                logger.warning("No candidates found in AI response")
+                return {"error": "No candidates found in AI response"}
+        else:
+            logger.error(f"AI API request failed with status {response.status_code}: {response.text}")
+            return {"error": f"AI API request failed with status {response.status_code}", "details": response.text}
+        
+    except Exception as e:
+        logger.error(f"💥 AI Semester Plan Processing Error: {e}", exc_info=True)
+        return {"error": str(e)}
 
 # Holiday fetching function updated to use Google AI API

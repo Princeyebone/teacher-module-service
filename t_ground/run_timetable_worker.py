@@ -47,6 +47,7 @@ def main():
         logger.info(f"   - Job Timeout: {timetable_worker_config['job_timeout']} seconds")
         logger.info(f"   - Concurrent Jobs: {timetable_worker_config['concurrent_jobs']}")
         logger.info(f"   - Retry Delay: {timetable_worker_config['retry_delay']} seconds")
+        logger.info(f"   - Queue Name: timetable_queue")
         
         # Run the worker
         run_worker(timetable_worker_config)

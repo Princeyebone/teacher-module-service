@@ -94,8 +94,20 @@ import redis.asyncio as redis
 # Project imports
 from config import settings
 from model import WeeklyTimeTable, TeacherProfile, TeacherNotification, UploadedFile, TempExtract
-from sch_ground.background import arq_redis_settings, async_engine, publish_ws_message, save_notification
-from external_service import get_holidays_from_ai  # For potential AI parsing integration
+
+# Import from sch_ground.background which contains shared utilities, but create separate Redis settings
+try:
+    from sch_ground.background import async_engine, publish_ws_message, save_notification
+except ImportError:
+    # If running as script directly, add parent directory to path
+    import sys
+    import os
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, parent_dir)
+    from sch_ground.background import async_engine, publish_ws_message, save_notification
+
+# Create separate Redis settings (without queue_name parameter)
+timetable_redis_settings = RedisSettings(host="localhost", port=6379, database=0, conn_timeout=10, conn_retries=5, conn_retry_delay=1)
 
 # Logger already initialized at the top
 
@@ -712,10 +724,50 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
         except Exception as e:
             logger.warning(f"⚠️ Error cleaning up global sent messages: {e}")
 
+# Update the enqueue function to use the correct queue name
+async def enqueue_timetable_processing(teacher_id: str, file_path: str, gcs_file_name: str) -> Optional[str]:
+    """
+    Enqueue a timetable file processing task for a teacher.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+        file_path: Path to the uploaded timetable file
+        gcs_file_name: File name to be used in GCS
+        
+    Returns:
+        Job ID string if successful, None if failed
+    """
+    try:
+        # Validate teacher_id is a valid UUID
+        UUID(teacher_id)
+        
+        redis = await create_pool(timetable_redis_settings)
+        job = await redis.enqueue_job(
+            'process_timetable_file_task', 
+            str(teacher_id), 
+            file_path,
+            gcs_file_name,
+            _queue_name='timetable_queue'
+        )
+        
+        logger.info(f"✅ Timetable processing queued for teacher {teacher_id}: {job.job_id}")
+        print(f"📄 Timetable job ID for teacher {teacher_id}: {job.job_id}")
+        
+        await redis.aclose()
+        return job.job_id
+        
+    except ValueError as e:
+        logger.error(f"❌ Invalid teacher_id format: {teacher_id} - {e}")
+        return None
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue timetable task for {teacher_id}: {e}")
+        return None
+
 # ARQ Worker Configuration
 async def startup(ctx):
     """ARQ worker startup"""
-    ctx['redis'] = await create_pool(arq_redis_settings)
+    # Create pool with specific queue name
+    ctx['redis'] = await create_pool(timetable_redis_settings, default_queue_name='timetable_queue')
     logger.info("Timetable processing worker started")
 
 async def shutdown(ctx):
@@ -728,7 +780,8 @@ async def shutdown(ctx):
 # Worker configuration for this specific task
 timetable_worker_config = {
     'functions': [process_timetable_file_task],
-    'redis_settings': arq_redis_settings,
+    'redis_settings': timetable_redis_settings,
+    'queue_name': 'timetable_queue',  # Use just the queue name without arq:queue: prefix
     'on_startup': startup,
     'on_shutdown': shutdown,
     'max_tries': 3,           # Retry failed jobs 3 times
@@ -742,7 +795,8 @@ timetable_worker_config = {
 # Manual testing function
 if __name__ == "__main__":
     async def test_enqueue():
-        redis = await create_pool(arq_redis_settings)
+        # Use timetable-specific Redis settings
+        redis = await create_pool(timetable_redis_settings)
         try:
             teacher_id = "7bed2b69-8000-4b36-8e91-7fe0b70c9d82"
             test_file = "./uploads/test_timetable.pdf"

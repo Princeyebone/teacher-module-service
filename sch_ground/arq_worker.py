@@ -88,6 +88,7 @@ def print_worker_info():
     print("="*50)
     print(f"Redis Host: {arq_redis_settings.host}")
     print(f"Redis Port: {arq_redis_settings.port}")
+    print(f"Redis Queue Name: schedule_queue")
     print(f"Max Tries: {worker_config.get('max_tries', 'default')}")
     print(f"Job Timeout: {worker_config.get('job_timeout', 'default')} seconds")
     print(f"Retry Delay: {worker_config.get('retry_delay', 'default')} seconds")

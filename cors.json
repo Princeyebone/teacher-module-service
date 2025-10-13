@@ -1,8 +1,8 @@
 [
   {
     "origin": ["*"],
-    "method": ["PUT"],
-    "responseHeader": ["Content-Type"],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE", "OPTIONS"],
+    "responseHeader": ["Content-Type", "x-goog-resumable"],
     "maxAgeSeconds": 3600
   }
 ]

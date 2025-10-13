@@ -7641,3 +7641,778 @@ WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
 2025-10-03 14:36:48,857 - arq.worker - INFO - recording health: Oct-03 14:36:48 j_complete=5 j_failed=6 j_retried=0 j_ongoing=0 queued=0
 2025-10-03 15:49:55,005 - t_ground.table_back - INFO - Timetable processing worker shutdown
 2025-10-03 15:49:55,023 - __main__ - INFO - [STOPPED] Worker stopped by user
+2025-10-05 03:30:19,589 - __main__ - INFO - [STARTING] Timetable Processing Worker...
+2025-10-05 03:30:19,590 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-10-05 03:30:19,590 - __main__ - INFO -    - Max Tries: 3
+2025-10-05 03:30:19,590 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-10-05 03:30:19,591 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-10-05 03:30:19,591 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-10-05 03:30:19,612 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-10-05 03:30:19,618 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.47M clients_connected=7 db_keys=9
+2025-10-05 03:30:19,628 - t_ground.table_back - INFO - Timetable processing worker started
+2025-10-05 03:31:44,917 - arq.worker - INFO -   0.47s → 7520150924ba43bda7d87d49856839f9:process_timetable_file_task('7bed2b69-8000-4b36-8e91-7fe0b70c9d82', './uploads/timetable/7bed2b69-8000-4b36…)
+2025-10-05 03:31:44,925 - t_ground.table_back - INFO - 🚀 Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-05 03:31:44,929 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2e336d3c69a10f50b65f8f9e150f46f for key: started__Processing timetable file..._
+2025-10-05 03:31:44,930 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 0
+2025-10-05 03:31:44,932 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 0
+2025-10-05 03:31:44,934 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-05 03:31:44,934 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 1 items
+2025-10-05 03:31:44,935 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 1 items
+2025-10-05 03:31:45,308 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-10-05 03:31:45,310 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-05 03:31:45,320 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-10-05 03:31:45,322 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-05 03:31:45,330 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-10-05 03:31:45,336 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-05 03:31:45,884 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:31:45,890 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:31:45,892 - sqlalchemy.engine.Engine - INFO - [generated in 0.00152s] (UUID('c8ed1a30-1dcb-4ebe-b23a-4a1bae4d2bee'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 10, 5, 2, 31, 45, 347120))
+2025-10-05 03:31:45,901 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:31:45,909 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-05 03:31:45,952 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf'}
+2025-10-05 03:31:45,957 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-05 03:31:45,959 - t_ground.table_back - INFO - 🔍 Detected file type: pdf
+2025-10-05 03:31:45,959 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2c8ed8331fceda06790635ef28a8c0f for key: processing__Extracting text from pdf file..._
+2025-10-05 03:31:45,960 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 1
+2025-10-05 03:31:45,962 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 1
+2025-10-05 03:31:45,962 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-05 03:31:45,963 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 2 items
+2025-10-05 03:31:45,964 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 2 items
+2025-10-05 03:31:45,971 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:31:45,974 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:31:45,975 - sqlalchemy.engine.Engine - INFO - [cached since 0.0847s ago] (UUID('fbdd697c-7c49-449f-b17d-2b08573695f0'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 10, 5, 2, 31, 45, 967904))
+2025-10-05 03:31:45,983 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:31:45,993 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-05 03:31:45,999 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-10-05 03:31:46,005 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-05 03:31:46,005 - t_ground.table_back - INFO - 📄 Extracting text from PDF: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-05 03:31:46,380 - t_ground.table_back - INFO - ✅ Successfully extracted text using pdfplumber: 1219 characters
+2025-10-05 03:31:46,388 - t_ground.table_back - INFO - 📄 Extracted 1219 characters from file
+2025-10-05 03:31:46,391 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: b738f4a85418b0db47213ba878e2bca1 for key: processing__Processing extracted text with AI..._
+2025-10-05 03:31:46,397 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 2
+2025-10-05 03:31:46,398 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 2
+2025-10-05 03:31:46,400 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: b738f4a85418b0db47213ba878e2bca1
+2025-10-05 03:31:46,400 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 3 items
+2025-10-05 03:31:46,401 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 3 items
+2025-10-05 03:31:46,414 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:31:46,416 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:31:46,417 - sqlalchemy.engine.Engine - INFO - [cached since 0.5274s ago] (UUID('caebb9ad-bd36-4c73-920c-245d8b420468'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing extracted text with AI...', 'info', False, datetime.datetime(2025, 10, 5, 2, 31, 46, 410267))
+2025-10-05 03:31:46,422 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:31:46,427 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-05 03:31:46,434 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Processing extracted text with AI...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'extracted_text_length': 1219}
+2025-10-05 03:31:46,439 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: b738f4a85418b0db47213ba878e2bca1
+2025-10-05 03:31:46,440 - t_ground.table_back - INFO - 🤖 Sending extracted text to AI for processing
+2025-10-05 03:31:46,443 - external_service - INFO - 🚀 Sending timetable data to AI for processing
+2025-10-05 03:31:46,443 - external_service - INFO - 📂 GCS Source Path: gs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-05 03:31:46,444 - external_service - INFO - 📊 Extracted Text Length: 1219 characters
+2025-10-05 03:31:46,445 - external_service - INFO - 📝 Prompt Length: 3040 characters
+2025-10-05 03:31:46,445 - external_service - INFO - 🔗 Sending request to AI API
+2025-10-05 03:32:02,598 - external_service - INFO - 📡 AI API Response Status: 200
+2025-10-05 03:32:02,599 - external_service - INFO - ✅ AI API Response Received Successfully
+2025-10-05 03:32:02,600 - external_service - INFO - 📋 AI Response (first 1000 chars): {'candidates': [{'content': {'role': 'model', 'parts': [{'text': '{\n  "extracted_data": {\n    "timetables": [\n      {\n        "weekday": "monday",\n        "subject": "Mathematics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "monday",\n        "subject": "English",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "monday",\n        "subject": "Chemistry",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "English",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "M...
+2025-10-05 03:32:02,600 - external_service - INFO - 🔍 AI Generated Content Length: 4042 characters
+2025-10-05 03:32:02,601 - external_service - INFO - 📦 JSON Extracted from AI Response, Length: 4042 characters
+2025-10-05 03:32:02,602 - external_service - INFO - 🎉 AI Response Parsed Successfully
+2025-10-05 03:32:02,603 - external_service - INFO - 📈 Number of timetable entries found: 20
+2025-10-05 03:32:02,607 - t_ground.table_back - INFO - 🎉 AI processing successful
+2025-10-05 03:32:02,608 - t_ground.table_back - INFO - 📊 Found 20 timetable entries
+2025-10-05 03:32:02,609 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 1566ad831192307878bc0f759daedeca for key: processing__Saving 20 timetable entries..._20
+2025-10-05 03:32:02,609 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 3
+2025-10-05 03:32:02,610 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 3
+2025-10-05 03:32:02,610 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 1566ad831192307878bc0f759daedeca
+2025-10-05 03:32:02,612 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 4 items
+2025-10-05 03:32:02,613 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 4 items
+2025-10-05 03:32:02,619 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:32:02,621 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:32:02,622 - sqlalchemy.engine.Engine - INFO - [cached since 16.73s ago] (UUID('e3d0a03d-ebf2-4357-9bd1-a6726dbeb54c'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Saving 20 timetable entries...', 'info', False, datetime.datetime(2025, 10, 5, 2, 32, 2, 616667))
+2025-10-05 03:32:02,629 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:32:02,636 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-05 03:32:02,645 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Saving 20 timetable entries...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-05 03:32:02,673 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 1566ad831192307878bc0f759daedeca
+2025-10-05 03:32:02,678 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:32:02,690 - sqlalchemy.engine.Engine - INFO - SELECT teacherprofile.no_id, teacherprofile.id, teacherprofile.school_id, teacherprofile.individual_id, teacherprofile.display_name, teacherprofile.qualification, teacherprofile.qualification_year, teacherprofile.qualification_institution, teacherprofile.work_institution, teacherprofile.subjects, teacherprofile.bio, teacherprofile.rating, teacherprofile.role, teacherprofile.country 
+FROM teacherprofile 
+WHERE teacherprofile.id = $1::UUID
+2025-10-05 03:32:02,705 - sqlalchemy.engine.Engine - INFO - [generated in 0.01420s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-05 03:32:02,785 - sqlalchemy.engine.Engine - INFO - SELECT weeklytimetable.id, weeklytimetable.teacher_id, weeklytimetable.weekday, weeklytimetable.pupils, weeklytimetable.subject, weeklytimetable.start_time, weeklytimetable.end_time, weeklytimetable.location 
+FROM weeklytimetable 
+WHERE weeklytimetable.teacher_id = $1::UUID
+2025-10-05 03:32:02,786 - sqlalchemy.engine.Engine - INFO - [generated in 0.00191s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-05 03:32:02,804 - sqlalchemy.engine.Engine - INFO - DELETE FROM weeklytimetable WHERE weeklytimetable.id = $1::INTEGER
+2025-10-05 03:32:02,808 - sqlalchemy.engine.Engine - INFO - [generated in 0.00368s] [(141,), (142,), (143,), (144,), (145,), (146,), (147,), (148,)  ... displaying 10 of 21 total bound parameter sets ...  (160,), (161,)]
+2025-10-05 03:32:02,817 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:32:02,821 - t_ground.table_back - INFO - 🗑️ Deleted 21 existing timetable entries
+2025-10-05 03:32:02,824 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:32:02,829 - sqlalchemy.engine.Engine - INFO - SELECT tempextract.id, tempextract.teacher_id, tempextract.type, tempextract.data, tempextract.created_at, tempextract.updated_at 
+FROM tempextract 
+WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
+2025-10-05 03:32:02,831 - sqlalchemy.engine.Engine - INFO - [generated in 0.00310s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable')
+2025-10-05 03:32:02,846 - t_ground.table_back - INFO - 🆕 Created new TempExtract entry for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-10-05 03:32:02,849 - sqlalchemy.engine.Engine - INFO - INSERT INTO tempextract (id, teacher_id, type, data, created_at, updated_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::JSONB, $5::TIMESTAMP WITHOUT TIME ZONE, $6::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:32:02,849 - sqlalchemy.engine.Engine - INFO - [generated in 0.00098s] (UUID('435382f9-76e9-4cba-b8cc-5ea5823b2c32'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable', '{"entries": [{"weekday": "monday", "subject": "Mathematics", "start_time": "09:00", "end_time": "10:00", "location": "Room 101", "pupils": "Class 10A ... (2528 characters truncated) ... ime": "12:00", "end_time": "13:00", "location": "Room 101", "pupils": "Class 10A"}], "entry_count": 20, "extracted_at": "2025-10-05T02:32:02.843858"}', datetime.datetime(2025, 10, 5, 2, 32, 2, 845450), datetime.datetime(2025, 10, 5, 2, 32, 2, 845908))
+2025-10-05 03:32:02,864 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:32:02,870 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:32:02,873 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:32:02,875 - sqlalchemy.engine.Engine - INFO - [cached since 16.98s ago] (UUID('b3a07da7-6b6d-467c-96c5-f558e40cd65e'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Timetable Processing Complete', 'Successfully processed timetable with 20 entries', 'success', False, datetime.datetime(2025, 10, 5, 2, 32, 2, 868929))
+2025-10-05 03:32:02,877 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:32:02,879 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Timetable Processing Complete
+2025-10-05 03:32:02,881 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 76c6b118be07a43e12875d55298b11da for key: complete_COMPLETE_TIMETABLE_Successfully processed timetable with 20 entries_20
+2025-10-05 03:32:02,883 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 4
+2025-10-05 03:32:02,883 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 4
+2025-10-05 03:32:02,883 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 76c6b118be07a43e12875d55298b11da
+2025-10-05 03:32:02,884 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 5 items
+2025-10-05 03:32:02,884 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 5 items
+2025-10-05 03:32:02,888 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-05 03:32:02,889 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-05 03:32:02,890 - sqlalchemy.engine.Engine - INFO - [cached since 17s ago] (UUID('b9345798-d28a-4426-863d-c85aeff0e51b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Successfully processed timetable with 20 entries', 'info', False, datetime.datetime(2025, 10, 5, 2, 32, 2, 887229))
+2025-10-05 03:32:02,893 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-05 03:32:02,894 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-05 03:32:02,900 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'complete', 'type': 'COMPLETE_TIMETABLE', 'message': 'Successfully processed timetable with 20 entries', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-05 03:32:02,903 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 76c6b118be07a43e12875d55298b11da
+2025-10-05 03:32:02,904 - t_ground.table_back - INFO - 🧹 Cleaned up temporary file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-05 03:32:02,911 - t_ground.table_back - INFO - 🧹 Cleaned up 5 message hashes from global set
+2025-10-05 03:32:02,924 - arq.worker - INFO -  18.01s ← 7520150924ba43bda7d87d49856839f9:process_timetable_file_task ● {'status': 'success', 'message': 'Successfully processed timetable with 20 entr…
+2025-10-05 04:30:19,707 - arq.worker - INFO - recording health: Oct-05 04:30:19 j_complete=1 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-10-05 16:28:49,504 - arq.worker - WARNING - job 62f4b51bbde942fbb52ddfe9584cf0f8, function 'generate_schedule_task' not found
+2025-10-05 16:41:24,972 - arq.worker - WARNING - job 4f30841cd56d4cd8b09b97bbb157b9e0, function 'generate_schedule_task' not found
+2025-10-05 16:51:06,340 - arq.worker - WARNING - job 54bbc9c95ac846b4b2b1354c2bb94ba0, function 'generate_schedule_task' not found
+2025-10-05 17:27:08,829 - arq.worker - INFO - recording health: Oct-05 17:27:08 j_complete=1 j_failed=3 j_retried=0 j_ongoing=0 queued=0
+2025-10-07 09:53:13,905 - t_ground.table_back - INFO - Timetable processing worker shutdown
+2025-10-07 09:53:14,101 - __main__ - INFO - [STOPPED] Worker stopped by user
+2025-10-07 09:53:41,744 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Worker.main() done, defined at C:\Users\HP\tmdl5\env\Lib\site-packages\arq\worker.py:344> exception=TimeoutError('Timeout connecting to server')>
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        **self._connection_arguments()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1122, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (host, port), family=family,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        type=socket.SOCK_STREAM, proto=proto, flags=flags, loop=self)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 1508, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                  proto=proto, flags=flags)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+        lambda: self._connect(), lambda error: self.disconnect()
+    )
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2032.0_x64__qbz5n2kfra8p0\Lib\asyncio\timeouts.py", line 116, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\arq\worker.py", line 361, in main
+    await self._poll_iteration()
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\arq\worker.py", line 386, in _poll_iteration
+    job_ids = await self.pool.zrangebyscore(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.queue_name, min=float('-inf'), start=self._queue_read_offset, num=count, max=now
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "C:\Users\HP\tmdl5\env\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2025-10-12 01:48:14,017 - __main__ - INFO - [STARTING] Timetable Processing Worker...
+2025-10-12 01:48:14,018 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-10-12 01:48:14,018 - __main__ - INFO -    - Max Tries: 3
+2025-10-12 01:48:14,018 - __main__ - INFO -    - Job Timeout: 300 seconds
+2025-10-12 01:48:14,018 - __main__ - INFO -    - Concurrent Jobs: 2
+2025-10-12 01:48:14,019 - __main__ - INFO -    - Retry Delay: 10 seconds
+2025-10-12 01:48:14,019 - __main__ - INFO -    - Queue Name: timetable_queue
+2025-10-12 01:48:14,056 - arq.worker - INFO - Starting worker for 1 functions: process_timetable_file_task
+2025-10-12 01:48:14,060 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.51M clients_connected=4 db_keys=3
+2025-10-12 01:48:14,067 - t_ground.table_back - INFO - Timetable processing worker started
+2025-10-12 01:48:14,084 - arq.worker - INFO - 191.02s → 1b5b8b2f8a79497fa6dd2efc0abd3f49:process_timetable_file_task('7bed2b69-8000-4b36-8e91-7fe0b70c9d82', './uploads/timetable/7bed2b69-8000-4b36…) delayed=191.02s
+2025-10-12 01:48:14,084 - t_ground.table_back - INFO - 🚀 Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:48:14,085 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2e336d3c69a10f50b65f8f9e150f46f for key: started__Processing timetable file..._
+2025-10-12 01:48:14,085 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 0
+2025-10-12 01:48:14,086 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 0
+2025-10-12 01:48:14,086 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 01:48:14,086 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 1 items
+2025-10-12 01:48:14,086 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 1 items
+2025-10-12 01:48:14,291 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-10-12 01:48:14,291 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-12 01:48:14,297 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-10-12 01:48:14,298 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-12 01:48:14,302 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-10-12 01:48:14,302 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-10-12 01:48:14,444 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:14,446 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:14,446 - sqlalchemy.engine.Engine - INFO - [generated in 0.00050s] (UUID('d9aeed18-d96d-4fdf-b38f-85fac6147579'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 10, 12, 0, 48, 14, 304932))
+2025-10-12 01:48:14,460 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:14,462 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:48:14,471 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf'}
+2025-10-12 01:48:14,476 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 01:48:14,476 - t_ground.table_back - INFO - 🔍 Detected file type: pdf
+2025-10-12 01:48:14,476 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2c8ed8331fceda06790635ef28a8c0f for key: processing__Extracting text from pdf file..._
+2025-10-12 01:48:14,477 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 1
+2025-10-12 01:48:14,477 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 1
+2025-10-12 01:48:14,477 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 01:48:14,477 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 2 items
+2025-10-12 01:48:14,478 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 2 items
+2025-10-12 01:48:14,481 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:14,484 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:14,484 - sqlalchemy.engine.Engine - INFO - [cached since 0.03879s ago] (UUID('a6ec9ca6-134b-48ee-818f-1bb556c1bf23'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 10, 12, 0, 48, 14, 479581))
+2025-10-12 01:48:14,491 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:14,494 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:48:14,501 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-10-12 01:48:14,503 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 01:48:14,504 - t_ground.table_back - INFO - 📄 Extracting text from PDF: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:48:14,649 - t_ground.table_back - INFO - ✅ Successfully extracted text using pdfplumber: 1219 characters
+2025-10-12 01:48:14,650 - t_ground.table_back - INFO - 📄 Extracted 1219 characters from file
+2025-10-12 01:48:14,650 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: b738f4a85418b0db47213ba878e2bca1 for key: processing__Processing extracted text with AI..._
+2025-10-12 01:48:14,651 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 2
+2025-10-12 01:48:14,651 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 2
+2025-10-12 01:48:14,651 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 01:48:14,651 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 3 items
+2025-10-12 01:48:14,651 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 3 items
+2025-10-12 01:48:14,655 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:14,656 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:14,657 - sqlalchemy.engine.Engine - INFO - [cached since 0.2109s ago] (UUID('e8d34a4d-2a4c-42bd-bc73-cd811d1ce0c7'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing extracted text with AI...', 'info', False, datetime.datetime(2025, 10, 12, 0, 48, 14, 653611))
+2025-10-12 01:48:14,658 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:14,660 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:48:14,664 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Processing extracted text with AI...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'extracted_text_length': 1219}
+2025-10-12 01:48:14,666 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 01:48:14,666 - t_ground.table_back - INFO - 🤖 Sending extracted text to AI for processing
+2025-10-12 01:48:14,666 - external_service - INFO - 🚀 Sending timetable data to AI for processing
+2025-10-12 01:48:14,666 - external_service - INFO - 📂 GCS Source Path: gs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:48:14,666 - external_service - INFO - 📊 Extracted Text Length: 1219 characters
+2025-10-12 01:48:14,667 - external_service - INFO - 📝 Prompt Length: 3040 characters
+2025-10-12 01:48:14,667 - external_service - INFO - =====START OF WHAT IS SENT TO AI=====
+2025-10-12 01:48:14,667 - external_service - INFO - URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key=AQ.Ab8RN...h3Yw
+2025-10-12 01:48:14,667 - external_service - INFO - HEADERS: {'Content-Type': 'application/json'}
+2025-10-12 01:48:14,667 - external_service - INFO - PAYLOAD:
+2025-10-12 01:48:14,668 - external_service - INFO - {
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "\ud83c\udfaf You are an advanced AI assistant specializing in processing complex timetable data. Your primary goal is to analyze the provided information and return a structured JSON object that exactly matches the specified frontend schema.\n\n\ud83d\udcc2 **Input Data:**\n1.  **EXTRACTED_TEXT:** The raw, copied text content from the timetable document. This is the primary data source for rapid extraction.\n2.  **GCS_SOURCE_PATH:** The Google Cloud Storage path (e.g., gs://your-bucket/document.pdf) to the original timetable file. This serves as a definitive source of truth for verification against any ambiguities in the EXTRACTED_TEXT.\n\n\ud83d\udccb **Task:**\nAnalyze the **EXTRACTED_TEXT** and structure all valid timetable entries into the required JSON format. Use the **GCS_SOURCE_PATH** reference to get insight into the original file not only when the extracted text is unclear, truncated, or contains formatting ambiguities that require context from the original document but always even if the text is clear.\n\n\u2699\ufe0f **Required JSON Output Structure:**\n```\n{\n  \"extracted_data\": {\n    \"timetables\": [\n      {\n        \"weekday\": \"monday\",  // lowercase full day name (e.g., monday, tuesday)\n        \"subject\": \"Mathematics\",  // full subject name\n        \"start_time\": \"09:00\",  // 24-hour format HH:MM\n        \"end_time\": \"10:00\",  // 24-hour format HH:MM\n        \"location\": \"Class 1\",  // classroom or location (Optional)\n        \"pupils\": \"Class 10A\"  // class, grade, or group information (Required)\n      }\n      # ... include all timetable entries found\n    ]\n  }\n}\n\n\ud83d\udcc4 **EXTRACTED_TEXT:**\nTeacher Timetable Template\nTemplate Requirements:\n\u2022 At least 2 different subjects\n\u2022 At least 4 classes total\n\u2022 At least 3 classes per day\n\u2022 Include all required fields: Day, Subject, Start Time, End Time, Location, Class/Pupils\nSample Timetable:\nDay 09:00-10:00 10:00-11:00 11:00-12:00 12:00-13:00 13:00-14:00 14:00-15:00 15:00-16:00\nMonday Mathematics English Lunch Break Chemistry\nRoom 101 Room 102 Lab 2\nClass 10A Class 9B Class 10C\nTuesday English Mathematics Physics Geography\nRoom 102 Room 101 Lab 1 Room 201\nClass 9B Class 10A Class 11A Class 9C\nWednesday Physics Chemistry English Mathematics\nLab 1 Lab 2 Room 102 Room 101\nClass 11A Class 10C Class 9B Class 10A\nThursday Geography History Mathematics English Biology\nRoom 201 Room 202 Room 101 Room 102 Lab 3\nClass 9C Class 10B Class 10A Class 9B Class 11B\nFriday Chemistry Physics English Mathematics\nLab 2 Lab 1 Room 102 Room 101\nClass 10C Class 11A Class 9B Class 10A\nInstructions:\n1. Fill in your actual timetable data\n2. Save as PDF before uploading\n3. Each cell should contain: Subject, Location, and Class/Pupils (separated by line breaks)\n4. Leave cells blank for free periods or when not teaching\n5. Required fields: Day, Subject, Start Time, End Time\n\n\n\ud83d\udd17 **GCS_SOURCE_PATH:**\ngs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf\n\n\u26a0\ufe0f Please return ONLY the valid JSON object that matches the specified schema. Do not include any additional text, code, or explanations.\n"
+        }
+      ]
+    }
+  ],
+  "generation_config": {
+    "temperature": 0.2,
+    "responseMimeType": "application/json"
+  }
+}
+2025-10-12 01:48:14,669 - external_service - INFO - =====END OF WHAT IS SENT TO AI=====
+2025-10-12 01:48:14,670 - external_service - INFO - 🔗 Sending request to AI API
+2025-10-12 01:48:30,172 - external_service - INFO - 📡 AI API Response Status: 200
+2025-10-12 01:48:30,196 - external_service - INFO - ✅ AI API Response Received Successfully
+2025-10-12 01:48:30,321 - external_service - INFO - 📋 AI Response: {'candidates': [{'content': {'role': 'model', 'parts': [{'text': '{\n  "extracted_data": {\n    "timetables": [\n      {\n        "weekday": "monday",\n        "subject": "Mathematics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "monday",\n        "subject": "English",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "monday",\n        "subject": "Chemistry",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "English",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Mathematics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Physics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Geography",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Physics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Chemistry",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Geography",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "History",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 202",\n        "pupils": "Class 10B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Mathematics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "English",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Biology",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 3",\n        "pupils": "Class 11B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Chemistry",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Physics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "friday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      }\n    ]\n  }\n}'}]}, 'finishReason': 'STOP', 'avgLogprobs': -0.0004702129218944166}], 'usageMetadata': {'promptTokenCount': 919, 'candidatesTokenCount': 1512, 'totalTokenCount': 2431, 'trafficType': 'ON_DEMAND', 'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 919}], 'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 1512}]}, 'modelVersion': 'gemini-2.5-flash-lite', 'createTime': '2025-10-12T01:50:41.414905Z', 'responseId': 'cQnraLmpGfatgLUP74aO0QU'}
+2025-10-12 01:48:30,367 - external_service - INFO - 🔍 AI Generated Content Length: 4042 characters
+2025-10-12 01:48:30,379 - external_service - INFO - 📦 JSON Extracted from AI Response, Length: 4042 characters
+2025-10-12 01:48:30,453 - external_service - INFO - 🎉 AI Response Parsed Successfully
+2025-10-12 01:48:30,482 - external_service - INFO - 📈 Number of timetable entries found: 20
+2025-10-12 01:48:30,535 - t_ground.table_back - INFO - 🎉 AI processing successful
+2025-10-12 01:48:30,540 - t_ground.table_back - INFO - 📊 Found 20 timetable entries
+2025-10-12 01:48:30,564 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 1566ad831192307878bc0f759daedeca for key: processing__Saving 20 timetable entries..._20
+2025-10-12 01:48:30,569 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 3
+2025-10-12 01:48:30,594 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 3
+2025-10-12 01:48:30,600 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 1566ad831192307878bc0f759daedeca
+2025-10-12 01:48:30,605 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 4 items
+2025-10-12 01:48:30,625 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 4 items
+2025-10-12 01:48:30,653 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:30,659 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:30,682 - sqlalchemy.engine.Engine - INFO - [cached since 16.24s ago] (UUID('183e9fdd-f996-4e01-a018-8fba211ec9b6'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Saving 20 timetable entries...', 'info', False, datetime.datetime(2025, 10, 12, 0, 48, 30, 649600))
+2025-10-12 01:48:30,704 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:30,708 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:48:30,741 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Saving 20 timetable entries...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 01:48:30,749 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 1566ad831192307878bc0f759daedeca
+2025-10-12 01:48:30,763 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:30,781 - sqlalchemy.engine.Engine - INFO - SELECT teacherprofile.no_id, teacherprofile.id, teacherprofile.school_id, teacherprofile.individual_id, teacherprofile.display_name, teacherprofile.qualification, teacherprofile.qualification_year, teacherprofile.qualification_institution, teacherprofile.work_institution, teacherprofile.subjects, teacherprofile.bio, teacherprofile.rating, teacherprofile.role, teacherprofile.country 
+FROM teacherprofile 
+WHERE teacherprofile.id = $1::UUID
+2025-10-12 01:48:30,798 - sqlalchemy.engine.Engine - INFO - [generated in 0.01738s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 01:48:31,042 - sqlalchemy.engine.Engine - INFO - SELECT weeklytimetable.id, weeklytimetable.teacher_id, weeklytimetable.weekday, weeklytimetable.pupils, weeklytimetable.subject, weeklytimetable.start_time, weeklytimetable.end_time, weeklytimetable.location 
+FROM weeklytimetable 
+WHERE weeklytimetable.teacher_id = $1::UUID
+2025-10-12 01:48:31,044 - sqlalchemy.engine.Engine - INFO - [generated in 0.00148s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 01:48:31,144 - sqlalchemy.engine.Engine - INFO - DELETE FROM weeklytimetable WHERE weeklytimetable.id = $1::INTEGER
+2025-10-12 01:48:31,196 - sqlalchemy.engine.Engine - INFO - [generated in 0.05262s] [(287,), (288,), (289,), (290,), (291,), (293,), (294,), (295,)  ... displaying 10 of 23 total bound parameter sets ...  (309,), (310,)]
+2025-10-12 01:48:31,221 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:31,239 - t_ground.table_back - INFO - 🗑️ Deleted 23 existing timetable entries
+2025-10-12 01:48:31,250 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:31,273 - sqlalchemy.engine.Engine - INFO - SELECT tempextract.id, tempextract.teacher_id, tempextract.type, tempextract.class_name, tempextract.subject, tempextract.file, tempextract.data, tempextract.created_at, tempextract.updated_at 
+FROM tempextract 
+WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
+2025-10-12 01:48:31,277 - sqlalchemy.engine.Engine - INFO - [generated in 0.00424s] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable')
+2025-10-12 01:48:31,325 - t_ground.table_back - INFO - 🆕 Created new TempExtract entry for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-10-12 01:48:31,328 - sqlalchemy.engine.Engine - INFO - INSERT INTO tempextract (id, teacher_id, type, class_name, subject, file, data, created_at, updated_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::JSONB, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:31,330 - sqlalchemy.engine.Engine - INFO - [generated in 0.00146s] (UUID('7ca7f1e9-49de-4091-bc09-d8d58fb6e525'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable', None, None, None, '{"entries": [{"weekday": "monday", "subject": "Mathematics", "start_time": "09:00", "end_time": "10:00", "location": "Room 101", "pupils": "Class 10A ... (2528 characters truncated) ... ime": "12:00", "end_time": "13:00", "location": "Room 101", "pupils": "Class 10A"}], "entry_count": 20, "extracted_at": "2025-10-12T00:48:31.323683"}', datetime.datetime(2025, 10, 12, 0, 48, 31, 324709), datetime.datetime(2025, 10, 12, 0, 48, 31, 325159))
+2025-10-12 01:48:31,361 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:31,369 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:31,372 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:31,374 - sqlalchemy.engine.Engine - INFO - [cached since 16.93s ago] (UUID('943aa305-4f9b-46da-9946-a8986a16d004'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Timetable Processing Complete', 'Successfully processed timetable with 20 entries', 'success', False, datetime.datetime(2025, 10, 12, 0, 48, 31, 365352))
+2025-10-12 01:48:31,377 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:31,379 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Timetable Processing Complete
+2025-10-12 01:48:31,382 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 76c6b118be07a43e12875d55298b11da for key: complete_COMPLETE_TIMETABLE_Successfully processed timetable with 20 entries_20
+2025-10-12 01:48:31,382 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 4
+2025-10-12 01:48:31,382 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 4
+2025-10-12 01:48:31,383 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 76c6b118be07a43e12875d55298b11da
+2025-10-12 01:48:31,383 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 5 items
+2025-10-12 01:48:31,384 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 5 items
+2025-10-12 01:48:31,391 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:48:31,392 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:48:31,394 - sqlalchemy.engine.Engine - INFO - [cached since 16.95s ago] (UUID('b982f3a1-822f-4da5-9a8a-a8e7cb189975'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Successfully processed timetable with 20 entries', 'info', False, datetime.datetime(2025, 10, 12, 0, 48, 31, 387735))
+2025-10-12 01:48:31,396 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:48:31,398 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:48:31,405 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'complete', 'type': 'COMPLETE_TIMETABLE', 'message': 'Successfully processed timetable with 20 entries', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 01:48:31,408 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 76c6b118be07a43e12875d55298b11da
+2025-10-12 01:48:31,411 - t_ground.table_back - INFO - 🧹 Cleaned up temporary file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:48:31,413 - t_ground.table_back - INFO - 🧹 Cleaned up 5 message hashes from global set
+2025-10-12 01:48:31,414 - arq.worker - INFO -  17.33s ← 1b5b8b2f8a79497fa6dd2efc0abd3f49:process_timetable_file_task ● {'status': 'success', 'message': 'Successfully processed timetable with 20 entr…
+2025-10-12 01:53:13,652 - arq.worker - INFO -   0.43s → 419394d179dd424cbff0660a20d1315a:process_timetable_file_task('7bed2b69-8000-4b36-8e91-7fe0b70c9d82', './uploads/timetable/7bed2b69-8000-4b36…)
+2025-10-12 01:53:13,679 - t_ground.table_back - INFO - 🚀 Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:53:13,690 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2e336d3c69a10f50b65f8f9e150f46f for key: started__Processing timetable file..._
+2025-10-12 01:53:13,694 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 0
+2025-10-12 01:53:13,697 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 0
+2025-10-12 01:53:13,698 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 01:53:13,698 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 1 items
+2025-10-12 01:53:13,699 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 1 items
+2025-10-12 01:53:14,609 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:14,652 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:14,654 - sqlalchemy.engine.Engine - INFO - [cached since 300.2s ago] (UUID('280f0097-ac32-4642-9a3b-1c24ff0640b5'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 10, 12, 0, 53, 14, 389726))
+2025-10-12 01:53:14,677 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:14,685 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:53:14,707 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf'}
+2025-10-12 01:53:14,710 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 01:53:14,712 - t_ground.table_back - INFO - 🔍 Detected file type: pdf
+2025-10-12 01:53:14,712 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2c8ed8331fceda06790635ef28a8c0f for key: processing__Extracting text from pdf file..._
+2025-10-12 01:53:14,713 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 1
+2025-10-12 01:53:14,713 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 1
+2025-10-12 01:53:14,713 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 01:53:14,713 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 2 items
+2025-10-12 01:53:14,714 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 2 items
+2025-10-12 01:53:14,724 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:14,725 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:14,725 - sqlalchemy.engine.Engine - INFO - [cached since 300.3s ago] (UUID('12b3e591-b7e6-46f7-9d3f-7972eee8e748'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 10, 12, 0, 53, 14, 719990))
+2025-10-12 01:53:14,732 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:14,737 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:53:14,744 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-10-12 01:53:14,746 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 01:53:14,748 - t_ground.table_back - INFO - 📄 Extracting text from PDF: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:53:15,324 - t_ground.table_back - INFO - ✅ Successfully extracted text using pdfplumber: 1219 characters
+2025-10-12 01:53:15,325 - t_ground.table_back - INFO - 📄 Extracted 1219 characters from file
+2025-10-12 01:53:15,326 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: b738f4a85418b0db47213ba878e2bca1 for key: processing__Processing extracted text with AI..._
+2025-10-12 01:53:15,327 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 2
+2025-10-12 01:53:15,327 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 2
+2025-10-12 01:53:15,327 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 01:53:15,327 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 3 items
+2025-10-12 01:53:15,327 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 3 items
+2025-10-12 01:53:15,333 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:15,334 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:15,335 - sqlalchemy.engine.Engine - INFO - [cached since 300.9s ago] (UUID('7486e4e5-d88a-42da-95c6-28d1a523edd1'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing extracted text with AI...', 'info', False, datetime.datetime(2025, 10, 12, 0, 53, 15, 330348))
+2025-10-12 01:53:15,339 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:15,341 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:53:15,346 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Processing extracted text with AI...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'extracted_text_length': 1219}
+2025-10-12 01:53:15,354 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 01:53:15,361 - t_ground.table_back - INFO - 🤖 Sending extracted text to AI for processing
+2025-10-12 01:53:15,362 - external_service - INFO - 🚀 Sending timetable data to AI for processing
+2025-10-12 01:53:15,370 - external_service - INFO - 📂 GCS Source Path: gs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:53:15,371 - external_service - INFO - 📊 Extracted Text Length: 1219 characters
+2025-10-12 01:53:15,374 - external_service - INFO - 📝 Prompt Length: 3040 characters
+2025-10-12 01:53:15,374 - external_service - INFO - =====START OF WHAT IS SENT TO AI=====
+2025-10-12 01:53:15,375 - external_service - INFO - URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key=AQ.Ab8RN...h3Yw
+2025-10-12 01:53:15,376 - external_service - INFO - HEADERS: {'Content-Type': 'application/json'}
+2025-10-12 01:53:15,376 - external_service - INFO - PAYLOAD:
+2025-10-12 01:53:15,378 - external_service - INFO - {
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "\ud83c\udfaf You are an advanced AI assistant specializing in processing complex timetable data. Your primary goal is to analyze the provided information and return a structured JSON object that exactly matches the specified frontend schema.\n\n\ud83d\udcc2 **Input Data:**\n1.  **EXTRACTED_TEXT:** The raw, copied text content from the timetable document. This is the primary data source for rapid extraction.\n2.  **GCS_SOURCE_PATH:** The Google Cloud Storage path (e.g., gs://your-bucket/document.pdf) to the original timetable file. This serves as a definitive source of truth for verification against any ambiguities in the EXTRACTED_TEXT.\n\n\ud83d\udccb **Task:**\nAnalyze the **EXTRACTED_TEXT** and structure all valid timetable entries into the required JSON format. Use the **GCS_SOURCE_PATH** reference to get insight into the original file not only when the extracted text is unclear, truncated, or contains formatting ambiguities that require context from the original document but always even if the text is clear.\n\n\u2699\ufe0f **Required JSON Output Structure:**\n```\n{\n  \"extracted_data\": {\n    \"timetables\": [\n      {\n        \"weekday\": \"monday\",  // lowercase full day name (e.g., monday, tuesday)\n        \"subject\": \"Mathematics\",  // full subject name\n        \"start_time\": \"09:00\",  // 24-hour format HH:MM\n        \"end_time\": \"10:00\",  // 24-hour format HH:MM\n        \"location\": \"Class 1\",  // classroom or location (Optional)\n        \"pupils\": \"Class 10A\"  // class, grade, or group information (Required)\n      }\n      # ... include all timetable entries found\n    ]\n  }\n}\n\n\ud83d\udcc4 **EXTRACTED_TEXT:**\nTeacher Timetable Template\nTemplate Requirements:\n\u2022 At least 2 different subjects\n\u2022 At least 4 classes total\n\u2022 At least 3 classes per day\n\u2022 Include all required fields: Day, Subject, Start Time, End Time, Location, Class/Pupils\nSample Timetable:\nDay 09:00-10:00 10:00-11:00 11:00-12:00 12:00-13:00 13:00-14:00 14:00-15:00 15:00-16:00\nMonday Mathematics English Lunch Break Chemistry\nRoom 101 Room 102 Lab 2\nClass 10A Class 9B Class 10C\nTuesday English Mathematics Physics Geography\nRoom 102 Room 101 Lab 1 Room 201\nClass 9B Class 10A Class 11A Class 9C\nWednesday Physics Chemistry English Mathematics\nLab 1 Lab 2 Room 102 Room 101\nClass 11A Class 10C Class 9B Class 10A\nThursday Geography History Mathematics English Biology\nRoom 201 Room 202 Room 101 Room 102 Lab 3\nClass 9C Class 10B Class 10A Class 9B Class 11B\nFriday Chemistry Physics English Mathematics\nLab 2 Lab 1 Room 102 Room 101\nClass 10C Class 11A Class 9B Class 10A\nInstructions:\n1. Fill in your actual timetable data\n2. Save as PDF before uploading\n3. Each cell should contain: Subject, Location, and Class/Pupils (separated by line breaks)\n4. Leave cells blank for free periods or when not teaching\n5. Required fields: Day, Subject, Start Time, End Time\n\n\n\ud83d\udd17 **GCS_SOURCE_PATH:**\ngs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf\n\n\u26a0\ufe0f Please return ONLY the valid JSON object that matches the specified schema. Do not include any additional text, code, or explanations.\n"
+        }
+      ]
+    }
+  ],
+  "generation_config": {
+    "temperature": 0.2,
+    "responseMimeType": "application/json"
+  }
+}
+2025-10-12 01:53:15,397 - external_service - INFO - =====END OF WHAT IS SENT TO AI=====
+2025-10-12 01:53:15,402 - external_service - INFO - 🔗 Sending request to AI API
+2025-10-12 01:53:30,578 - external_service - INFO - 📡 AI API Response Status: 200
+2025-10-12 01:53:30,940 - external_service - INFO - ✅ AI API Response Received Successfully
+2025-10-12 01:53:31,563 - external_service - INFO - 📋 AI Response: {'candidates': [{'content': {'role': 'model', 'parts': [{'text': '{\n  "extracted_data": {\n    "timetables": [\n      {\n        "weekday": "monday",\n        "subject": "Mathematics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "monday",\n        "subject": "English",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "monday",\n        "subject": "Chemistry",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "English",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Mathematics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Physics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Geography",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Physics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Chemistry",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Geography",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "History",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 202",\n        "pupils": "Class 10B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Mathematics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "English",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Biology",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 3",\n        "pupils": "Class 11B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Chemistry",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Physics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "friday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      }\n    ]\n  }\n}'}]}, 'finishReason': 'STOP', 'avgLogprobs': -0.0004702129218944166}], 'usageMetadata': {'promptTokenCount': 919, 'candidatesTokenCount': 1512, 'totalTokenCount': 2431, 'trafficType': 'ON_DEMAND', 'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 919}], 'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 1512}]}, 'modelVersion': 'gemini-2.5-flash-lite', 'createTime': '2025-10-12T01:55:42.268814Z', 'responseId': 'ngrraI60EMKVhMIPkZKM8QY'}
+2025-10-12 01:53:31,588 - external_service - INFO - 🔍 AI Generated Content Length: 4042 characters
+2025-10-12 01:53:31,591 - external_service - INFO - 📦 JSON Extracted from AI Response, Length: 4042 characters
+2025-10-12 01:53:31,592 - external_service - INFO - 🎉 AI Response Parsed Successfully
+2025-10-12 01:53:31,592 - external_service - INFO - 📈 Number of timetable entries found: 20
+2025-10-12 01:53:31,612 - t_ground.table_back - INFO - 🎉 AI processing successful
+2025-10-12 01:53:31,613 - t_ground.table_back - INFO - 📊 Found 20 timetable entries
+2025-10-12 01:53:31,614 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 1566ad831192307878bc0f759daedeca for key: processing__Saving 20 timetable entries..._20
+2025-10-12 01:53:31,795 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 3
+2025-10-12 01:53:31,809 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 3
+2025-10-12 01:53:31,821 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 1566ad831192307878bc0f759daedeca
+2025-10-12 01:53:31,839 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 4 items
+2025-10-12 01:53:31,846 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 4 items
+2025-10-12 01:53:32,182 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:32,369 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:32,371 - sqlalchemy.engine.Engine - INFO - [cached since 317.9s ago] (UUID('7a10d8e1-3703-48e8-a9cd-6f0400051d16'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Saving 20 timetable entries...', 'info', False, datetime.datetime(2025, 10, 12, 0, 53, 32, 164022))
+2025-10-12 01:53:32,375 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:32,382 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:53:32,573 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Saving 20 timetable entries...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 01:53:32,579 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 1566ad831192307878bc0f759daedeca
+2025-10-12 01:53:32,836 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:32,850 - sqlalchemy.engine.Engine - INFO - SELECT teacherprofile.no_id, teacherprofile.id, teacherprofile.school_id, teacherprofile.individual_id, teacherprofile.display_name, teacherprofile.qualification, teacherprofile.qualification_year, teacherprofile.qualification_institution, teacherprofile.work_institution, teacherprofile.subjects, teacherprofile.bio, teacherprofile.rating, teacherprofile.role, teacherprofile.country 
+FROM teacherprofile 
+WHERE teacherprofile.id = $1::UUID
+2025-10-12 01:53:32,854 - sqlalchemy.engine.Engine - INFO - [cached since 302.1s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 01:53:33,007 - sqlalchemy.engine.Engine - INFO - SELECT weeklytimetable.id, weeklytimetable.teacher_id, weeklytimetable.weekday, weeklytimetable.pupils, weeklytimetable.subject, weeklytimetable.start_time, weeklytimetable.end_time, weeklytimetable.location 
+FROM weeklytimetable 
+WHERE weeklytimetable.teacher_id = $1::UUID
+2025-10-12 01:53:33,008 - sqlalchemy.engine.Engine - INFO - [cached since 302s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 01:53:33,027 - sqlalchemy.engine.Engine - INFO - DELETE FROM weeklytimetable WHERE weeklytimetable.id = $1::INTEGER
+2025-10-12 01:53:33,034 - sqlalchemy.engine.Engine - INFO - [cached since 301.9s ago] [(311,), (312,), (313,), (314,), (315,), (316,), (317,), (318,)  ... displaying 10 of 20 total bound parameter sets ...  (329,), (330,)]
+2025-10-12 01:53:33,045 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:33,059 - t_ground.table_back - INFO - 🗑️ Deleted 20 existing timetable entries
+2025-10-12 01:53:33,068 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:33,069 - sqlalchemy.engine.Engine - INFO - SELECT tempextract.id, tempextract.teacher_id, tempextract.type, tempextract.class_name, tempextract.subject, tempextract.file, tempextract.data, tempextract.created_at, tempextract.updated_at 
+FROM tempextract 
+WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
+2025-10-12 01:53:33,070 - sqlalchemy.engine.Engine - INFO - [cached since 301.8s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable')
+2025-10-12 01:53:33,123 - t_ground.table_back - INFO - 🆕 Created new TempExtract entry for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-10-12 01:53:33,125 - sqlalchemy.engine.Engine - INFO - INSERT INTO tempextract (id, teacher_id, type, class_name, subject, file, data, created_at, updated_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::JSONB, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:33,126 - sqlalchemy.engine.Engine - INFO - [cached since 301.8s ago] (UUID('e3290ac6-8306-4cd6-bdab-7e35afa02090'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable', None, None, None, '{"entries": [{"weekday": "monday", "subject": "Mathematics", "start_time": "09:00", "end_time": "10:00", "location": "Room 101", "pupils": "Class 10A ... (2528 characters truncated) ... ime": "12:00", "end_time": "13:00", "location": "Room 101", "pupils": "Class 10A"}], "entry_count": 20, "extracted_at": "2025-10-12T00:53:33.083924"}', datetime.datetime(2025, 10, 12, 0, 53, 33, 121199), datetime.datetime(2025, 10, 12, 0, 53, 33, 121680))
+2025-10-12 01:53:33,150 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:33,156 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:33,157 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:33,158 - sqlalchemy.engine.Engine - INFO - [cached since 318.7s ago] (UUID('8741c39f-4653-4a54-a0df-5aee1ccedd1f'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Timetable Processing Complete', 'Successfully processed timetable with 20 entries', 'success', False, datetime.datetime(2025, 10, 12, 0, 53, 33, 154763))
+2025-10-12 01:53:33,161 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:33,166 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Timetable Processing Complete
+2025-10-12 01:53:33,171 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 76c6b118be07a43e12875d55298b11da for key: complete_COMPLETE_TIMETABLE_Successfully processed timetable with 20 entries_20
+2025-10-12 01:53:33,172 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 4
+2025-10-12 01:53:33,173 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 4
+2025-10-12 01:53:33,174 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 76c6b118be07a43e12875d55298b11da
+2025-10-12 01:53:33,175 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 5 items
+2025-10-12 01:53:33,176 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 5 items
+2025-10-12 01:53:33,182 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 01:53:33,184 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 01:53:33,184 - sqlalchemy.engine.Engine - INFO - [cached since 318.7s ago] (UUID('06285f85-6480-4f85-a26a-a8deef9c0ec7'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Successfully processed timetable with 20 entries', 'info', False, datetime.datetime(2025, 10, 12, 0, 53, 33, 179699))
+2025-10-12 01:53:33,188 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 01:53:33,190 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 01:53:33,196 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'complete', 'type': 'COMPLETE_TIMETABLE', 'message': 'Successfully processed timetable with 20 entries', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 01:53:33,200 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 76c6b118be07a43e12875d55298b11da
+2025-10-12 01:53:33,202 - t_ground.table_back - INFO - 🧹 Cleaned up temporary file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 01:53:33,204 - t_ground.table_back - INFO - 🧹 Cleaned up 5 message hashes from global set
+2025-10-12 01:53:33,217 - arq.worker - INFO -  19.58s ← 419394d179dd424cbff0660a20d1315a:process_timetable_file_task ● {'status': 'success', 'message': 'Successfully processed timetable with 20 entr…
+2025-10-12 02:05:33,212 - arq.worker - INFO -   0.33s → 09b0382f22494b64b842b548fc2afbc4:process_timetable_file_task('7bed2b69-8000-4b36-8e91-7fe0b70c9d82', './uploads/timetable/7bed2b69-8000-4b36…)
+2025-10-12 02:05:33,240 - t_ground.table_back - INFO - 🚀 Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:05:33,254 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2e336d3c69a10f50b65f8f9e150f46f for key: started__Processing timetable file..._
+2025-10-12 02:05:33,256 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 0
+2025-10-12 02:05:33,259 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 0
+2025-10-12 02:05:33,261 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 02:05:33,262 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 1 items
+2025-10-12 02:05:33,262 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 1 items
+2025-10-12 02:05:34,029 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:34,081 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:34,085 - sqlalchemy.engine.Engine - INFO - [cached since 1040s ago] (UUID('fb5ab01c-fc5b-489d-9a2c-76c5fc1ffeaf'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 10, 12, 1, 5, 33, 788745))
+2025-10-12 02:05:34,119 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:34,127 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:05:34,160 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf'}
+2025-10-12 02:05:34,162 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 02:05:34,165 - t_ground.table_back - INFO - 🔍 Detected file type: pdf
+2025-10-12 02:05:34,166 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2c8ed8331fceda06790635ef28a8c0f for key: processing__Extracting text from pdf file..._
+2025-10-12 02:05:34,167 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 1
+2025-10-12 02:05:34,167 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 1
+2025-10-12 02:05:34,168 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 02:05:34,168 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 2 items
+2025-10-12 02:05:34,169 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 2 items
+2025-10-12 02:05:34,176 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:34,177 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:34,178 - sqlalchemy.engine.Engine - INFO - [cached since 1040s ago] (UUID('dfe79b05-b8e5-4467-a66a-a654037e6e0f'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 10, 12, 1, 5, 34, 173030))
+2025-10-12 02:05:34,182 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:34,186 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:05:34,191 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-10-12 02:05:34,193 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 02:05:34,195 - t_ground.table_back - INFO - 📄 Extracting text from PDF: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:05:34,614 - t_ground.table_back - INFO - ✅ Successfully extracted text using pdfplumber: 1219 characters
+2025-10-12 02:05:34,615 - t_ground.table_back - INFO - 📄 Extracted 1219 characters from file
+2025-10-12 02:05:34,617 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: b738f4a85418b0db47213ba878e2bca1 for key: processing__Processing extracted text with AI..._
+2025-10-12 02:05:34,618 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 2
+2025-10-12 02:05:34,618 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 2
+2025-10-12 02:05:34,619 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 02:05:34,620 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 3 items
+2025-10-12 02:05:34,624 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 3 items
+2025-10-12 02:05:34,639 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:34,642 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:34,643 - sqlalchemy.engine.Engine - INFO - [cached since 1040s ago] (UUID('686d121d-1744-4026-bcc4-fb4265a8d02d'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing extracted text with AI...', 'info', False, datetime.datetime(2025, 10, 12, 1, 5, 34, 631470))
+2025-10-12 02:05:34,647 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:34,650 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:05:34,659 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Processing extracted text with AI...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'extracted_text_length': 1219}
+2025-10-12 02:05:34,665 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 02:05:34,668 - t_ground.table_back - INFO - 🤖 Sending extracted text to AI for processing
+2025-10-12 02:05:34,680 - external_service - INFO - 🚀 Sending timetable data to AI for processing
+2025-10-12 02:05:34,681 - external_service - INFO - 📂 GCS Source Path: gs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:05:34,682 - external_service - INFO - 📊 Extracted Text Length: 1219 characters
+2025-10-12 02:05:34,694 - external_service - INFO - 📝 Prompt Length: 3040 characters
+2025-10-12 02:05:34,695 - external_service - INFO - =====START OF WHAT IS SENT TO AI=====
+2025-10-12 02:05:34,696 - external_service - INFO - URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key=AQ.Ab8RN...h3Yw
+2025-10-12 02:05:34,696 - external_service - INFO - HEADERS: {'Content-Type': 'application/json'}
+2025-10-12 02:05:34,697 - external_service - INFO - PAYLOAD:
+2025-10-12 02:05:34,699 - external_service - INFO - {
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "\ud83c\udfaf You are an advanced AI assistant specializing in processing complex timetable data. Your primary goal is to analyze the provided information and return a structured JSON object that exactly matches the specified frontend schema.\n\n\ud83d\udcc2 **Input Data:**\n1.  **EXTRACTED_TEXT:** The raw, copied text content from the timetable document. This is the primary data source for rapid extraction.\n2.  **GCS_SOURCE_PATH:** The Google Cloud Storage path (e.g., gs://your-bucket/document.pdf) to the original timetable file. This serves as a definitive source of truth for verification against any ambiguities in the EXTRACTED_TEXT.\n\n\ud83d\udccb **Task:**\nAnalyze the **EXTRACTED_TEXT** and structure all valid timetable entries into the required JSON format. Use the **GCS_SOURCE_PATH** reference to get insight into the original file not only when the extracted text is unclear, truncated, or contains formatting ambiguities that require context from the original document but always even if the text is clear.\n\n\u2699\ufe0f **Required JSON Output Structure:**\n```\n{\n  \"extracted_data\": {\n    \"timetables\": [\n      {\n        \"weekday\": \"monday\",  // lowercase full day name (e.g., monday, tuesday)\n        \"subject\": \"Mathematics\",  // full subject name\n        \"start_time\": \"09:00\",  // 24-hour format HH:MM\n        \"end_time\": \"10:00\",  // 24-hour format HH:MM\n        \"location\": \"Class 1\",  // classroom or location (Optional)\n        \"pupils\": \"Class 10A\"  // class, grade, or group information (Required)\n      }\n      # ... include all timetable entries found\n    ]\n  }\n}\n\n\ud83d\udcc4 **EXTRACTED_TEXT:**\nTeacher Timetable Template\nTemplate Requirements:\n\u2022 At least 2 different subjects\n\u2022 At least 4 classes total\n\u2022 At least 3 classes per day\n\u2022 Include all required fields: Day, Subject, Start Time, End Time, Location, Class/Pupils\nSample Timetable:\nDay 09:00-10:00 10:00-11:00 11:00-12:00 12:00-13:00 13:00-14:00 14:00-15:00 15:00-16:00\nMonday Mathematics English Lunch Break Chemistry\nRoom 101 Room 102 Lab 2\nClass 10A Class 9B Class 10C\nTuesday English Mathematics Physics Geography\nRoom 102 Room 101 Lab 1 Room 201\nClass 9B Class 10A Class 11A Class 9C\nWednesday Physics Chemistry English Mathematics\nLab 1 Lab 2 Room 102 Room 101\nClass 11A Class 10C Class 9B Class 10A\nThursday Geography History Mathematics English Biology\nRoom 201 Room 202 Room 101 Room 102 Lab 3\nClass 9C Class 10B Class 10A Class 9B Class 11B\nFriday Chemistry Physics English Mathematics\nLab 2 Lab 1 Room 102 Room 101\nClass 10C Class 11A Class 9B Class 10A\nInstructions:\n1. Fill in your actual timetable data\n2. Save as PDF before uploading\n3. Each cell should contain: Subject, Location, and Class/Pupils (separated by line breaks)\n4. Leave cells blank for free periods or when not teaching\n5. Required fields: Day, Subject, Start Time, End Time\n\n\n\ud83d\udd17 **GCS_SOURCE_PATH:**\ngs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf\n\n\u26a0\ufe0f Please return ONLY the valid JSON object that matches the specified schema. Do not include any additional text, code, or explanations.\n"
+        }
+      ]
+    }
+  ],
+  "generation_config": {
+    "temperature": 0.2,
+    "responseMimeType": "application/json"
+  }
+}
+2025-10-12 02:05:34,724 - external_service - INFO - =====END OF WHAT IS SENT TO AI=====
+2025-10-12 02:05:34,725 - external_service - INFO - 🔗 Sending request to AI API
+2025-10-12 02:05:49,865 - external_service - INFO - 📡 AI API Response Status: 200
+2025-10-12 02:05:49,870 - external_service - INFO - ✅ AI API Response Received Successfully
+2025-10-12 02:05:49,874 - external_service - INFO - 📋 AI Response: {'candidates': [{'content': {'role': 'model', 'parts': [{'text': '{\n  "extracted_data": {\n    "timetables": [\n      {\n        "weekday": "monday",\n        "subject": "Mathematics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "monday",\n        "subject": "English",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "monday",\n        "subject": "Chemistry",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "English",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Mathematics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Physics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Geography",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Physics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Chemistry",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Geography",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "History",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 202",\n        "pupils": "Class 10B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Mathematics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "English",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Biology",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 3",\n        "pupils": "Class 11B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Chemistry",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Physics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "friday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      }\n    ]\n  }\n}'}]}, 'finishReason': 'STOP', 'avgLogprobs': -0.0004702129218944166}], 'usageMetadata': {'promptTokenCount': 919, 'candidatesTokenCount': 1512, 'totalTokenCount': 2431, 'trafficType': 'ON_DEMAND', 'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 919}], 'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 1512}]}, 'modelVersion': 'gemini-2.5-flash-lite', 'createTime': '2025-10-12T02:08:01.266058Z', 'responseId': 'gQ3raMqeEMiRhMIPrvPlsQc'}
+2025-10-12 02:05:49,894 - external_service - INFO - 🔍 AI Generated Content Length: 4042 characters
+2025-10-12 02:05:49,895 - external_service - INFO - 📦 JSON Extracted from AI Response, Length: 4042 characters
+2025-10-12 02:05:49,896 - external_service - INFO - 🎉 AI Response Parsed Successfully
+2025-10-12 02:05:49,900 - external_service - INFO - 📈 Number of timetable entries found: 20
+2025-10-12 02:05:49,910 - t_ground.table_back - INFO - 🎉 AI processing successful
+2025-10-12 02:05:49,921 - t_ground.table_back - INFO - 📊 Found 20 timetable entries
+2025-10-12 02:05:49,923 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 1566ad831192307878bc0f759daedeca for key: processing__Saving 20 timetable entries..._20
+2025-10-12 02:05:49,925 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 3
+2025-10-12 02:05:49,926 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 3
+2025-10-12 02:05:49,927 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 1566ad831192307878bc0f759daedeca
+2025-10-12 02:05:49,935 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 4 items
+2025-10-12 02:05:49,937 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 4 items
+2025-10-12 02:05:49,966 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:49,976 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:49,978 - sqlalchemy.engine.Engine - INFO - [cached since 1056s ago] (UUID('6130a78d-31d3-40ce-8f90-9da967d824f0'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Saving 20 timetable entries...', 'info', False, datetime.datetime(2025, 10, 12, 1, 5, 49, 949962))
+2025-10-12 02:05:49,986 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:49,992 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:05:50,009 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Saving 20 timetable entries...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 02:05:50,017 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 1566ad831192307878bc0f759daedeca
+2025-10-12 02:05:50,251 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:50,264 - sqlalchemy.engine.Engine - INFO - SELECT teacherprofile.no_id, teacherprofile.id, teacherprofile.school_id, teacherprofile.individual_id, teacherprofile.display_name, teacherprofile.qualification, teacherprofile.qualification_year, teacherprofile.qualification_institution, teacherprofile.work_institution, teacherprofile.subjects, teacherprofile.bio, teacherprofile.rating, teacherprofile.role, teacherprofile.country 
+FROM teacherprofile 
+WHERE teacherprofile.id = $1::UUID
+2025-10-12 02:05:50,270 - sqlalchemy.engine.Engine - INFO - [cached since 1039s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 02:05:50,360 - sqlalchemy.engine.Engine - INFO - SELECT weeklytimetable.id, weeklytimetable.teacher_id, weeklytimetable.weekday, weeklytimetable.pupils, weeklytimetable.subject, weeklytimetable.start_time, weeklytimetable.end_time, weeklytimetable.location 
+FROM weeklytimetable 
+WHERE weeklytimetable.teacher_id = $1::UUID
+2025-10-12 02:05:50,361 - sqlalchemy.engine.Engine - INFO - [cached since 1039s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 02:05:50,376 - sqlalchemy.engine.Engine - INFO - DELETE FROM weeklytimetable WHERE weeklytimetable.id = $1::INTEGER
+2025-10-12 02:05:50,376 - sqlalchemy.engine.Engine - INFO - [cached since 1039s ago] [(331,), (332,), (333,), (334,), (335,), (336,), (337,), (338,)  ... displaying 10 of 20 total bound parameter sets ...  (349,), (350,)]
+2025-10-12 02:05:50,383 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:50,386 - t_ground.table_back - INFO - 🗑️ Deleted 20 existing timetable entries
+2025-10-12 02:05:50,393 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:50,396 - sqlalchemy.engine.Engine - INFO - SELECT tempextract.id, tempextract.teacher_id, tempextract.type, tempextract.class_name, tempextract.subject, tempextract.file, tempextract.data, tempextract.created_at, tempextract.updated_at 
+FROM tempextract 
+WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
+2025-10-12 02:05:50,397 - sqlalchemy.engine.Engine - INFO - [cached since 1039s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable')
+2025-10-12 02:05:50,437 - t_ground.table_back - INFO - 🆕 Created new TempExtract entry for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-10-12 02:05:50,439 - sqlalchemy.engine.Engine - INFO - INSERT INTO tempextract (id, teacher_id, type, class_name, subject, file, data, created_at, updated_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::JSONB, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:50,440 - sqlalchemy.engine.Engine - INFO - [cached since 1039s ago] (UUID('c99ef5c2-cb78-426f-a2a8-fa9b814220ba'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable', None, None, None, '{"entries": [{"weekday": "monday", "subject": "Mathematics", "start_time": "09:00", "end_time": "10:00", "location": "Room 101", "pupils": "Class 10A ... (2528 characters truncated) ... ime": "12:00", "end_time": "13:00", "location": "Room 101", "pupils": "Class 10A"}], "entry_count": 20, "extracted_at": "2025-10-12T01:05:50.407740"}', datetime.datetime(2025, 10, 12, 1, 5, 50, 433776), datetime.datetime(2025, 10, 12, 1, 5, 50, 434748))
+2025-10-12 02:05:50,446 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:50,453 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:50,454 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:50,455 - sqlalchemy.engine.Engine - INFO - [cached since 1056s ago] (UUID('d06b1f13-9ea0-4ef8-b7ef-9a0552a0c2b0'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Timetable Processing Complete', 'Successfully processed timetable with 20 entries', 'success', False, datetime.datetime(2025, 10, 12, 1, 5, 50, 450279))
+2025-10-12 02:05:50,459 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:50,460 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Timetable Processing Complete
+2025-10-12 02:05:50,463 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 76c6b118be07a43e12875d55298b11da for key: complete_COMPLETE_TIMETABLE_Successfully processed timetable with 20 entries_20
+2025-10-12 02:05:50,465 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 4
+2025-10-12 02:05:50,465 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 4
+2025-10-12 02:05:50,465 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 76c6b118be07a43e12875d55298b11da
+2025-10-12 02:05:50,466 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 5 items
+2025-10-12 02:05:50,466 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 5 items
+2025-10-12 02:05:50,469 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:05:50,470 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:05:50,471 - sqlalchemy.engine.Engine - INFO - [cached since 1056s ago] (UUID('6ebd73a1-80ff-433c-aaa5-ebdee3acec25'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Successfully processed timetable with 20 entries', 'info', False, datetime.datetime(2025, 10, 12, 1, 5, 50, 467987))
+2025-10-12 02:05:50,473 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:05:50,475 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:05:50,481 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'complete', 'type': 'COMPLETE_TIMETABLE', 'message': 'Successfully processed timetable with 20 entries', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 02:05:50,495 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 76c6b118be07a43e12875d55298b11da
+2025-10-12 02:05:50,497 - t_ground.table_back - INFO - 🧹 Cleaned up temporary file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:05:50,500 - t_ground.table_back - INFO - 🧹 Cleaned up 5 message hashes from global set
+2025-10-12 02:05:50,504 - arq.worker - INFO -  17.30s ← 09b0382f22494b64b842b548fc2afbc4:process_timetable_file_task ● {'status': 'success', 'message': 'Successfully processed timetable with 20 entr…
+2025-10-12 02:10:25,190 - arq.worker - INFO -   0.36s → 6a19089ebf3448939da7a07fe720fb83:process_timetable_file_task('7bed2b69-8000-4b36-8e91-7fe0b70c9d82', './uploads/timetable/7bed2b69-8000-4b36…)
+2025-10-12 02:10:25,246 - t_ground.table_back - INFO - 🚀 Starting timetable file processing for teacher: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82, file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:10:25,259 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2e336d3c69a10f50b65f8f9e150f46f for key: started__Processing timetable file..._
+2025-10-12 02:10:25,264 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 0
+2025-10-12 02:10:25,266 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 0
+2025-10-12 02:10:25,266 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 02:10:25,267 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 1 items
+2025-10-12 02:10:25,267 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 1 items
+2025-10-12 02:10:26,839 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:26,941 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:26,948 - sqlalchemy.engine.Engine - INFO - [cached since 1332s ago] (UUID('83286060-37ac-4128-ab49-80159eb740dd'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing timetable file...', 'info', False, datetime.datetime(2025, 10, 12, 1, 10, 26, 177067))
+2025-10-12 02:10:27,012 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:27,030 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:10:27,082 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'started', 'message': 'Processing timetable file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'file_path': './uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf'}
+2025-10-12 02:10:27,094 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2e336d3c69a10f50b65f8f9e150f46f
+2025-10-12 02:10:27,113 - t_ground.table_back - INFO - 🔍 Detected file type: pdf
+2025-10-12 02:10:27,117 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: f2c8ed8331fceda06790635ef28a8c0f for key: processing__Extracting text from pdf file..._
+2025-10-12 02:10:27,122 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 1
+2025-10-12 02:10:27,123 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 1
+2025-10-12 02:10:27,126 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 02:10:27,128 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 2 items
+2025-10-12 02:10:27,131 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 2 items
+2025-10-12 02:10:27,152 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:27,158 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:27,159 - sqlalchemy.engine.Engine - INFO - [cached since 1333s ago] (UUID('389da625-b2f0-464e-9ad8-3503b8162d76'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Extracting text from pdf file...', 'info', False, datetime.datetime(2025, 10, 12, 1, 10, 27, 142480))
+2025-10-12 02:10:27,187 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:27,207 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:10:27,227 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Extracting text from pdf file...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82'}
+2025-10-12 02:10:27,256 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: f2c8ed8331fceda06790635ef28a8c0f
+2025-10-12 02:10:27,275 - t_ground.table_back - INFO - 📄 Extracting text from PDF: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:10:29,059 - t_ground.table_back - INFO - ✅ Successfully extracted text using pdfplumber: 1219 characters
+2025-10-12 02:10:29,063 - t_ground.table_back - INFO - 📄 Extracted 1219 characters from file
+2025-10-12 02:10:29,072 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: b738f4a85418b0db47213ba878e2bca1 for key: processing__Processing extracted text with AI..._
+2025-10-12 02:10:29,080 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 2
+2025-10-12 02:10:29,083 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 2
+2025-10-12 02:10:29,086 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 02:10:29,090 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 3 items
+2025-10-12 02:10:29,093 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 3 items
+2025-10-12 02:10:29,121 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:29,183 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:29,215 - sqlalchemy.engine.Engine - INFO - [cached since 1335s ago] (UUID('7b33bf31-c07d-46aa-a332-159c27fa0251'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Processing extracted text with AI...', 'info', False, datetime.datetime(2025, 10, 12, 1, 10, 29, 116680))
+2025-10-12 02:10:29,242 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:29,252 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:10:29,315 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Processing extracted text with AI...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'extracted_text_length': 1219}
+2025-10-12 02:10:29,440 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: b738f4a85418b0db47213ba878e2bca1
+2025-10-12 02:10:29,443 - t_ground.table_back - INFO - 🤖 Sending extracted text to AI for processing
+2025-10-12 02:10:29,447 - external_service - INFO - 🚀 Sending timetable data to AI for processing
+2025-10-12 02:10:29,463 - external_service - INFO - 📂 GCS Source Path: gs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:10:29,471 - external_service - INFO - 📊 Extracted Text Length: 1219 characters
+2025-10-12 02:10:29,474 - external_service - INFO - 📝 Prompt Length: 3040 characters
+2025-10-12 02:10:29,476 - external_service - INFO - =====START OF WHAT IS SENT TO AI=====
+2025-10-12 02:10:29,477 - external_service - INFO - URL: https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:generateContent?key=AQ.Ab8RN...h3Yw
+2025-10-12 02:10:29,487 - external_service - INFO - HEADERS: {'Content-Type': 'application/json'}
+2025-10-12 02:10:29,493 - external_service - INFO - PAYLOAD:
+2025-10-12 02:10:29,508 - external_service - INFO - {
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "\ud83c\udfaf You are an advanced AI assistant specializing in processing complex timetable data. Your primary goal is to analyze the provided information and return a structured JSON object that exactly matches the specified frontend schema.\n\n\ud83d\udcc2 **Input Data:**\n1.  **EXTRACTED_TEXT:** The raw, copied text content from the timetable document. This is the primary data source for rapid extraction.\n2.  **GCS_SOURCE_PATH:** The Google Cloud Storage path (e.g., gs://your-bucket/document.pdf) to the original timetable file. This serves as a definitive source of truth for verification against any ambiguities in the EXTRACTED_TEXT.\n\n\ud83d\udccb **Task:**\nAnalyze the **EXTRACTED_TEXT** and structure all valid timetable entries into the required JSON format. Use the **GCS_SOURCE_PATH** reference to get insight into the original file not only when the extracted text is unclear, truncated, or contains formatting ambiguities that require context from the original document but always even if the text is clear.\n\n\u2699\ufe0f **Required JSON Output Structure:**\n```\n{\n  \"extracted_data\": {\n    \"timetables\": [\n      {\n        \"weekday\": \"monday\",  // lowercase full day name (e.g., monday, tuesday)\n        \"subject\": \"Mathematics\",  // full subject name\n        \"start_time\": \"09:00\",  // 24-hour format HH:MM\n        \"end_time\": \"10:00\",  // 24-hour format HH:MM\n        \"location\": \"Class 1\",  // classroom or location (Optional)\n        \"pupils\": \"Class 10A\"  // class, grade, or group information (Required)\n      }\n      # ... include all timetable entries found\n    ]\n  }\n}\n\n\ud83d\udcc4 **EXTRACTED_TEXT:**\nTeacher Timetable Template\nTemplate Requirements:\n\u2022 At least 2 different subjects\n\u2022 At least 4 classes total\n\u2022 At least 3 classes per day\n\u2022 Include all required fields: Day, Subject, Start Time, End Time, Location, Class/Pupils\nSample Timetable:\nDay 09:00-10:00 10:00-11:00 11:00-12:00 12:00-13:00 13:00-14:00 14:00-15:00 15:00-16:00\nMonday Mathematics English Lunch Break Chemistry\nRoom 101 Room 102 Lab 2\nClass 10A Class 9B Class 10C\nTuesday English Mathematics Physics Geography\nRoom 102 Room 101 Lab 1 Room 201\nClass 9B Class 10A Class 11A Class 9C\nWednesday Physics Chemistry English Mathematics\nLab 1 Lab 2 Room 102 Room 101\nClass 11A Class 10C Class 9B Class 10A\nThursday Geography History Mathematics English Biology\nRoom 201 Room 202 Room 101 Room 102 Lab 3\nClass 9C Class 10B Class 10A Class 9B Class 11B\nFriday Chemistry Physics English Mathematics\nLab 2 Lab 1 Room 102 Room 101\nClass 10C Class 11A Class 9B Class 10A\nInstructions:\n1. Fill in your actual timetable data\n2. Save as PDF before uploading\n3. Each cell should contain: Subject, Location, and Class/Pupils (separated by line breaks)\n4. Leave cells blank for free periods or when not teaching\n5. Required fields: Day, Subject, Start Time, End Time\n\n\n\ud83d\udd17 **GCS_SOURCE_PATH:**\ngs:#teacher_module_acatable_bucket/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf\n\n\u26a0\ufe0f Please return ONLY the valid JSON object that matches the specified schema. Do not include any additional text, code, or explanations.\n"
+        }
+      ]
+    }
+  ],
+  "generation_config": {
+    "temperature": 0.2,
+    "responseMimeType": "application/json"
+  }
+}
+2025-10-12 02:10:29,553 - external_service - INFO - =====END OF WHAT IS SENT TO AI=====
+2025-10-12 02:10:29,553 - external_service - INFO - 🔗 Sending request to AI API
+2025-10-12 02:10:44,278 - external_service - INFO - 📡 AI API Response Status: 200
+2025-10-12 02:10:44,282 - external_service - INFO - ✅ AI API Response Received Successfully
+2025-10-12 02:10:44,285 - external_service - INFO - 📋 AI Response: {'candidates': [{'content': {'role': 'model', 'parts': [{'text': '{\n  "extracted_data": {\n    "timetables": [\n      {\n        "weekday": "monday",\n        "subject": "Mathematics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "monday",\n        "subject": "English",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "monday",\n        "subject": "Chemistry",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "English",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Mathematics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Physics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "tuesday",\n        "subject": "Geography",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Physics",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Chemistry",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "wednesday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Geography",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Room 201",\n        "pupils": "Class 9C"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "History",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Room 202",\n        "pupils": "Class 10B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Mathematics",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "English",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "thursday",\n        "subject": "Biology",\n        "start_time": "13:00",\n        "end_time": "14:00",\n        "location": "Lab 3",\n        "pupils": "Class 11B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Chemistry",\n        "start_time": "09:00",\n        "end_time": "10:00",\n        "location": "Lab 2",\n        "pupils": "Class 10C"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Physics",\n        "start_time": "10:00",\n        "end_time": "11:00",\n        "location": "Lab 1",\n        "pupils": "Class 11A"\n      },\n      {\n        "weekday": "friday",\n        "subject": "English",\n        "start_time": "11:00",\n        "end_time": "12:00",\n        "location": "Room 102",\n        "pupils": "Class 9B"\n      },\n      {\n        "weekday": "friday",\n        "subject": "Mathematics",\n        "start_time": "12:00",\n        "end_time": "13:00",\n        "location": "Room 101",\n        "pupils": "Class 10A"\n      }\n    ]\n  }\n}'}]}, 'finishReason': 'STOP', 'avgLogprobs': -0.0004702129218944166}], 'usageMetadata': {'promptTokenCount': 919, 'candidatesTokenCount': 1512, 'totalTokenCount': 2431, 'trafficType': 'ON_DEMAND', 'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 919}], 'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 1512}]}, 'modelVersion': 'gemini-2.5-flash-lite', 'createTime': '2025-10-12T02:12:55.767510Z', 'responseId': 'pw7raJbsLuqCm9IPi-qEkQQ'}
+2025-10-12 02:10:44,292 - external_service - INFO - 🔍 AI Generated Content Length: 4042 characters
+2025-10-12 02:10:44,293 - external_service - INFO - 📦 JSON Extracted from AI Response, Length: 4042 characters
+2025-10-12 02:10:44,294 - external_service - INFO - 🎉 AI Response Parsed Successfully
+2025-10-12 02:10:44,295 - external_service - INFO - 📈 Number of timetable entries found: 20
+2025-10-12 02:10:44,303 - t_ground.table_back - INFO - 🎉 AI processing successful
+2025-10-12 02:10:44,306 - t_ground.table_back - INFO - 📊 Found 20 timetable entries
+2025-10-12 02:10:44,313 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 1566ad831192307878bc0f759daedeca for key: processing__Saving 20 timetable entries..._20
+2025-10-12 02:10:44,317 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 3
+2025-10-12 02:10:44,320 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 3
+2025-10-12 02:10:44,321 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 1566ad831192307878bc0f759daedeca
+2025-10-12 02:10:44,322 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 4 items
+2025-10-12 02:10:44,322 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 4 items
+2025-10-12 02:10:44,343 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:44,348 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:44,349 - sqlalchemy.engine.Engine - INFO - [cached since 1350s ago] (UUID('6315a21f-5fcd-461b-b717-e93ffbf33741'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Saving 20 timetable entries...', 'info', False, datetime.datetime(2025, 10, 12, 1, 10, 44, 327019))
+2025-10-12 02:10:44,365 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:44,376 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:10:44,434 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'processing', 'message': 'Saving 20 timetable entries...', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 02:10:44,480 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 1566ad831192307878bc0f759daedeca
+2025-10-12 02:10:44,701 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:44,729 - sqlalchemy.engine.Engine - INFO - SELECT teacherprofile.no_id, teacherprofile.id, teacherprofile.school_id, teacherprofile.individual_id, teacherprofile.display_name, teacherprofile.qualification, teacherprofile.qualification_year, teacherprofile.qualification_institution, teacherprofile.work_institution, teacherprofile.subjects, teacherprofile.bio, teacherprofile.rating, teacherprofile.role, teacherprofile.country 
+FROM teacherprofile 
+WHERE teacherprofile.id = $1::UUID
+2025-10-12 02:10:44,747 - sqlalchemy.engine.Engine - INFO - [cached since 1334s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 02:10:44,915 - sqlalchemy.engine.Engine - INFO - SELECT weeklytimetable.id, weeklytimetable.teacher_id, weeklytimetable.weekday, weeklytimetable.pupils, weeklytimetable.subject, weeklytimetable.start_time, weeklytimetable.end_time, weeklytimetable.location 
+FROM weeklytimetable 
+WHERE weeklytimetable.teacher_id = $1::UUID
+2025-10-12 02:10:44,919 - sqlalchemy.engine.Engine - INFO - [cached since 1334s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'),)
+2025-10-12 02:10:44,953 - sqlalchemy.engine.Engine - INFO - DELETE FROM weeklytimetable WHERE weeklytimetable.id = $1::INTEGER
+2025-10-12 02:10:44,966 - sqlalchemy.engine.Engine - INFO - [cached since 1334s ago] [(351,), (352,), (353,), (354,), (355,), (356,), (357,), (358,)  ... displaying 10 of 20 total bound parameter sets ...  (369,), (370,)]
+2025-10-12 02:10:45,077 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:45,110 - t_ground.table_back - INFO - 🗑️ Deleted 20 existing timetable entries
+2025-10-12 02:10:45,139 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:45,154 - sqlalchemy.engine.Engine - INFO - SELECT tempextract.id, tempextract.teacher_id, tempextract.type, tempextract.class_name, tempextract.subject, tempextract.file, tempextract.data, tempextract.created_at, tempextract.updated_at 
+FROM tempextract 
+WHERE tempextract.teacher_id = $1::UUID AND tempextract.type = $2::VARCHAR
+2025-10-12 02:10:45,158 - sqlalchemy.engine.Engine - INFO - [cached since 1334s ago] (UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable')
+2025-10-12 02:10:45,294 - t_ground.table_back - INFO - 🆕 Created new TempExtract entry for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-10-12 02:10:45,358 - sqlalchemy.engine.Engine - INFO - INSERT INTO tempextract (id, teacher_id, type, class_name, subject, file, data, created_at, updated_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::JSONB, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:45,563 - sqlalchemy.engine.Engine - INFO - [cached since 1334s ago] (UUID('c3d9816b-c9f7-4b0b-96c9-e4bb86a939d8'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'timetable', None, None, None, '{"entries": [{"weekday": "monday", "subject": "Mathematics", "start_time": "09:00", "end_time": "10:00", "location": "Room 101", "pupils": "Class 10A ... (2528 characters truncated) ... ime": "12:00", "end_time": "13:00", "location": "Room 101", "pupils": "Class 10A"}], "entry_count": 20, "extracted_at": "2025-10-12T01:10:45.255455"}', datetime.datetime(2025, 10, 12, 1, 10, 45, 293493), datetime.datetime(2025, 10, 12, 1, 10, 45, 294332))
+2025-10-12 02:10:45,703 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:45,731 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:45,735 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:45,797 - sqlalchemy.engine.Engine - INFO - [cached since 1351s ago] (UUID('45324323-d2f0-4a94-b176-4c59d0640009'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Timetable Processing Complete', 'Successfully processed timetable with 20 entries', 'success', False, datetime.datetime(2025, 10, 12, 1, 10, 45, 726239))
+2025-10-12 02:10:45,858 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:45,881 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Timetable Processing Complete
+2025-10-12 02:10:45,889 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Checking message hash: 76c6b118be07a43e12875d55298b11da for key: complete_COMPLETE_TIMETABLE_Successfully processed timetable with 20 entries_20
+2025-10-12 02:10:45,893 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Local sent_messages set size: 4
+2025-10-12 02:10:45,909 - t_ground.table_back - INFO - 🔍 [DEDUPLICATION] Global SENT_MESSAGES set size: 4
+2025-10-12 02:10:45,914 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Adding message hash to both local and global sent_messages: 76c6b118be07a43e12875d55298b11da
+2025-10-12 02:10:45,938 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Local set now contains 5 items
+2025-10-12 02:10:45,942 - t_ground.table_back - INFO - ➕ [DEDUPLICATION] Global set now contains 5 items
+2025-10-12 02:10:45,975 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-10-12 02:10:45,987 - sqlalchemy.engine.Engine - INFO - INSERT INTO teachernotification (id, teacher_id, title, message, type, is_read, created_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::TIMESTAMP WITHOUT TIME ZONE)
+2025-10-12 02:10:45,988 - sqlalchemy.engine.Engine - INFO - [cached since 1352s ago] (UUID('0cc435bf-951b-4b70-b289-0662e1ba457b'), UUID('7bed2b69-8000-4b36-8e91-7fe0b70c9d82'), 'Schedule Update', 'Successfully processed timetable with 20 entries', 'info', False, datetime.datetime(2025, 10, 12, 1, 10, 45, 957320))
+2025-10-12 02:10:46,006 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-10-12 02:10:46,034 - tmdl - INFO - Notification saved for teacher 7bed2b69-8000-4b36-8e91-7fe0b70c9d82: Schedule Update
+2025-10-12 02:10:46,201 - tmdl - INFO - [Redis] Published to ws:teacher:7bed2b69-8000-4b36-8e91-7fe0b70c9d82: {'status': 'complete', 'type': 'COMPLETE_TIMETABLE', 'message': 'Successfully processed timetable with 20 entries', 'teacher_id': '7bed2b69-8000-4b36-8e91-7fe0b70c9d82', 'entry_count': 20}
+2025-10-12 02:10:46,270 - t_ground.table_back - INFO - ✅ [DEDUPLICATION] Sent unique WebSocket message with hash: 76c6b118be07a43e12875d55298b11da
+2025-10-12 02:10:46,272 - t_ground.table_back - INFO - 🧹 Cleaned up temporary file: ./uploads/timetable/7bed2b69-8000-4b36-8e91-7fe0b70c9d82.pdf
+2025-10-12 02:10:46,274 - t_ground.table_back - INFO - 🧹 Cleaned up 5 message hashes from global set
+2025-10-12 02:10:46,301 - arq.worker - INFO -  21.11s ← 6a19089ebf3448939da7a07fe720fb83:process_timetable_file_task ● {'status': 'success', 'message': 'Successfully processed timetable with 20 entr…

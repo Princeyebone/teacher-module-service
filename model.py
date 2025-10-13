@@ -243,6 +243,9 @@ class TempExtract(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
     type: str = Field(index=True)  # e.g., "timetable", "academic_calendar"
+    class_name: Optional[str] = Field(default=None, index=True)  # New field for class name
+    subject: Optional[str] = Field(default=None, index=True)  # New field for subject
+    file: Optional[str] = Field(default=None)  # New field for signed URL of the file downloaded from GCS
     data: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)

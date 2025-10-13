@@ -50,8 +50,8 @@ async_engine = create_async_engine(
     pool_pre_ping=True
 )
 
-# Arq Redis settings
-arq_redis_settings = RedisSettings(host="localhost", port=6379)
+# Arq Redis settings (without queue_name parameter)
+arq_redis_settings = RedisSettings(host="localhost", port=6379, database=0, conn_timeout=10, conn_retries=5, conn_retry_delay=1)
 
 # ---------------- DATABASE UTILS ---------------- #
 async def get_session():
@@ -334,31 +334,57 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
                         logger.info(f"{len(filtered_sessions)} sessions remain after filtering")
                         
                         # ROBUST IMPLEMENTATION: Atomic transaction for both table operations
-                        # Clear existing sessions
-                        logger.debug("Clearing existing ClassSession entries...")
+                        # Update existing sessions instead of deleting all and recreating
+                        logger.debug("Updating ClassSession entries...")
                         existing_sessions = (await session.execute(
                             select(ClassSession).where(ClassSession.teacher_id == teacher_id)
                         )).scalars().all()
-                        for session_obj in existing_sessions:
-                            await session.delete(session_obj)
                         
-                        # Save new sessions to ClassSession table
-                        logger.debug("Saving new ClassSession entries...")
+                        # Create a mapping of existing sessions by their unique characteristics
+                        existing_session_map = {
+                            (s.date, s.start_time, s.subject, s.class_name): s 
+                            for s in existing_sessions
+                        }
+                        
+                        # Track which existing sessions have been updated
+                        updated_sessions = set()
+                        
                         class_sessions_saved = 0
+                        
+                        # Update or create sessions
                         for cs in filtered_sessions:
-                            session.add(ClassSession(
-                                teacher_id=teacher_id,
-                                subject=cs["subject"],
-                                date=cs["date"],
-                                start_time=cs["start_time"],
-                                end_time=cs["end_time"],
-                                class_name=cs["class_name"],
-                                session_number=cs["session_number"],
-                                is_completed=False,
-                                resource_generated=False,
-                                location=cs["location"]
-                            ))
+                            key = (cs["date"], cs["start_time"], cs["subject"], cs["class_name"])
+                            
+                            if key in existing_session_map:
+                                # Update existing session
+                                session_obj = existing_session_map[key]
+                                session_obj.end_time = cs["end_time"]
+                                session_obj.session_number = cs["session_number"]
+                                session_obj.location = cs["location"]
+                                session_obj.is_completed = False
+                                session_obj.resource_generated = False
+                                session.add(session_obj)
+                                updated_sessions.add(key)
+                            else:
+                                # Create new session
+                                session.add(ClassSession(
+                                    teacher_id=teacher_id,
+                                    subject=cs["subject"],
+                                    date=cs["date"],
+                                    start_time=cs["start_time"],
+                                    end_time=cs["end_time"],
+                                    class_name=cs["class_name"],
+                                    session_number=cs["session_number"],
+                                    is_completed=False,
+                                    resource_generated=False,
+                                    location=cs["location"]
+                                ))
                             class_sessions_saved += 1
+                        
+                        # Delete sessions that weren't in the new data
+                        for key, session_obj in existing_session_map.items():
+                            if key not in updated_sessions:
+                                await session.delete(session_obj)
                         
                         logger.info(f"{class_sessions_saved} sessions prepared for ClassSession table")
                         
@@ -561,7 +587,8 @@ async def populate_teacher_planner_events_atomic(session, teacher_id, calendar_d
 
 # ---------------- ARQ WORKER CONFIG ---------------- #
 async def startup(ctx):
-    ctx['redis'] = await create_pool(arq_redis_settings)
+    # Create pool with specific queue name
+    ctx['redis'] = await create_pool(arq_redis_settings, default_queue_name='schedule_queue')
     logger.info("Arq worker started")
 
 async def shutdown(ctx):
@@ -573,6 +600,7 @@ async def shutdown(ctx):
 worker_config = {
     'functions': [generate_schedule_task],
     'redis_settings': arq_redis_settings,
+    'queue_name': 'schedule_queue',  # Use just the queue name without arq:queue: prefix
     'on_startup': startup,
     'on_shutdown': shutdown,
     'max_tries': 5,           # Retry failed jobs 5 times

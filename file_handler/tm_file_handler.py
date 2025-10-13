@@ -81,7 +81,13 @@ async def upload_timetable(
         logger.info(f"🏷️ File content type: {content_type}")
         
         # Generate signed URL for frontend to upload to GCS with correct content type
-        signed_url = generate_signed_url(settings.GCS_BUCKET_NAME, gcs_file_name, content_type)
+        # For file uploads, we need to use PUT method
+        signed_url = generate_signed_url(
+            settings.GCS_BUCKET_NAME, 
+            gcs_file_name, 
+            method="PUT",
+            content_type=content_type
+        )
         logger.info(f"🔗 Generated signed URL for GCS upload")
         
         # Create a record in database

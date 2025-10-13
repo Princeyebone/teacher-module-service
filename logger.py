@@ -1,10 +1,30 @@
 # logger.py
 import logging
+import logging.handlers
 import sys
-from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
 from config import settings
+
+class SafeRotatingFileHandler(logging.handlers.RotatingFileHandler):
+    """
+    A RotatingFileHandler that handles PermissionError on Windows
+    when trying to rotate log files that are locked by another process.
+    """
+    def doRollover(self):
+        """
+        Override doRollover to handle PermissionError gracefully.
+        """
+        try:
+            super().doRollover()
+        except PermissionError:
+            # If we can't rotate the file, just continue logging to the same file
+            # This can happen on Windows when the file is locked by another process
+            pass
+        except OSError as e:
+            # Handle other OS errors that might occur during rotation
+            if e.errno != 32:  # Only suppress "file in use" errors
+                raise
 
 def setup_logging():
     log_dir = Path("logs")
@@ -19,8 +39,8 @@ def setup_logging():
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
-    # File handler (rotating)
-    file_handler = RotatingFileHandler(
+    # File handler (rotating) with error handling for Windows
+    file_handler = SafeRotatingFileHandler(
         log_dir / "tmdl.log",
         maxBytes=1024*1024,  # 1MB
         backupCount=5,
