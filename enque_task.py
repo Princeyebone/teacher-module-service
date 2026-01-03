@@ -31,6 +31,9 @@ from t_ground.table_back import timetable_redis_settings
 from ca_ground.calendar_back import calendar_redis_settings
 from semplan_ground.semplan_back import semplan_redis_settings
 
+# Import RAG Redis settings
+from rag_back.rag_back import rag_redis_settings
+
 logger = logging.getLogger(__name__)
 
 
@@ -39,8 +42,8 @@ async def enqueue_calendar_processing(teacher_id: str, file_path: str, gcs_file_
     Enqueue a calendar file processing task for a teacher.
     
     Args:
-        teacher_id: UUID string of the teacher
-        file_path: Path to the uploaded calendar file
+        teacher_id: UUID string of the teacher (can be None for system/developer records)
+        file_path: Path to the uploaded calendar file or file name
         gcs_file_name: File name to be used in GCS
         additional_data: Additional context or data that may contain multiple calendar info
         
@@ -48,13 +51,16 @@ async def enqueue_calendar_processing(teacher_id: str, file_path: str, gcs_file_
         Job ID string if successful, None if failed
     """
     try:
-        # Validate teacher_id is a valid UUID
-        UUID(teacher_id)
+        # Validate teacher_id is a valid UUID (unless it's None for system/developer records)
+        if teacher_id is not None:
+            UUID(teacher_id)
+        elif teacher_id is None:
+            logger.info("Processing calendar task for system/developer record (NULL teacher_id)")
         
         redis = await create_pool(calendar_redis_settings)
         job = await redis.enqueue_job(
             'process_calendar_file_task', 
-            str(teacher_id), 
+            str(teacher_id) if teacher_id is not None else None, 
             file_path,
             gcs_file_name,
             additional_data,
@@ -80,21 +86,24 @@ async def enqueue_timetable_processing(teacher_id: str, file_path: str, gcs_file
     Enqueue a timetable file processing task for a teacher.
     
     Args:
-        teacher_id: UUID string of the teacher
-        file_path: Path to the uploaded timetable file
+        teacher_id: UUID string of the teacher (can be None for system/developer records)
+        file_path: Path to the uploaded timetable file or file name
         gcs_file_name: File name to be used in GCS
         
     Returns:
         Job ID string if successful, None if failed
     """
     try:
-        # Validate teacher_id is a valid UUID
-        UUID(teacher_id)
+        # Validate teacher_id is a valid UUID (unless it's None for system/developer records)
+        if teacher_id is not None:
+            UUID(teacher_id)
+        elif teacher_id is None:
+            logger.info("Processing timetable task for system/developer record (NULL teacher_id)")
         
         redis = await create_pool(timetable_redis_settings)
         job = await redis.enqueue_job(
             'process_timetable_file_task', 
-            str(teacher_id), 
+            str(teacher_id) if teacher_id is not None else None, 
             file_path,
             gcs_file_name,
             _queue_name='timetable_queue'  # Use queue name without arq:queue: prefix
@@ -119,20 +128,23 @@ async def enqueue_schedule_generation(teacher_id: str, country: str = "Ghana") -
     Enqueue a schedule generation task for a teacher.
     
     Args:
-        teacher_id: UUID string of the teacher
+        teacher_id: UUID string of the teacher (can be None for system/developer records)
         country: Country for holiday fetching (default: Ghana)
         
     Returns:
         Job ID string if successful, None if failed
     """
     try:
-        # Validate teacher_id is a valid UUID
-        UUID(teacher_id)
+        # Validate teacher_id is a valid UUID (unless it's None for system/developer records)
+        if teacher_id is not None:
+            UUID(teacher_id)
+        elif teacher_id is None:
+            logger.info("Processing schedule generation task for system/developer record (NULL teacher_id)")
         
         redis = await create_pool(schedule_redis_settings)
         job = await redis.enqueue_job(
             'generate_schedule_task', 
-            str(teacher_id), 
+            str(teacher_id) if teacher_id is not None else None, 
             country,
             _queue_name='schedule_queue'  # Use queue name without arq:queue: prefix
         )
@@ -156,8 +168,8 @@ async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_n
     Enqueue a semester plan processing task for a teacher.
     
     Args:
-        teacher_id: UUID string of the teacher
-        file_path: Path to the uploaded semester plan file
+        teacher_id: UUID string of the teacher (can be None for system/developer records)
+        file_path: Path to the uploaded semester plan file or file name
         gcs_file_name: File name to be used in GCS
         subject: Subject name (optional)
         class_name: Class name (optional)
@@ -167,13 +179,16 @@ async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_n
         Job ID string if successful, None if failed
     """
     try:
-        # Validate teacher_id is a valid UUID
-        UUID(teacher_id)
+        # Validate teacher_id is a valid UUID (unless it's None for system/developer records)
+        if teacher_id is not None:
+            UUID(teacher_id)
+        elif teacher_id is None:
+            logger.info("Processing semester plan task for system/developer record (NULL teacher_id)")
         
         redis = await create_pool(semplan_redis_settings)
         job = await redis.enqueue_job(
             'process_semplan_file_task', 
-            str(teacher_id), 
+            str(teacher_id) if teacher_id is not None else None, 
             file_path,
             gcs_file_name,
             subject,
@@ -193,6 +208,47 @@ async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_n
         return None
     except Exception as e:
         logger.error(f"❌ Failed to enqueue semester plan task for {teacher_id}: {e}")
+        return None
+
+
+async def enqueue_rag_processing(teacher_id: str, file_path: str, gcs_file_name: str, metadata: dict) -> Optional[str]:
+    """
+    Enqueue a RAG file processing task for a teacher.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+        file_path: Path to the uploaded file
+        gcs_file_name: File name to be used in GCS
+        metadata: Dictionary containing subject, notes, level, region, source_url, pillar, etc.
+        
+    Returns:
+        Job ID string if successful, None if failed
+    """
+    try:
+        # Validate teacher_id is a valid UUID
+        UUID(teacher_id)
+        
+        redis = await create_pool(rag_redis_settings)
+        job = await redis.enqueue_job(
+            'process_rag_file_task', 
+            str(teacher_id), 
+            file_path,
+            gcs_file_name,
+            metadata,
+            _queue_name='rag_queue'  # Use queue name without arq:queue: prefix
+        )
+        
+        logger.info(f"✅ RAG processing queued for teacher {teacher_id}: {job.job_id}")
+        print(f"📚 RAG job ID for teacher {teacher_id}: {job.job_id}")
+        
+        await redis.aclose()
+        return job.job_id
+        
+    except ValueError as e:
+        logger.error(f"❌ Invalid teacher_id format: {teacher_id} - {e}")
+        return None
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue RAG task for {teacher_id}: {e}")
         return None
 
 

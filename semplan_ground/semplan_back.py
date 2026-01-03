@@ -86,9 +86,9 @@ except ImportError:
     XLSX_AVAILABLE = False
 
 # ARQ and database imports
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from arq import create_pool, ArqRedis
 from arq.connections import RedisSettings
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy import select
 import redis.asyncio as redis
 
@@ -96,7 +96,7 @@ import redis.asyncio as redis
 from config import settings
 from model import TeacherNotification, TempExtract
 from sch_ground.background import arq_redis_settings, async_engine, publish_ws_message, save_notification
-from database import AsyncSessionLocal
+from database import async_engine
 
 
 # Logger already initialized at the top
@@ -190,7 +190,11 @@ class FileExtractor:
                     
                     text_content = ""
                     for i, image in enumerate(images):
-                        page_text = pytesseract.image_to_string(image)
+                        try:
+                            page_text = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                        except Exception as timeout_e:
+                            logger.warning(f"OCR timed out for page {i+1}: {timeout_e}")
+                            page_text = ""  # Treat timeout as no text extracted
                         text_content += f"Page {i+1}:\n{page_text}\n"
                     
                     logger.info(f"✅ OCR extraction from PDF successful: {len(text_content)} characters")
@@ -202,7 +206,11 @@ class FileExtractor:
             else:
                 # Direct OCR for image files
                 image = Image.open(file_path)
-                text_content = pytesseract.image_to_string(image)
+                try:
+                    text_content = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                except Exception as timeout_e:
+                    logger.warning(f"OCR timed out for image: {timeout_e}")
+                    text_content = ""  # Treat timeout as no text extracted
                 logger.info(f"✅ OCR extraction successful: {len(text_content)} characters")
                 return text_content
                 
@@ -356,6 +364,41 @@ async def process_semplan_file_task(ctx: Dict[Any, Any], teacher_id: str, file_p
                 "class_name": class_name
             }
         )
+        
+        # Download file from GCS if not present locally (e.g. uploaded directly to GCS)
+        if not os.path.exists(file_path) and gcs_file_name:
+            logger.info(f"[SEMPLAN] File not found locally: {file_path}. Attempting to download from GCS: {gcs_file_name}")
+            try:
+                # Import here to avoid circular dependencies
+                from gcs_utils import get_gcs_client
+                client = get_gcs_client()
+                bucket = client.bucket(settings.GCS_BUCKET_NAME)
+                blob = bucket.blob(gcs_file_name)
+                
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                
+                logger.info(f"Downloading to {file_path}...")
+                blob.download_to_filename(file_path)
+                logger.info(f"[SEMPLAN] Successfully downloaded file to {file_path}")
+                
+            except Exception as e:
+                error_msg = f"Failed to download file from GCS: {str(e)}"
+                logger.error(f"[SEMPLAN] {error_msg}")
+                # Notify error
+                await send_unique_ws_message(
+                    teacher_id, 
+                    {
+                        "type": "semplan_processing",
+                        "status": "error",
+                        "message": error_msg,
+                        "file_name": os.path.basename(file_path),
+                        "teacher_id": teacher_id,
+                        "subject": subject,
+                        "class_name": class_name
+                    }
+                )
+                raise RuntimeError(error_msg)
         
         # Extract session data if subject and class_name are provided
         enhanced_session_data = session_data or {}
@@ -576,7 +619,7 @@ async def process_semplan_file_task(ctx: Dict[Any, Any], teacher_id: str, file_p
                     # Send to AI with both extracted text (if available) and GCS file path
                     # NOTE: The AI has been instructed to ONLY use the weekly_sessions data for mapping,
                     # and to IGNORE any week numbers mentioned in the extracted text or document
-                    ai_result = send_semester_plan_to_ai(
+                    ai_result = await send_semester_plan_to_ai(
                         extracted_text,  # This may be empty or unclear, but AI will also use the GCS file
                         f"gs://{settings.GCS_BUCKET_NAME}/{gcs_file_name}",
                         settings.API_KEY,
@@ -589,31 +632,156 @@ async def process_semplan_file_task(ctx: Dict[Any, Any], teacher_id: str, file_p
                         logger.info("🎉 AI processing successful")
                         # Log the complete AI response for debugging
                         logger.info(f"🤖 COMPLETE AI RESPONSE: {json.dumps(ai_result, indent=2, default=str)}")
-                        # Store AI response directly in the Strand/Substrand/ContentStandard/Indicator tables
+                        
+                        # Use a SINGLE transaction for both plan AND outline
+                        # If outline fails, the plan is also rolled back (no orphan plans)
+                        
+                        # RETRY CONFIGURATION
+                        max_db_retries = 3
+                        max_outline_retries = 3
+                        
                         try:
-                            await store_ai_response_in_tables(
-                                teacher_id, 
-                                class_name, 
-                                subject, 
-                                ai_result
-                            )
-                            # Notify completion only if AI processing and storage were successful
+                            # Create a single session for both operations
+                            async with AsyncSession(async_engine) as unified_db:
+                                # Storage with retry logic
+                                db_attempt = 0
+                                db_retry_delay = 5  # Start with 5 seconds
+                                storage_success = False
+                                
+                                while db_attempt < max_db_retries and not storage_success:
+                                    try:
+                                        if db_attempt > 0:
+                                            logger.info(f"🔄 [SEMPLAN DB RETRY] Attempt {db_attempt + 1}/{max_db_retries} after {db_retry_delay}s wait...")
+                                            await asyncio.sleep(db_retry_delay)
+                                            db_retry_delay *= 2  # Exponential backoff
+                                        
+                                        # Store AI response in tables (plan data)
+                                        await store_ai_response_in_tables_with_session(
+                                            unified_db,
+                                            teacher_id, 
+                                            class_name, 
+                                            subject, 
+                                            ai_result
+                                        )
+                                        logger.info("📊 [SEMPLAN] Plan data flushed to database (not committed yet)")
+                                        storage_success = True
+                                        
+                                    except Exception as db_error:
+                                        db_attempt += 1
+                                        logger.error(f"❌ [SEMPLAN] DB Storage error (attempt {db_attempt}): {db_error}")
+                                        
+                                        if db_attempt < max_db_retries:
+                                            logger.info(f"   Will retry in {db_retry_delay}s...")
+                                            await unified_db.rollback()
+                                        else:
+                                            logger.error(f"❌ [SEMPLAN] DB Storage failed after {max_db_retries} attempts")
+                                            await unified_db.rollback()
+                                            raise Exception(f"Database storage failed after {max_db_retries} attempts: {db_error}")
+                                
+                                # Generate outline INLINE with retry (same task, same transaction)
+                                logger.info("📘 [SEMPLAN] Generating course outline inline...")
+                                await send_unique_ws_message(
+                                    teacher_id,
+                                    {
+                                        "type": "semplan_processing",
+                                        "status": "generating_outline",
+                                        "message": f"Generating course outline for {subject} - {class_name}...",
+                                        "file_name": os.path.basename(file_path),
+                                        "teacher_id": teacher_id,
+                                        "subject": subject,
+                                        "class_name": class_name
+                                    }
+                                )
+                                
+                                # Fetch semester metadata for outline generation
+                                outline_semester_name = None
+                                outline_term = None
+                                outline_education_system = None
+                                outline_education_level = None
+                                
+                                try:
+                                    from model import AcademicCalendar, TeacherProfile
+                                    from sqlalchemy import select
+                                    
+                                    cal_result = await unified_db.execute(
+                                        select(AcademicCalendar).where(AcademicCalendar.teacher_id == UUID(teacher_id))
+                                    )
+                                    calendar = cal_result.scalar_one_or_none()
+                                    if calendar:
+                                        outline_semester_name = calendar.semester_name if hasattr(calendar, 'semester_name') else None
+                                        outline_term = calendar.term if hasattr(calendar, 'term') else None
+                                    
+                                    teacher_result = await unified_db.execute(
+                                        select(TeacherProfile).where(TeacherProfile.id == UUID(teacher_id))
+                                    )
+                                    teacher = teacher_result.scalar_one_or_none()
+                                    if teacher:
+                                        outline_education_system = teacher.country if hasattr(teacher, 'country') else None
+                                except Exception as cal_err:
+                                    logger.warning(f"[SEMPLAN] Could not fetch calendar data for outline: {cal_err}")
+                                
+                                # Outline generation with retry logic
+                                from outline_back.inline_outline import generate_outline_inline
+                                
+                                outline_attempt = 0
+                                outline_retry_delay = 10  # Start with 10 seconds
+                                outline_success = False
+                                outline_result = None
+                                
+                                while outline_attempt < max_outline_retries and not outline_success:
+                                    try:
+                                        if outline_attempt > 0:
+                                            logger.info(f"🔄 [SEMPLAN OUTLINE RETRY] Attempt {outline_attempt + 1}/{max_outline_retries} after {outline_retry_delay}s wait...")
+                                            await asyncio.sleep(outline_retry_delay)
+                                            outline_retry_delay *= 2  # Exponential backoff
+                                        
+                                        outline_result = await generate_outline_inline(
+                                            db=unified_db,
+                                            teacher_id=teacher_id,
+                                            subject=subject,
+                                            class_name=class_name,
+                                            education_system=outline_education_system,
+                                            academic_level=outline_education_level,
+                                            semester_name=outline_semester_name,
+                                            term=outline_term
+                                        )
+                                        
+                                        logger.info(f"📘 [SEMPLAN] Outline generated: {outline_result}")
+                                        outline_success = True
+                                        
+                                    except Exception as outline_error:
+                                        outline_attempt += 1
+                                        logger.error(f"❌ [SEMPLAN] Outline generation error (attempt {outline_attempt}): {outline_error}")
+                                        
+                                        if outline_attempt < max_outline_retries:
+                                            logger.info(f"   Will retry in {outline_retry_delay}s...")
+                                        else:
+                                            logger.error(f"❌ [SEMPLAN] Outline generation failed after {max_outline_retries} attempts")
+                                            await unified_db.rollback()  # Rollback plan if outline fails
+                                            raise Exception(f"Outline generation failed after {max_outline_retries} attempts: {outline_error}")
+                                
+                                # Only commit if BOTH plan AND outline succeeded
+                                await unified_db.commit()
+                                logger.info("✅ [SEMPLAN] Plan AND outline committed successfully")
+                            
+                            # Notify completion - both plan AND outline succeeded
                             await send_unique_ws_message(
                                 teacher_id,
                                 {
                                     "type": "semplan_processing",
                                     "status": "completed",
-                                    "message": f"Text extraction completed successfully. Extracted {len(extracted_text)} characters.",
+                                    "message": f"Plan and outline created for {subject} - {class_name}",
                                     "file_name": os.path.basename(file_path),
                                     "teacher_id": teacher_id,
                                     "subject": subject,
                                     "class_name": class_name,
                                     "extracted_characters": len(extracted_text),
-                                    "ai_processed": True
+                                    "ai_processed": True,
+                                    "outline_generated": True
                                 }
                             )
                         except Exception as storage_error:
-                            logger.error(f"💥 Failed to store AI response in tables: {storage_error}")
+                            logger.error(f"💥 Failed to store AI response or generate outline: {storage_error}")
                             logger.error(f"Full traceback: {traceback.format_exc()}")
                             # Notify error
                             await send_unique_ws_message(
@@ -621,7 +789,7 @@ async def process_semplan_file_task(ctx: Dict[Any, Any], teacher_id: str, file_p
                                 {
                                     "type": "semplan_processing",
                                     "status": "error",
-                                    "message": f"Failed to store AI response in tables: {str(storage_error)}",
+                                    "message": f"Failed to create plan and outline: {str(storage_error)}",
                                     "file_name": os.path.basename(file_path),
                                     "teacher_id": teacher_id,
                                     "subject": subject,
@@ -742,7 +910,8 @@ async def process_semplan_file_task(ctx: Dict[Any, Any], teacher_id: str, file_p
             }
         )
         
-        raise Exception(error_msg)
+        raise RuntimeError(error_msg)
+
     finally:
         # Clean up global sent messages for this function instance
         try:
@@ -777,8 +946,8 @@ semplan_worker_config = {
     "queue_name": "semplan_queue",  # Use just the queue name without arq:queue: prefix
     "on_startup": startup,
     "on_shutdown": shutdown,
-    "max_tries": 3,
-    "job_timeout": 300,  # 5 minutes
+    "max_tries": 5,
+    "job_timeout": 600,  # 10 minutes
     "concurrent_jobs": 5,
     "retry_delay": 60,   # 1 minute
     "keep_result": 3600, # 1 hour
@@ -786,7 +955,7 @@ semplan_worker_config = {
 }
 
 # Function to enqueue semester plan processing task
-async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_name: str, subject: str = None, class_name: str = None, session_data: Dict = None) -> Optional[str]:
+async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_name: str, subject: str = None, class_name: str = None, session_data: Dict = None, delay: int = 0) -> Optional[str]:
     """
     Enqueue a semester plan processing task.
     
@@ -818,7 +987,8 @@ async def enqueue_semplan_processing(teacher_id: str, file_path: str, gcs_file_n
             subject,
             class_name,
             session_data,
-            _queue_name='semplan_queue'
+            _queue_name='semplan_queue',
+            _defer_by=delay
         )
         
         if job:
@@ -876,8 +1046,7 @@ async def store_ai_response_in_temp_extract(teacher_id: str, class_name: str, su
                         settings.GCS_BUCKET_NAME, 
                         gcs_file_name, 
                         method="GET",
-                        expiration=604800,
-                        only_include_host_in_headers=False
+                        expiration=604800
                     )
                     logger.info(f"[SEMPLAN] Generated signed URL for file: {gcs_file_name}")
                 except Exception as e:
@@ -913,7 +1082,211 @@ async def store_ai_response_in_temp_extract(teacher_id: str, class_name: str, su
         logger.error(f"[SEMPLAN] Full traceback: {traceback.format_exc()}")
         raise
 
-# New function to store AI response directly in the Strand/Substrand/ContentStandard/Indicator tables
+# New function to store AI response with a provided session (for atomic transactions)
+async def store_ai_response_in_tables_with_session(db_session, teacher_id: str, class_name: str, subject: str, ai_response: dict):
+    """
+    Store the AI response data directly in the Strand, Substrand, ContentStandard, and Indicator tables.
+    Uses a provided database session and flushes instead of committing (caller handles commit).
+    
+    This version is used for atomic transactions where both plan AND outline must succeed or fail together.
+    
+    Args:
+        db_session: The database session to use (from caller)
+        teacher_id: The UUID of the teacher
+        class_name: The class name
+        subject: The subject name
+        ai_response: The AI response containing strand_data, substrand_data, content_standard_data, and indicator_data
+    """
+    logger.info(f"[SEMPLAN] Storing AI response (atomic mode) for teacher {teacher_id}, class {class_name}, subject {subject}")
+    logger.info(f"[SEMPLAN] COMPLETE AI RESPONSE BEING STORED: {json.dumps(ai_response, indent=2, default=str)}")
+    
+    from sqlalchemy import and_, delete
+    from model import Strand, Substrand, ContentStandard, Indicator
+    
+    # Delete in the correct order to avoid foreign key constraint violations
+    await db_session.execute(
+        delete(Indicator).where(
+            and_(
+                Indicator.teacher_id == UUID(teacher_id),
+                Indicator.class_name == class_name,
+                Indicator.subject == subject
+            )
+        )
+    )
+    await db_session.execute(
+        delete(ContentStandard).where(
+            and_(
+                ContentStandard.teacher_id == UUID(teacher_id),
+                ContentStandard.class_name == class_name,
+                ContentStandard.subject == subject
+            )
+        )
+    )
+    await db_session.execute(
+        delete(Substrand).where(
+            and_(
+                Substrand.teacher_id == UUID(teacher_id),
+                Substrand.class_name == class_name,
+                Substrand.subject == subject
+            )
+        )
+    )
+    await db_session.execute(
+        delete(Strand).where(
+            and_(
+                Strand.teacher_id == UUID(teacher_id),
+                Strand.class_name == class_name,
+                Strand.subject == subject
+            )
+        )
+    )
+    await db_session.flush()  # Flush only, don't commit - caller handles commit
+    logger.info(f"[SEMPLAN] Deleted existing data for teacher {teacher_id}, class {class_name}, subject {subject}")
+    
+    # Process strand data - handle both flat and nested structures
+    strand_data_list = ai_response.get("strand_data", [])
+    logger.info(f"[SEMPLAN] Processing {len(strand_data_list)} strand entries")
+    created_strands = {}  # strand_name -> {week_number -> strand_object}
+    
+    # Process strands (same logic as store_ai_response_in_tables but simpler for flat structure)
+    for strand_data in strand_data_list:
+        strand_name = strand_data.get("strand_name", strand_data.get("name", "Unknown"))
+        weeks = strand_data.get("weeks", [])
+        session_ids = strand_data.get("session_ids", [])
+        session_details = strand_data.get("session_details", [])
+        
+        if strand_name not in created_strands:
+            created_strands[strand_name] = {}
+        
+        for week in weeks:
+            week_num = int(week) if isinstance(week, (int, str)) else 1
+            if week_num not in created_strands[strand_name]:
+                strand = Strand(
+                    strand_name=strand_name,
+                    subject=subject,
+                    class_name=class_name,
+                    teacher_id=UUID(teacher_id),
+                    week_number=week_num,
+                    session_ids=session_ids,
+                    session_details=session_details
+                )
+                db_session.add(strand)
+                created_strands[strand_name][week_num] = strand
+    
+    await db_session.flush()  # Flush to get IDs
+    logger.info(f"[SEMPLAN] Created {len(created_strands)} strands")
+    
+    # Refresh strands to get IDs
+    for strand_name in created_strands:
+        for week_num in created_strands[strand_name]:
+            await db_session.refresh(created_strands[strand_name][week_num])
+    
+    # Process substrand data
+    substrand_data_list = ai_response.get("substrand_data", [])
+    created_substrands = {}
+    
+    for substrand_data in substrand_data_list:
+        strand_name = substrand_data.get("strand_name", "Unknown")
+        substrand_name = substrand_data.get("substrand_name", substrand_data.get("name", "Unknown"))
+        weeks = substrand_data.get("weeks", [])
+        session_ids = substrand_data.get("session_ids", [])
+        session_details = substrand_data.get("session_details", [])
+        
+        strand_id = None
+        if strand_name in created_strands and created_strands[strand_name]:
+            first_week = list(created_strands[strand_name].keys())[0]
+            strand_id = created_strands[strand_name][first_week].id
+        
+        if strand_id and substrand_name not in created_substrands:
+            substrand = Substrand(
+                substrand_name=substrand_name,
+                strand_id=strand_id,
+                subject=subject,
+                class_name=class_name,
+                teacher_id=UUID(teacher_id),
+                week_numbers=[int(w) if isinstance(w, (int, str)) else 1 for w in weeks],
+                session_ids=session_ids,
+                session_details=session_details
+            )
+            db_session.add(substrand)
+            created_substrands[substrand_name] = substrand
+    
+    await db_session.flush()
+    logger.info(f"[SEMPLAN] Created {len(created_substrands)} substrands")
+    
+    for substrand_name in created_substrands:
+        await db_session.refresh(created_substrands[substrand_name])
+    
+    # Process content standard data
+    content_standard_data_list = ai_response.get("content_standard_data", [])
+    created_content_standards = {}
+    
+    for cs_data in content_standard_data_list:
+        substrand_name = cs_data.get("substrand_name", "Unknown")
+        cs_code = cs_data.get("content_standard_code", "")
+        cs_text = cs_data.get("content_standard_text", cs_data.get("content_standard", ""))
+        session_ids = cs_data.get("session_ids", [])
+        session_details = cs_data.get("session_details", [])
+        
+        substrand_id = None
+        if substrand_name in created_substrands:
+            substrand_id = created_substrands[substrand_name].id
+        
+        if substrand_id and cs_code not in created_content_standards:
+            content_standard = ContentStandard(
+                content_standard_code=cs_code,
+                content_standard=cs_text,
+                substrand_id=substrand_id,
+                subject=subject,
+                class_name=class_name,
+                teacher_id=UUID(teacher_id),
+                session_ids=session_ids,
+                session_details=session_details
+            )
+            db_session.add(content_standard)
+            created_content_standards[cs_code] = content_standard
+    
+    await db_session.flush()
+    logger.info(f"[SEMPLAN] Created {len(created_content_standards)} content standards")
+    
+    for cs_code in created_content_standards:
+        await db_session.refresh(created_content_standards[cs_code])
+    
+    # Process indicator data
+    indicator_data_list = ai_response.get("indicator_data", [])
+    created_indicators = 0
+    
+    for ind_data in indicator_data_list:
+        cs_code = ind_data.get("content_standard_code", "")
+        ind_code = ind_data.get("indicator_code", "")
+        ind_text = ind_data.get("indicator_text", ind_data.get("indicator", ""))
+        session_ids = ind_data.get("session_ids", [])
+        session_details = ind_data.get("session_details", [])
+        
+        content_standard_id = None
+        if cs_code in created_content_standards:
+            content_standard_id = created_content_standards[cs_code].id
+        
+        if content_standard_id:
+            indicator = Indicator(
+                indicator_code=ind_code,
+                indicator_text=ind_text,
+                content_standard_id=content_standard_id,
+                subject=subject,
+                class_name=class_name,
+                teacher_id=UUID(teacher_id),
+                session_ids=session_ids,
+                session_details=session_details
+            )
+            db_session.add(indicator)
+            created_indicators += 1
+    
+    await db_session.flush()  # Flush only, caller handles commit
+    logger.info(f"[SEMPLAN] Created {created_indicators} indicators")
+    logger.info(f"[SEMPLAN] ✅ AI response stored (NOT COMMITTED YET - awaiting outline)")
+
+
+# Existing function (kept for backward compatibility but uses commit)
 async def store_ai_response_in_tables(teacher_id: str, class_name: str, subject: str, ai_response: dict):
     """
     Store the AI response data directly in the Strand, Substrand, ContentStandard, and Indicator tables.
@@ -929,7 +1302,7 @@ async def store_ai_response_in_tables(teacher_id: str, class_name: str, subject:
         logger.info(f"[SEMPLAN] COMPLETE AI RESPONSE BEING STORED: {json.dumps(ai_response, indent=2, default=str)}")
         
         # Create a new database session
-        async with AsyncSessionLocal() as db_session:
+        async with AsyncSession(async_engine) as db_session:
             # First, delete any existing data for this teacher, class, and subject combination
             # This ensures we have a clean slate for the new AI-generated data
             from sqlalchemy import and_, delete

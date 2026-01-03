@@ -151,7 +151,7 @@ async def create_student(student_data: dict, db: AsyncSession) -> Student:
     
     # Create student object (without teacher_id and class_name as they're no longer in the model)
     student = Student(
-        email=student_data["email"] or '',  # Empty string if no email
+        email=student_data["email"] or None,  # None if no email to avoid unique constraint issues
         index_number=student_data["index_number"],
         hashed_password=hashed_password,
         name=student_data["name"],
@@ -715,7 +715,10 @@ async def bulk_create_students(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Upload a CSV file containing student information and create accounts with temporary passwords.
+    Upload a CSV file containing student information and add students to database without login credentials.
+    
+    For now, we only add students to the database and enroll them in courses.
+    Full login credentials will be implemented in the future.
     
     CSV Format:
     Required columns: name
@@ -733,7 +736,7 @@ async def bulk_create_students(
     Jane Smith,,STU002
     Bob Johnson,bob@example.com,
     
-    Students can be enrolled in a specific subject and class if provided via query parameters.
+    Students are added to the database and enrolled in courses if subject is provided.
     If a student already exists (by email or index_number), they will be enrolled in the teacher's course
     without creating a duplicate account.
     
@@ -850,16 +853,13 @@ async def bulk_create_students(
                 # Use provided class_name or default to teacher's institution
                 student_class_name = class_name or student_data.get('class_name') or getattr(current_teacher, 'work_institution', 'Not assigned')
                 
-                # Hash the name as temporary password
-                hashed_password = get_password_hash(student_data['name'])  # Use name as temporary password
-                
-                # Create student object (without teacher_id and class_name as they're no longer in the model)
+                # Create student with placeholder password (no login for now)
                 student = Student(
-                    email=student_data['email'] or '',  # Empty string if no email
+                    email=student_data['email'] or None,  # None if no email to avoid unique constraint issues
                     index_number=student_data['index_number'],
-                    hashed_password=hashed_password,
+                    hashed_password="",  # No password for now
                     name=student_data['name'],
-                    password_changed=False  # Password not changed yet
+                    password_changed=True  # Mark as "changed" since there's no login
                 )
                 
                 # Add to database
@@ -868,18 +868,13 @@ async def bulk_create_students(
                 await db.refresh(student)
                 
                 # Prepare student response data
-                # Determine login ID for response:
-                # 1. If only email provided -> use email as login ID
-                # 2. If index_number provided (with or without email) -> use index_number as login ID
-                login_id = student_data['index_number'] if student_data['index_number'] else student_data['email']
-                
                 student_response = {
                     "id": str(student.id),
                     "name": student.name,
                     "email": student.email,
                     "index_number": student.index_number,
                     "class_name": "",  # No longer stored in Student model
-                    "login_id": login_id,
+                    "login_id": "",  # No login ID for now
                     "created_at": student.created_at.isoformat() if student.created_at else None
                 }
                 
@@ -944,21 +939,17 @@ async def register_single_student(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Register a single student with name as temporary password.
+    Register a single student in the database without login credentials.
+    
+    For now, we only add students to the database and enroll them in courses.
+    Full login credentials will be implemented in the future.
     
     Registration logic:
-    - If only email and name provided -> student logs in with email and name (password)
-    - If only index_number and name provided -> student logs in with index_number and name (password)
-    - If both email, index_number and name provided -> student logs in with index_number and name (password)
-    
-    If a student already exists (by email or index_number), they will be enrolled in the teacher's course
-    without creating a duplicate account.
-    
-    Students can be enrolled in a specific subject and class if provided.
+    - Add student to database with placeholder password
+    - Enroll student in teacher's course if subject is provided
     
     Returns:
     - Student information
-    - Login ID that student will use to login
     - Enrollment information (if subject provided)
     """
     # Validate that at least one of email or index_number is provided
@@ -985,7 +976,7 @@ async def register_single_student(
             response_data = {
                 "id": str(existing_student.id),
                 "name": existing_student.name,
-                "email": existing_student.email,
+                "email": existing_student.email if existing_student.email is not None else "",
                 "index_number": existing_student.index_number,
                 "class_name": "",  # No longer stored in Student model
                 "login_id": login_id,
@@ -1005,6 +996,7 @@ async def register_single_student(
             if student_data.subject and not existing_enrollment:
                 enrollment = StudentEnrollment(
                     student_id=existing_student.id,
+                    teacher_id=current_teacher.id,
                     subject=student_data.subject,
                     class_name=student_data.class_name or getattr(current_teacher, 'work_institution', 'Not assigned'),
                     teacher_display_name=student_data.teacher_display_name or getattr(current_teacher, 'display_name', None),
@@ -1038,24 +1030,16 @@ async def register_single_student(
             return StudentRegistrationResponse(**response_data)
         
         # Student doesn't exist - create new student account
-        # Determine login ID:
-        # 1. If only email provided -> use email as login ID
-        # 2. If index_number provided (with or without email) -> use index_number as login ID
-        login_id = student_data.index_number if student_data.index_number else student_data.email
-        
         # Use provided class_name or default to teacher's institution
         class_name = student_data.class_name or getattr(current_teacher, 'work_institution', 'Not assigned')
         
-        # Hash the name as temporary password
-        hashed_password = get_password_hash(student_data.name)  # Use name as temporary password
-        
-        # Create student object (without teacher_id and class_name as they're no longer in the model)
+        # Create student with placeholder password (no login for now)
         student = Student(
-            email=student_data.email or '',  # Empty string if no email
+            email=student_data.email or None,  # None if no email to avoid unique constraint issues
             index_number=student_data.index_number,
-            hashed_password=hashed_password,
+            hashed_password="",  # No password for now
             name=student_data.name,
-            password_changed=False  # Password not changed yet
+            password_changed=True  # Mark as "changed" since there's no login
         )
         
         # Add to database
@@ -1067,10 +1051,10 @@ async def register_single_student(
         response_data = {
             "id": str(student.id),
             "name": student.name,
-            "email": student.email,
+            "email": student.email if student.email is not None else "",
             "index_number": student.index_number,
             "class_name": "",
-            "login_id": login_id,
+            "login_id": "",  # No login ID for now
             "created_at": student.created_at.isoformat() if student.created_at else None
         }
         

@@ -1,17 +1,20 @@
-"""Google Cloud Storage utilities for timetable file handling"""
+"""
+Google Cloud Storage Utility Functions
+
+This module provides utility functions for working with Google Cloud Storage,
+including generating signed URLs and downloading files.
+"""
 
 import os
-import uuid
 from typing import Optional
-from google.cloud import storage
-from google.cloud.exceptions import NotFound
-from logger import logger
 from config import settings
+from logger import logger
 
-# Initialize GCS client
 def get_gcs_client():
     """Initialize and return GCS client"""
     try:
+        from google.cloud import storage
+        
         if settings.GCS_SERVICE_ACCOUNT_JSON:
             # If service account JSON is provided as content
             if settings.GCS_SERVICE_ACCOUNT_JSON.startswith('{'):
@@ -34,172 +37,132 @@ def get_gcs_client():
         logger.error(f"❌ Failed to initialize GCS client: {e}")
         raise
 
-def generate_signed_url(
-    bucket_name: str,
-    blob_name: str,
-    method: str = "GET",
-    content_type: str = "application/octet-stream",
-    expiration: int = 86400,
-    only_include_host_in_headers: bool = False
-) -> str:
-    """
-    Generate a signed URL for uploading (PUT) or downloading (GET) a file to/from GCS.
-    
-    Args:
-        bucket_name: Name of the GCS bucket
-        blob_name: Name of the blob (file) in GCS
-        method: HTTP method (GET or PUT)
-        content_type: Content type of the file
-        expiration: Expiration time in seconds
-        only_include_host_in_headers: Whether to only include host in signed headers (default: False)
-    
-    Returns:
-        Signed URL for uploading or downloading
-    """
-    try:
-        client = get_gcs_client()
-        bucket = client.bucket(bucket_name)
-        # Let the GCS library handle URL encoding
-        blob = bucket.blob(blob_name)
-
-        logger.info(f"🔗 Generating signed URL for {blob_name} using method {method}")
-        logger.info(f"🔗 only_include_host_in_headers: {only_include_host_in_headers}")
-        
-        # Check if the blob exists for GET requests (only log, don't fail)
-        if method.upper() == "GET":
-            try:
-                if not blob.exists():
-                    logger.warning(f"⚠️ Blob {blob_name} does not exist in bucket {bucket_name}")
-                else:
-                    logger.info(f"✅ Blob {blob_name} exists in bucket {bucket_name}")
-            except Exception as e:
-                # If we can't check existence due to permissions, that's OK
-                logger.info(f"ℹ️ Cannot verify blob existence for {blob_name}: {e}")
-
-        # For PUT requests, we may need to specify headers
-        if method.upper() == "PUT":
-            # Generate signed URL for upload (HTTP PUT)
-            # Only include "host" in signed headers as requested when only_include_host_in_headers is True
-            if only_include_host_in_headers:
-                logger.info("🔗 Generating PUT URL with only host header")
-                url = blob.generate_signed_url(
-                    version="v4",
-                    expiration=expiration,
-                    method=method,
-                    headers={
-                        "host": "storage.googleapis.com"
-                    }
-                )
-            else:
-                logger.info("🔗 Generating PUT URL with content-type and host headers")
-                url = blob.generate_signed_url(
-                    version="v4",
-                    expiration=expiration,
-                    method=method,
-                    content_type=content_type,
-                    headers={
-                        "Content-Type": content_type
-                    }
-                )
-        else:  # GET (download)
-            # For GET requests, we typically don't need to specify headers for simple downloads
-            # However, if only_include_host_in_headers is True, we'll include the host header
-            if only_include_host_in_headers:
-                logger.info("🔗 Generating GET URL with host header")
-                url = blob.generate_signed_url(
-                    version="v4",
-                    expiration=expiration,
-                    method=method,
-                    headers={
-                        "host": "storage.googleapis.com"
-                    }
-                )
-            else:
-                logger.info("🔗 Generating GET URL (no special headers)")
-                # For GET requests, we don't need to specify headers, but we should ensure proper authentication
-                url = blob.generate_signed_url(
-                    version="v4",
-                    expiration=expiration,
-                    method=method
-                )
-
-        logger.info(f"✅ Generated signed URL ({method}) for {blob_name}, expires in {expiration}s, only_include_host_in_headers: {only_include_host_in_headers}")
-        logger.info(f"✅ URL length: {len(url)} characters")
-        return url
-    except Exception as e:
-        logger.error(f"💥 Failed to generate signed URL: {e}", exc_info=True)
-        raise
-
-
-def generate_file_name(teacher_id: str, file_extension: str, file_type: str = "timetable") -> str:
-    """
-    Generate a file name in the format: {file_type}/{teacher_id}.{extension}
-    
-    Args:
-        teacher_id: Teacher UUID
-        file_extension: File extension (e.g., 'pdf', 'docx')
-        file_type: Type of file (default: 'timetable', can be 'academic_calendar', etc.)
-    
-    Returns:
-        Generated file name
-    """
-    return f"{file_type}/{teacher_id}.{file_extension}"
-
 def get_file_from_gcs(bucket_name: str, blob_name: str) -> Optional[bytes]:
     """
-    Download file content from GCS
+    Download file content from GCS.
     
     Args:
         bucket_name: Name of the GCS bucket
         blob_name: Name of the blob (file) in GCS
-    
+        
     Returns:
-        File content as bytes, or None if not found
+        File content as bytes, or None if download failed
     """
     try:
+        logger.info(f"📥 Downloading file from GCS: {bucket_name}/{blob_name}")
+        
+        # Get GCS client
         client = get_gcs_client()
+        
+        # Get bucket and blob
         bucket = client.bucket(bucket_name)
-        # Let the GCS library handle URL encoding
         blob = bucket.blob(blob_name)
         
-        if blob.exists():
-            content = blob.download_as_bytes()
-            logger.info(f"✅ Downloaded file {blob_name} from GCS")
-            return content
-        else:
-            logger.warning(f"⚠️ File {blob_name} not found in GCS")
-            return None
-    except NotFound:
-        logger.warning(f"⚠️ File {blob_name} not found in GCS")
+        # Download content as bytes
+        content = blob.download_as_bytes()
+        
+        logger.info(f"✅ Successfully downloaded {len(content)} bytes from GCS")
+        return content
+        
+    except Exception as e:
+        logger.error(f"❌ Error downloading file from GCS: {e}")
         return None
-    except Exception as e:
-        logger.error(f"💥 Failed to download file from GCS: {e}")
-        raise
 
-def delete_file_from_gcs(bucket_name: str, blob_name: str) -> bool:
+def generate_signed_url(bucket_name: str, blob_name: str, method: str = "GET", 
+                       content_type: Optional[str] = None, expiration: int = 86400) -> Optional[str]:
     """
-    Delete file from GCS
+    Generate a signed URL for a GCS blob.
     
     Args:
         bucket_name: Name of the GCS bucket
         blob_name: Name of the blob (file) in GCS
-    
+        method: HTTP method (GET, PUT, POST, etc.)
+        content_type: Content type for PUT/POST requests
+        expiration: URL expiration time in seconds (default: 24 hours)
+        
     Returns:
-        True if file was deleted, False if not found
+        Signed URL string, or None if generation failed
     """
     try:
+        logger.info(f"🔗 Generating signed URL for GCS: {bucket_name}/{blob_name}")
+        
+        # Get GCS client
         client = get_gcs_client()
+        
+        # Get bucket and blob
         bucket = client.bucket(bucket_name)
-        # Let the GCS library handle URL encoding
         blob = bucket.blob(blob_name)
         
-        if blob.exists():
-            blob.delete()
-            logger.info(f"🗑️ Deleted file {blob_name} from GCS")
-            return True
-        else:
-            logger.warning(f"⚠️ File {blob_name} not found in GCS for deletion")
-            return False
+        # Determine response content type based on file extension for GET requests
+        ext = blob_name.lower().split('.')[-1] if '.' in blob_name else ''
+        content_type_map = {
+            'mp3': 'audio/mpeg',
+            'wav': 'audio/wav',
+            'ogg': 'audio/ogg',
+            'webm': 'audio/webm',
+            'png': 'image/png',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'gif': 'image/gif',
+            'webp': 'image/webp',
+            'svg': 'image/svg+xml',
+            'pdf': 'application/pdf',
+        }
+        response_type = content_type_map.get(ext, None)
+        
+        # Generate signed URL with proper content type header
+        # This prevents ERR_BLOCKED_BY_ORB in browsers
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=expiration,
+            method=method,
+            content_type=content_type,
+            response_type=response_type if method == "GET" else None
+        )
+        
+        logger.info(f"✅ Generated signed URL: {url}")
+        return url
+        
     except Exception as e:
-        logger.error(f"💥 Failed to delete file from GCS: {e}")
-        raise
+        logger.error(f"❌ Error generating signed URL: {e}")
+        return None
+
+
+def generate_file_name(teacher_id: str, file_ext: str, folder: str = "uploads", 
+                      pillar: str = "general", original_filename: str = None) -> str:
+    """
+    Generate a standardized file name for GCS storage.
+    
+    Args:
+        teacher_id: Teacher UUID string
+        file_ext: File extension (without dot)
+        folder: Main folder name (default: "uploads")
+        pillar: Knowledge pillar (default: "general")
+        original_filename: Original filename for reference (optional)
+        
+    Returns:
+        Generated file path string
+    """
+    import uuid
+    from datetime import datetime
+    
+    # Generate timestamp
+    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    
+    # Generate unique identifier
+    unique_id = str(uuid.uuid4())[:8]
+    
+    # Create filename
+    if original_filename:
+        # Use original filename without extension and add our metadata
+        base_name = os.path.splitext(original_filename)[0]
+        filename = f"{base_name}_{timestamp}_{unique_id}.{file_ext}"
+    else:
+        # Generic filename
+        filename = f"{timestamp}_{unique_id}.{file_ext}"
+    
+    # Create full path
+    file_path = f"{folder}/{teacher_id}/{pillar}/{filename}"
+    
+    logger.info(f"📂 Generated file path: {file_path}")
+    return file_path

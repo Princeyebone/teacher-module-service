@@ -30,6 +30,8 @@ import file_handler.tm_file_handler as tm_file_handler
 import file_handler.ca_file_handler as ca_file_handler
 import file_handler.sem_file_handler as sem_file_handler
 import file_handler.curri_file_handler as curri_file_handler
+import file_handler.outline as outline_handler
+import file_handler.rag_file_handler as rag_file_handler
 import grade_crud
 import gradeweights
 import score
@@ -39,6 +41,15 @@ import publishing
 import student_read
 import monitering
 import answer
+import rag.input
+import rag.retrievals
+import todays_overview
+import file_handler.free_hand
+import brief_sche.brief_routes as brief_routes
+import file_handler.lesson_note_handler as lesson_note_handler
+import file_handler.slide_handler as slide_handler
+import file_handler.student_lesson_pack_handler as student_pack_handler
+import file_handler.student_support_handler as student_support_handler
 
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
@@ -102,6 +113,8 @@ app.include_router(tm_file_handler.router, prefix="/api/teacher")
 app.include_router(ca_file_handler.router, prefix="/api/teacher")
 app.include_router(sem_file_handler.router, prefix="/api/teacher")
 app.include_router(curri_file_handler.router, prefix="/api/teacher")
+app.include_router(outline_handler.router, prefix="/api/teacher")
+app.include_router(rag_file_handler.router, prefix="/api/teacher")
 app.include_router(grade_crud.router, prefix="/api/teacher")
 app.include_router(gradeweights.router, prefix="/api/teacher")
 app.include_router(score.router, prefix="/api/teacher")
@@ -111,6 +124,15 @@ app.include_router(student_auth.router, prefix="/api/teacher")
 app.include_router(student_read.router, prefix="/api/student")
 app.include_router(monitering.router, prefix="/api/teacher")
 app.include_router(answer.router, prefix="/api/student")
+app.include_router(rag.input.router)
+app.include_router(rag.retrievals.router)
+app.include_router(todays_overview.router)
+app.include_router(file_handler.free_hand.router)
+app.include_router(brief_routes.router, prefix="/api/teacher")
+app.include_router(lesson_note_handler.router, prefix="/api/teacher")
+app.include_router(slide_handler.router, prefix="/api/teacher")
+app.include_router(student_pack_handler.router, prefix="/api/teacher")
+app.include_router(student_support_handler.router, prefix="/api/teacher")
 
 # ✅ WebSocket Endpoint (Only handles live connections)
 @app.websocket("/ws/teacher/{teacher_id}")

@@ -19,7 +19,7 @@ from arq import run_worker
 
 # Handle imports for both direct execution and module import
 try:
-    from .semplan_back import semplan_worker_config
+    from semplan_ground.semplan_back import semplan_worker_config
 except ImportError:
     # If running as script directly, add parent directory to path
     import os

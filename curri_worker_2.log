@@ -1,0 +1,162 @@
+2025-12-08 17:07:41,471 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:07:45,048 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:08:19,364 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:08:19,365 - curri_back.curri_processor - ERROR - \u274c RAG import error: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:08:19,365 - __main__ - ERROR - \u274c Failed to import curriculum processor: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\curri_back\curri_worker.py", line 34, in <module>
+    from curri_back.curri_processor import process_curriculum_task
+  File "c:\Users\HP\tmdl5\curri_back\curri_processor.py", line 49, in <module>
+    from rag.text import extract_text_with_metadata, chunk_text_smart
+ImportError: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:08:27,355 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:08:28,857 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:08:53,332 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:08:53,332 - curri_back.curri_processor - ERROR - \u274c RAG import error: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:08:53,333 - __main__ - ERROR - \u274c Failed to import curriculum processor: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\curri_back\curri_worker.py", line 34, in <module>
+    from curri_back.curri_processor import process_curriculum_task
+  File "c:\Users\HP\tmdl5\curri_back\curri_processor.py", line 49, in <module>
+    from rag.text import extract_text_with_metadata, chunk_text_smart
+ImportError: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:09:01,359 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:09:02,701 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:09:21,788 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:09:21,788 - curri_back.curri_processor - ERROR - \u274c RAG import error: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:09:21,788 - __main__ - ERROR - \u274c Failed to import curriculum processor: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\curri_back\curri_worker.py", line 34, in <module>
+    from curri_back.curri_processor import process_curriculum_task
+  File "c:\Users\HP\tmdl5\curri_back\curri_processor.py", line 49, in <module>
+    from rag.text import extract_text_with_metadata, chunk_text_smart
+ImportError: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:09:32,068 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:09:33,579 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:10:04,208 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:10:04,209 - curri_back.curri_processor - ERROR - \u274c RAG import error: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:10:04,209 - __main__ - ERROR - \u274c Failed to import curriculum processor: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+
+Traceback (most recent call last):
+  File "c:\Users\HP\tmdl5\curri_back\curri_worker.py", line 34, in <module>
+    from curri_back.curri_processor import process_curriculum_task
+  File "c:\Users\HP\tmdl5\curri_back\curri_processor.py", line 49, in <module>
+    from rag.text import extract_text_from_pdf_pymupdf, chunk_text_with_langchain
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ImportError: cannot import name 'extract_text_with_metadata' from 'rag.text' (c:\Users\HP\tmdl5\rag\text.py)
+2025-12-08 17:10:12,098 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:10:20,380 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:11:59,075 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:13:10,863 - rag.embedding - INFO - Initializing Vertex AI embedding model: gemini-embedding-001
+2025-12-08 17:13:17,235 - rag.embedding - INFO - \u2705 Vertex AI Gemini model initialized successfully
+2025-12-08 17:13:20,177 - rag.retrieval_task - INFO - \u2705 Gemini embedding model available for retrieval
+2025-12-08 17:13:20,178 - curri_back.curri_processor - INFO - \u2705 RAG imports successful
+2025-12-08 17:13:20,208 - curri_back.curri_processor - INFO - \u2705 AI service import successful
+2025-12-08 17:13:20,247 - curri_back.curri_processor - INFO - \u2705 WebSocket imports successful
+2025-12-08 17:13:20,249 - curri_back.curri_processor - ERROR - \u274c GCS utilities import error: No module named 'util'
+2025-12-08 17:13:20,251 - __main__ - INFO - \u2705 Curriculum processor imported successfully
+2025-12-08 17:13:20,251 - __main__ - INFO - ============================================================
+2025-12-08 17:13:20,252 - __main__ - INFO - [STARTING] Curriculum Processing Worker
+2025-12-08 17:13:20,252 - __main__ - INFO - ============================================================
+2025-12-08 17:13:20,252 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-12-08 17:13:20,252 - __main__ - INFO -    - queue_name: curriculum_queue
+2025-12-08 17:13:20,252 - __main__ - INFO -    - max_tries: 5
+2025-12-08 17:13:20,252 - __main__ - INFO -    - retry_delay: 30
+2025-12-08 17:13:20,252 - __main__ - INFO -    - job_timeout: 600
+2025-12-08 17:13:20,252 - __main__ - INFO -    - concurrent_jobs: 1
+2025-12-08 17:13:20,253 - __main__ - INFO -    - keep_result: 3600
+2025-12-08 17:13:20,253 - __main__ - INFO -    - max_jobs: 50
+2025-12-08 17:13:20,253 - __main__ - INFO -    - health_check_interval: 60
+2025-12-08 17:13:20,253 - __main__ - INFO - ============================================================
+2025-12-08 17:13:20,300 - arq.worker - INFO - Starting worker for 1 functions: process_curriculum_task
+2025-12-08 17:13:20,310 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.51M clients_connected=8 db_keys=0
+2025-12-08 17:13:20,311 - __main__ - INFO - ============================================================
+2025-12-08 17:13:20,311 - __main__ - INFO - \U0001f680 Curriculum Processing Worker Starting Up...
+2025-12-08 17:13:20,311 - __main__ - INFO - ============================================================
+2025-12-08 17:13:20,311 - __main__ - INFO -    Queue: curriculum_queue
+2025-12-08 17:13:20,311 - __main__ - INFO -    Concurrent jobs: 1
+2025-12-08 17:13:20,311 - __main__ - INFO -    Max retries: 5
+2025-12-08 17:13:20,312 - __main__ - INFO -    Job timeout: 600s
+2025-12-08 17:13:20,312 - __main__ - INFO - ============================================================
+2025-12-08 17:31:39,349 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-08 17:31:43,838 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-08 17:32:12,033 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-08 17:32:12,033 - curri_back.curri_processor - INFO - \u2705 Text extraction imports successful
+2025-12-08 17:32:27,382 - rag.embedding - INFO - Initializing Vertex AI embedding model: gemini-embedding-001
+2025-12-08 17:32:29,382 - rag.embedding - INFO - \u2705 Vertex AI Gemini model initialized successfully
+2025-12-08 17:32:29,383 - curri_back.curri_processor - INFO - \u2705 Embedding imports successful
+2025-12-08 17:32:29,392 - rag.retrieval_task - INFO - \u2705 Gemini embedding model available for retrieval
+2025-12-08 17:32:29,392 - curri_back.curri_processor - INFO - \u2705 Retrieval imports successful
+2025-12-08 17:32:29,396 - curri_back.curri_processor - INFO - \u2705 AI service import successful
+2025-12-08 17:32:29,449 - curri_back.curri_processor - INFO - \u2705 WebSocket imports successful
+2025-12-08 17:32:29,451 - curri_back.curri_processor - INFO - \u2705 GCS utilities import successful
+2025-12-08 17:32:29,451 - __main__ - INFO - \u2705 Curriculum processor imported successfully
+2025-12-08 17:32:29,452 - __main__ - INFO - ============================================================
+2025-12-08 17:32:29,452 - __main__ - INFO - [STARTING] Curriculum Processing Worker
+2025-12-08 17:32:29,452 - __main__ - INFO - ============================================================
+2025-12-08 17:32:29,452 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-12-08 17:32:29,453 - __main__ - INFO -    - queue_name: curriculum_queue
+2025-12-08 17:32:29,453 - __main__ - INFO -    - max_tries: 5
+2025-12-08 17:32:29,453 - __main__ - INFO -    - retry_delay: 30
+2025-12-08 17:32:29,453 - __main__ - INFO -    - job_timeout: 600
+2025-12-08 17:32:29,453 - __main__ - INFO -    - concurrent_jobs: 1
+2025-12-08 17:32:29,453 - __main__ - INFO -    - keep_result: 3600
+2025-12-08 17:32:29,453 - __main__ - INFO -    - max_jobs: 50
+2025-12-08 17:32:29,454 - __main__ - INFO -    - health_check_interval: 60
+2025-12-08 17:32:29,454 - __main__ - INFO - ============================================================
+2025-12-08 17:32:29,471 - arq.worker - INFO - Starting worker for 1 functions: process_curriculum_task
+2025-12-08 17:32:29,474 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.51M clients_connected=10 db_keys=1
+2025-12-08 17:32:29,475 - __main__ - INFO - ============================================================
+2025-12-08 17:32:29,475 - __main__ - INFO - \U0001f680 Curriculum Processing Worker Starting Up...
+2025-12-08 17:32:29,475 - __main__ - INFO - ============================================================
+2025-12-08 17:32:29,475 - __main__ - INFO -    Queue: curriculum_queue
+2025-12-08 17:32:29,475 - __main__ - INFO -    Concurrent jobs: 1
+2025-12-08 17:32:29,475 - __main__ - INFO -    Max retries: 5
+2025-12-08 17:32:29,476 - __main__ - INFO -    Job timeout: 600s
+2025-12-08 17:32:29,476 - __main__ - INFO - ============================================================
+2025-12-09 08:12:54,070 - curri_back.curri_processor - INFO - \u2705 Database imports successful
+2025-12-09 08:12:59,095 - rag.text - INFO - \u2705 All modules imported successfully
+2025-12-09 08:14:08,702 - rag.text - INFO - \u2705 LangChain available for chunking
+2025-12-09 08:14:08,702 - curri_back.curri_processor - INFO - \u2705 Text extraction imports successful
+2025-12-09 08:14:38,987 - rag.embedding - INFO - Initializing Vertex AI embedding model: gemini-embedding-001
+2025-12-09 08:14:44,954 - rag.embedding - INFO - \u2705 Vertex AI Gemini model initialized successfully
+2025-12-09 08:14:44,955 - curri_back.curri_processor - INFO - \u2705 Embedding imports successful
+2025-12-09 08:14:44,962 - rag.retrieval_task - INFO - \u2705 Gemini embedding model available for retrieval
+2025-12-09 08:14:44,962 - curri_back.curri_processor - INFO - \u2705 Retrieval imports successful
+2025-12-09 08:14:45,008 - curri_back.curri_processor - INFO - \u2705 AI service import successful
+2025-12-09 08:14:45,044 - curri_back.curri_processor - INFO - \u2705 WebSocket imports successful
+2025-12-09 08:14:45,048 - curri_back.curri_processor - INFO - \u2705 GCS utilities import successful
+2025-12-09 08:14:45,055 - __main__ - INFO - \u2705 Curriculum processor imported successfully
+2025-12-09 08:14:45,055 - __main__ - INFO - ============================================================
+2025-12-09 08:14:45,055 - __main__ - INFO - [STARTING] Curriculum Processing Worker
+2025-12-09 08:14:45,055 - __main__ - INFO - ============================================================
+2025-12-09 08:14:45,055 - __main__ - INFO - [CONFIG] Worker Configuration:
+2025-12-09 08:14:45,059 - __main__ - INFO -    - queue_name: curriculum_queue
+2025-12-09 08:14:45,059 - __main__ - INFO -    - max_tries: 5
+2025-12-09 08:14:45,059 - __main__ - INFO -    - retry_delay: 30
+2025-12-09 08:14:45,059 - __main__ - INFO -    - job_timeout: 600
+2025-12-09 08:14:45,059 - __main__ - INFO -    - concurrent_jobs: 1
+2025-12-09 08:14:45,059 - __main__ - INFO -    - keep_result: 3600
+2025-12-09 08:14:45,059 - __main__ - INFO -    - max_jobs: 50
+2025-12-09 08:14:45,059 - __main__ - INFO -    - health_check_interval: 60
+2025-12-09 08:14:45,059 - __main__ - INFO - ============================================================
+2025-12-09 08:14:45,120 - arq.worker - INFO - Starting worker for 1 functions: process_curriculum_task
+2025-12-09 08:14:45,127 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.52M clients_connected=11 db_keys=1
+2025-12-09 08:14:45,128 - __main__ - INFO - ============================================================
+2025-12-09 08:14:45,128 - __main__ - INFO - \U0001f680 Curriculum Processing Worker Starting Up...
+2025-12-09 08:14:45,128 - __main__ - INFO - ============================================================
+2025-12-09 08:14:45,128 - __main__ - INFO -    Queue: curriculum_queue
+2025-12-09 08:14:45,128 - __main__ - INFO -    Concurrent jobs: 1
+2025-12-09 08:14:45,128 - __main__ - INFO -    Max retries: 5
+2025-12-09 08:14:45,128 - __main__ - INFO -    Job timeout: 600s
+2025-12-09 08:14:45,128 - __main__ - INFO - ============================================================
+2025-12-09 08:18:48,857 - arq.worker - INFO - recording health: Dec-09 08:18:46 j_complete=0 j_failed=0 j_retried=0 j_ongoing=0 queued=1
+2025-12-09 08:23:50,735 - arq.worker - INFO - recording health: Dec-09 08:23:49 j_complete=0 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+forrtl: error (200): program aborting due to window-CLOSE event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FFC4B1F0045  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFC4C2C54E0  Unknown               Unknown  Unknown
+ntdll.dll          00007FFC4D7A485B  Unknown               Unknown  Unknown

@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: postgres_with_pgvector
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0264442031Qq.
+      POSTGRES_DB: tmdl5
+    ports:
+      - "5433:5432"
+    volumes:
+      - teacher_pgdata:/var/lib/postgresql/data
+
+volumes:
+  teacher_pgdata:

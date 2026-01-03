@@ -1,0 +1,4 @@
+Audio generation ACTIVE.
+Primary: Gemini 2.5 Flash TTS (experimental)
+Fallback: Journey Voices (verified working)
+Last Test: Success (Fallback verified)

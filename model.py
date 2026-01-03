@@ -2,12 +2,12 @@ from sqlmodel import Field, Relationship, SQLModel, Column, JSON, ARRAY
 from sqlalchemy import event
 from sqlalchemy.types import UserDefinedType
 from sqlalchemy.dialects.postgresql import JSONB
+from pgvector.sqlalchemy import VECTOR
 from typing import Optional, List, Dict, Any
 from datetime import date, time, datetime
 import uuid
 from uuid import UUID, uuid4
 from enum import Enum
-
 
 
 class UserRole(str, Enum):
@@ -98,6 +98,8 @@ class WeeklyTimeTable(SQLModel, table=True):
     start_time: time
     end_time: time
     location: Optional[str] = None
+    edu_sys: Optional[str] = Field(default=None, description="Education system")
+    edu_lvl: Optional[str] = Field(default=None, description="Education level")
 
   
 
@@ -113,6 +115,56 @@ class ClassSession(SQLModel, table=True):
     session_number: Optional[int]
     is_completed: bool = False
     resource_generated: bool = False
+
+
+class Outline(SQLModel, table=True):
+    """Store AI-generated course/subject outlines for Teacher Lesson Pack"""
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    
+    # Outline content (AI-generated)
+    outline_content: str = Field(description="Complete course/subject outline in markdown or structured format")
+    
+    # Metadata
+    education_system: Optional[str] = None
+    academic_level: Optional[str] = None
+    semester_name: Optional[str] = None
+    term: Optional[str] = None
+    
+    # Tracking
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    is_active: bool = Field(default=True)
+
+
+class LessonBrief(SQLModel, table=True):
+    """Store AI-generated lesson briefs for teachers."""
+    __tablename__ = "lesson_briefs"
+    
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    session_date: date = Field(index=True)
+    
+    # Session references
+    session_id: Optional[int] = None
+    previous_session_id: Optional[int] = None
+    
+    # Lesson context (stored as JSON)
+    previous_lesson: Optional[str] = None  # JSON string
+    todays_lesson: Optional[str] = None    # JSON string
+    weekly_activity: Optional[str] = None  # JSON string
+    
+    # The main brief content (markdown format)
+    brief_content: str = Field(description="Full lesson brief in markdown format")
+    
+    # Generation tracking
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    generation_status: str = Field(default="pending")  # pending, completed, failed
 
   
 class TeacherPlannerEvent(SQLModel, table=True):
@@ -250,10 +302,6 @@ class TempExtract(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
-    class Config:
-        from_attributes = True
-
-
 class AssessmentWeights(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     name: str = Field(index=True)
@@ -277,7 +325,52 @@ class GradeSystem(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
-   
+class KnowledgeMetadata(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    
+    # 🧑🏽‍🏫 Ownership / source
+    teacher_id: Optional[UUID] = Field(default=None, foreign_key="teacherprofile.id", index=True)
+    uploader_type: Optional[str] = Field(default="system", description="system | teacher | admin")
+    
+    # 📘 Classification
+    subject: Optional[str] = Field(default=None, index=True)
+    level: Optional[str] = Field(default=None, index=True)
+    region: Optional[str] = Field(default=None, index=True)
+    pillar: Optional[str] = Field(default=None, index=True, description="curriculum | cognitive | assessment | pedagogy | misc")
+    
+    # 📂 Storage
+    file_path: Optional[str] = Field(default=None, description="GCS or local path to file")
+    source_url: Optional[str] = Field(default=None, description="If document was web-scraped or sourced online")
+    license: Optional[str] = Field(default=None, description="Open, Public, Restricted")
+    
+    # 🧩 Embedding / Vector info
+    is_embedded: bool = Field(default=False, index=True)
+    embedding_model: Optional[str] = Field(default=None)
+    chunk_count: Optional[int] = Field(default=None)
+    last_indexed_at: Optional[datetime] = Field(default=None)
+    
+    # 🧾 Metadata
+    notes: Optional[str] = Field(default=None)
+    checksum: Optional[str] = Field(default=None, description="MD5 hash to detect duplicate uploads")
+    
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class KnowledgeEmbedding(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    knowledge_id: int = Field(foreign_key="knowledgemetadata.id")
+    chunk_text: str
+    embedding: list = Field(sa_column=Column(VECTOR(1536)))  # 1536 for gemini-embedding-001 model
+    chunk_order: Optional[int] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Note: The embedding field is defined dynamically below to avoid linter issues
+
+class TestText(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    book: Optional[str] = None
+    text : Optional[str] = None
+    
 class AssessmentScores(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
@@ -294,7 +387,7 @@ class Student(SQLModel, table=True):
     id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
     email: Optional[str] = Field(index=True, unique=True)
     index_number: Optional[str] = Field(index=True, unique=True)
-    hashed_password: str
+    hashed_password: str  
     name: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -302,9 +395,6 @@ class Student(SQLModel, table=True):
     # Add field to track if password has been changed from default
     password_changed: bool = Field(default=False)
     
-    class Config:
-        from_attributes = True
-
 # Student Models
 class StudentEnrollment(SQLModel, table=True):
     """Table for student enrollments in subjects/courses"""
@@ -521,6 +611,90 @@ class SubmissionAnswer(SQLModel, table=True):
     is_correct: Optional[bool] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class Slide(SQLModel, table=True):
+    """Store AI-generated lesson slides as structured JSON"""
+    __tablename__ = "slides"
+    
+    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    subject: str = Field(index=True)
+    class_name: str = Field(index=True)
+    topic: Optional[str] = Field(default=None, max_length=500)
+    
+    # Indicator associations
+    indicator_ids: List[int] = Field(default_factory=list, sa_column=Column(JSONB))
+    
+    # The main slide content (structured JSON conforming to slide schema)
+    content_json: Dict[str, Any] = Field(default_factory=dict, sa_column=Column(JSONB))
+    
+    # Generation status
+    generation_status: str = Field(default="completed")  # pending, completed, failed
+    
+    # Timestamps
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class SlideImage(SQLModel, table=True):
+    """Track image generation status for slide images"""
+    __tablename__ = "slide_images"
+    
+    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    slide_id: UUID = Field(foreign_key="slides.id", index=True)
+    slide_item_id: str = Field(description="ID of the slide item containing this image")
+    
+    # Image generation details
+    prompt: str = Field(description="Image generation prompt")
+    style: Optional[str] = Field(default=None, max_length=100)
+    alt_text: Optional[str] = Field(default=None)
+    
+    # Generated image storage
+    image_url: Optional[str] = Field(default=None)
+    gcs_path: Optional[str] = Field(default=None)
+    
+    # Status tracking
+    status: str = Field(default="pending", index=True)  # pending, generating, generated, failed
+    error_message: Optional[str] = Field(default=None)
+    
+    # Timestamps
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class StudentSupportPack(SQLModel, table=True):
+    """Store personalized learning packs for individual students with specific needs"""
+    __tablename__ = "student_support_packs"
+    
+    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    teacher_id: UUID = Field(foreign_key="teacherprofile.id", index=True)
+    
+    # Student information
+    student_name: str = Field(max_length=255)
+    subject: str = Field(index=True, max_length=255)
+    class_name: str = Field(index=True, max_length=255)
+    
+    # Education context
+    edu_sys: Optional[str] = Field(default=None, max_length=100)
+    edu_lvl: Optional[str] = Field(default=None, max_length=100)
+    
+    # Lesson details
+    topic: str = Field(max_length=500)
+    interests: List[str] = Field(default_factory=list, sa_column=Column(JSONB))
+    health_considerations: Optional[str] = Field(default=None)
+    
+    # Generated content
+    content_json: Optional[Dict[str, Any]] = Field(default=None, sa_column=Column(JSONB))
+    teacher_instructions: Optional[str] = Field(default=None)
+    
+    # Status tracking
+    status: str = Field(default="pending", index=True, max_length=50)  # pending, processing, completed, failed
+    
+    # Timestamps
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
 
 
 

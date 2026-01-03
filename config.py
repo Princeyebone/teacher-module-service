@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     GCS_BUCKET_NAME: str = "your-gcs-bucket-name"
     GCS_PROJECT_ID: str = "your-gcp-project-id"
     GCS_SERVICE_ACCOUNT_JSON: str = "g"  # Path to service account JSON file or JSON content
+    GCS_SERVICE_ACCOUNT_JSON_VERTEX_AI: str = "Google_GenAI_Service_Account"  # Path to service account JSON file or JSON content
     
     # Google Gemini API key for timetable processing
     GEMINI_API_KEY: str = ""  # Add your Google Gemini API key to .env file
@@ -29,8 +30,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file=".env"
-    
 
 
 settings = Settings()
-print(settings.POPPLER_PATH)
+print()

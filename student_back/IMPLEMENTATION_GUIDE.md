@@ -1,0 +1,215 @@
+# Student Support Pack - Remaining Updates
+
+## ✅ Completed:
+1. Updated AI prompt to focus on topic (not subject)
+2. Added explicit examples (Fractions vs Friction)
+3. Added structured format requirements (Main Idea, Step-by-Step, etc.)
+4. Removed subject from image prompts
+
+## ⏳ Still Needed:
+
+### 1. Add Notes Parser Function
+Insert this function after line 380 in `student_support_generator.py`:
+
+```python
+def _parse_notes_into_slides(html_content: str, start_slide_num: int = 1) -> List[Dict]:
+    """Parse HTML notes into multiple slides based on h2 and h3 sections."""
+    from bs4 import BeautifulSoup
+    import copy
+    
+    slides = []
+    slide_num = start_slide_num
+    
+    MAX_PARAGRAPHS_PER_SLIDE = 3
+    MAX_BULLETS_PER_SLIDE = 6
+    MAX_SUBSECTIONS_PER_SLIDE = 2
+    
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        h2_elements = soup.find_all('h2')
+        
+        if not h2_elements:
+            slides.append({
+                "id": f"slide-{slide_num}",
+                "type": "notes_section",
+                "layout": "text_only",
+                "content": {"title": "Learning Notes", "html_content": html_content}
+            })
+            return slides
+        
+        for h2 in h2_elements:
+            section_title = h2.get_text(strip=True)
+            current_slide_content = {
+                "title": section_title,
+                "content_parts": [],
+                "paragraphs": [],
+                "bullet_points": [],
+                "subsections": []
+            }
+            
+            paragraph_count = 0
+            bullet_count = 0
+            
+            def commit_current_slide(part_num=None):
+                nonlocal slide_num, current_slide_content, paragraph_count, bullet_count
+                
+                if not current_slide_content["content_parts"] and not current_slide_content["subsections"]:
+                    return
+                
+                layout = "text_only"
+                if current_slide_content["subsections"]:
+                    layout = "content_with_subsections"
+                elif current_slide_content["bullet_points"] and current_slide_content["paragraphs"]:
+                    layout = "content_with_bullets"
+                elif current_slide_content["bullet_points"]:
+                    layout = "bullet_list"
+                
+                slide_content_obj = {
+                    "title": f"{section_title} (Part {part_num})" if part_num and part_num > 1 else section_title,
+                    "content_parts": copy.deepcopy(current_slide_content["content_parts"])
+                }
+                
+                if current_slide_content["paragraphs"]:
+                    slide_content_obj["body"] = " ".join(current_slide_content["paragraphs"])
+                
+                if current_slide_content["bullet_points"]:
+                    slide_content_obj["bullet_points"] = copy.deepcopy(current_slide_content["bullet_points"])
+                    
+                if current_slide_content["subsections"]:
+                    slide_content_obj["subsections"] = copy.deepcopy(current_slide_content["subsections"])
+                
+                slides.append({
+                    "id": f"slide-{slide_num}",
+                    "type": "notes_section",
+                    "layout": layout,
+                    "content": slide_content_obj
+                })
+                slide_num += 1
+                
+                current_slide_content["content_parts"] = []
+                current_slide_content["paragraphs"] = []
+                current_slide_content["bullet_points"] = []
+                current_slide_content["subsections"] = []
+                paragraph_count = 0
+                bullet_count = 0
+            
+            part_counter = 1
+            current = h2.find_next_sibling()
+            
+            while current and current.name != 'h2':
+                if current.name == 'h3':
+                    if paragraph_count > 0 or bullet_count > 0:
+                        commit_current_slide(part_counter)
+                        part_counter += 1
+                    
+                    subsection_title = current.get_text(strip=True)
+                    subsection_content_parts = []
+                    
+                    sub_current = current.find_next_sibling()
+                    while sub_current and sub_current.name not in ['h2', 'h3']:
+                        if sub_current.name == 'p':
+                            subsection_content_parts.append({
+                                "type": "paragraph",
+                                "text": sub_current.get_text(strip=True)
+                            })
+                        elif sub_current.name in ['ul', 'ol']:
+                            items = [li.get_text(strip=True) for li in sub_current.find_all('li')]
+                            tag_type = "bullet_list" if sub_current.name == 'ul' else "numbered_list"
+                            subsection_content_parts.append({"type": tag_type, "items": items})
+                        sub_current = sub_current.find_next_sibling()
+                    
+                    current_slide_content["subsections"].append({
+                        "heading": subsection_title,
+                        "content": subsection_content_parts
+                    })
+                    
+                    if len(current_slide_content["subsections"]) >= MAX_SUBSECTIONS_PER_SLIDE:
+                        commit_current_slide(part_counter)
+                        part_counter += 1
+                    
+                    current = sub_current
+                    continue
+                
+                elif current.name == 'p':
+                    text = current.get_text(strip=True)
+                    if text:
+                        if (paragraph_count >= MAX_PARAGRAPHS_PER_SLIDE and bullet_count > 0) or paragraph_count >= MAX_PARAGRAPHS_PER_SLIDE * 2:
+                            commit_current_slide(part_counter)
+                            part_counter += 1
+                        
+                        current_slide_content["paragraphs"].append(text)
+                        current_slide_content["content_parts"].append({"type": "paragraph", "text": text})
+                        paragraph_count += 1
+                        
+                elif current.name in ['ul', 'ol']:
+                    items = [li.get_text(strip=True) for li in current.find_all('li')]
+                    if items:
+                        new_bullet_count = len(items)
+                        if bullet_count + new_bullet_count > MAX_BULLETS_PER_SLIDE and (paragraph_count > 0 or bullet_count > 0):
+                            commit_current_slide(part_counter)
+                            part_counter += 1
+                        
+                        current_slide_content["bullet_points"].extend(items)
+                        tag_type = "bullet_list" if current.name == 'ul' else "numbered_list"
+                        current_slide_content["content_parts"].append({"type": tag_type, "items": items})
+                        bullet_count += new_bullet_count
+                
+                current = current.find_next_sibling()
+            
+            commit_current_slide(part_counter)
+        
+        logger.info(f"[NOTES-PARSER] Created {len(slides)} slides from HTML notes")
+        return slides
+        
+    except Exception as e:
+        logger.error(f"[NOTES-PARSER] Error parsing HTML: {e}")
+        return [{
+            "id": f"slide-{start_slide_num}",
+            "type": "notes_section",
+            "layout": "text_only",
+            "content": {"title": "Learning Notes", "html_content": html_content}
+        }]
+```
+
+### 2. Update Notes Slide Building (around line 450-461)
+Replace:
+```python
+# === 4. Notes Slides ===
+if notes_html:
+    slides.append({
+        "id": f"slide-{slide_num}",
+        "type": "notes",
+        "layout": "notes",
+        "content": {
+            "title": "Your Learning Notes",
+            "html_content": notes_html
+        }
+    })
+    slide_num += 1
+```
+
+With:
+```python
+# === 4. Notes Slides (parsed into multiple slides) ===
+if notes_html:
+    notes_slides = _parse_notes_into_slides(notes_html, slide_num)
+    slides.extend(notes_slides)
+    slide_num += len(notes_slides)
+```
+
+### 3. Remove Subject from Title (line 407)
+Change:
+```python
+"subtitle": f"Prepared for {student_name} - {subject} ({class_name})"
+```
+To:
+```python
+"subtitle": f"Prepared for {student_name} ({class_name})"
+```
+
+## Result:
+- Notes will be broken into multiple `notes_section` slides
+- Each h2 section becomes its own slide(s)
+- h3 subsections are properly structured
+- No arbitrary 8-slide limit
+- Same structure as student lesson packs

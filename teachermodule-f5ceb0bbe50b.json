@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "teachermodule",
+  "private_key_id": "f5ceb0bbe50b10c4751fc1f7603153c3d876646e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCSTb9mVoiLfeN5\nD9MtRmbkMRZryfwvaqTLbtgJAj9X4l6leqsmgQQfCzFz1dPbUBoa+Zhk0EATC/9F\nNkdJjfeTkN0XKYe9KdI35LGuDQJA68/2sRGtYK1+UE8ZbMyVztNUTdoVEnhHTBbC\nd/w3RpaOzlv/C8A19No9Xa8jHW54bh8cKXEUHIQa38m2X/RWVNKWM4NjGWC3TrBz\nI75mYYvOmBbaaexFzYaynuiOUfgYFTKeMeNkBnXc6bZwouUSZagz0dM4IYJMQwD1\nzNgAzw+UcIjT5xL6TJYeWqRG/mToEPOlMsE2+54E7hbhtQRCiNxZCrJ2l3fmgfo7\nNgQK+dd3AgMBAAECggEAAkdqSxubKqKxcdB0Sqse8bf2kHJW0lCqFn9JlpvvwMtx\nC/xPp2VKbEb40zuQmACS00MC3Ux9J0qIwCf706Bbo0A4OwlEpKBLi/BGo3gIzp57\nnFwR4fTFxXpFTwZp1wX1R9bWWUoU9sKNZc7DdvJLisKZ4oZPd9jDkP2L3bmygdUM\nmPHRZTHuxQKgp8uwi/VmqfB6+JrIWOG0k66CSM+pZYMRe/XaSE4K1jUxh9roQKc1\n1SJppdMWdFlmDE9uh3eFvx506ryVramvtY0uj/+4ubKTJ3hdk59Cl3r4tyfrqJaA\nHU7Pv4iFqoKBf4bQo+AvezeH0gaJNL0BXIb+q+bG4QKBgQDOdyEProAvDx+N7IlK\nCs/G17cVrBbTfWEgHinNeMdNj6A7w3slu4AdwAshIBsajT65UOqGn/CAZzPyRjZ9\nL+tSELQUZ7aeKNA41vgzymk5FZSMo+zoEfilAQQde3lsePdINDajzyU7n5qiwwVV\nnQZkb7yqr3oYRGc2v8kWbkkZJwKBgQC1Z4603aEWxQS+ULtQBfyW4n5XEwlVn5ez\n/opXaWUP08Hbs3GunGjxL2wsWAUvvLD4kmD+ySaXBz33j/sdrtcd9HS4HKiknZS1\njd1BiDGY0ZZgNy+elMvjhW6vUgnoLH1zDNA//e3bOWYKtLNI7eQx4TokvnuJgmvj\nC6k/EhIhMQKBgQCZWnbeFPj0+0Cuw/A9ZMZrpTJCEK5rrAcGOiFGkt1GSNX1Tf8c\nSaahclFR62z2Tc83ClkIYafbV8yHuYsjdQJO1EVNmrNTynDOpy14GnIJinPp+qAu\nx5ptxNFvrJTF8xuJL+8dwPCg1q2fE0fVDWsAEtaJ2QjRGY2oZs9Pr97vpQKBgQCE\nDIALFJHgm0Yaq3XOiK0XwIOrKsZOt7+cXJujiarxXHnvTa5hJqYVeynJFcGgwEAq\nkZNdpFsc8T6gaQSo1M7ulTYpl2MDgVnw1vXKcDN6RIasPz/Athu84TJzGMrxYQFo\nsFkfW967CAtJm8QuQE0uKf9DJA2VSYTzX1ex+5uK4QKBgB6AVJ6IeqJ/mher01Dd\nfFYs4c4iu01RgJhMrhUF/BngKVxFHyyaK1NZ6tYdye8teCYx8KjTa1oxaUkSCAb5\nLvEJJVivXoYF1jurlxA39ITHqpDragm5fCRAc8mkRFwJNuf9PovKn042u+p3G7vn\nge4IxGmQ7tXhax80thEZfDwb\n-----END PRIVATE KEY-----\n",
+  "client_email": "vertex-express@teachermodule.iam.gserviceaccount.com",
+  "client_id": "107702233232788878367",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vertex-express%40teachermodule.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

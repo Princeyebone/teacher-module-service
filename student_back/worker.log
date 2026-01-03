@@ -1,0 +1,467 @@
+2025-12-31 16:12:25,518 - __main__ - INFO - ======================================================================
+2025-12-31 16:12:25,519 - __main__ - INFO - Starting Student Support Pack Worker
+2025-12-31 16:12:25,519 - __main__ - INFO - ======================================================================
+2025-12-31 16:12:25,661 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2025-12-31 16:12:25,681 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.05M clients_connected=2 db_keys=0
+2025-12-31 16:12:25,682 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2025-12-31 16:12:25,683 - __main__ - INFO -    Queue: student_support_queue
+2025-12-31 16:12:25,683 - __main__ - INFO -    Redis: localhost:6379/db8
+2025-12-31 18:07:26,220 - __main__ - INFO - ======================================================================
+2025-12-31 18:07:26,224 - __main__ - INFO - Starting Student Support Pack Worker
+2025-12-31 18:07:26,224 - __main__ - INFO - ======================================================================
+2025-12-31 18:07:26,347 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2025-12-31 18:07:26,348 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.27M clients_connected=2 db_keys=2
+2025-12-31 18:07:26,348 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2025-12-31 18:07:26,348 - __main__ - INFO -    Queue: student_support_queue
+2025-12-31 18:07:26,349 - __main__ - INFO -    Redis: localhost:6379/db8
+2025-12-31 18:07:26,363 - arq.worker - INFO -  28.08s → fc32fd3e853941828eb5b06df8ba8a63:process_student_support_pack('7bc89e96-fc8f-4480-ba6a-4edfe589caed', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…) delayed=28.08s
+2025-12-31 18:07:26,363 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 18:07:26,364 - __main__ - INFO -    Pack ID: 7bc89e96-fc8f-4480-ba6a-4edfe589caed
+2025-12-31 18:07:26,364 - __main__ - INFO -    Topic: fraction
+2025-12-31 18:07:26,364 - __main__ - INFO -    Interests: ['balls']
+2025-12-31 18:07:31,670 - student_support - INFO - [START] Student Support Pack for mark - fraction
+2025-12-31 18:07:31,743 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-12-31 18:07:31,744 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 18:07:31,749 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-12-31 18:07:31,750 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 18:07:31,755 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-12-31 18:07:31,756 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 18:07:31,762 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 18:07:31,763 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 18:07:31,764 - sqlalchemy.engine.Engine - INFO - [generated in 0.00070s] ('processing', '7bc89e96-fc8f-4480-ba6a-4edfe589caed')
+2025-12-31 18:07:31,773 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 18:07:36,434 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 18:07:51,714 - student_support - INFO - [AI] Generated 2701 chars of notes
+2025-12-31 18:07:52,117 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 18:07:53,785 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 18:08:05,373 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 20s before retry 2/3...
+2025-12-31 18:08:35,665 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 18:08:35,666 - student_support - WARNING - [IMAGE] Failed to generate image 1
+2025-12-31 18:08:35,666 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 18:08:45,344 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 18:08:45,345 - student_support - WARNING - [IMAGE] Failed to generate image 2
+2025-12-31 18:08:45,346 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 18:08:57,870 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 18:08:57,871 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 18:08:57,877 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 18:08:57,878 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 18:08:57,879 - sqlalchemy.engine.Engine - INFO - [generated in 0.00080s] ('{"pack_id": "0ae1508a-6217-4d5a-b8fa-66ab447bf3ee", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fraction", "i ... (11078 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', 'Here are some instructions for teaching Mark about projectile motion, considering his ADHD:\n\n*   **Break down the lesson into smaller chunks:** Pro ... (2062 characters truncated) ... lex, focus on the conceptual understanding of how the angle of projection affects the range and maximum height. Skip the formulas entirely if needed.', 'completed', '7bc89e96-fc8f-4480-ba6a-4edfe589caed')
+2025-12-31 18:08:57,920 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 18:08:57,924 - student_support - INFO - [DB] Saved pack content for 7bc89e96-fc8f-4480-ba6a-4edfe589caed
+2025-12-31 18:08:57,924 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 18:08:57,925 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 18:08:57,925 - arq.worker - INFO -  91.56s ← fc32fd3e853941828eb5b06df8ba8a63:process_student_support_pack ● {'success': True, 'pack_id': '7bc89e96-fc8f-4480-ba6a-4edfe589caed'}
+2025-12-31 18:39:14,872 - arq.worker - INFO -   0.26s → ee585a9e652848db9f6507bb9b7980d7:process_student_support_pack('da46297a-2087-4ab0-824f-df4aef484ac2', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2025-12-31 18:39:14,919 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 18:39:14,924 - __main__ - INFO -    Pack ID: da46297a-2087-4ab0-824f-df4aef484ac2
+2025-12-31 18:39:14,925 - __main__ - INFO -    Topic: fraction
+2025-12-31 18:39:14,928 - __main__ - INFO -    Interests: ['cars', 'bascket ball']
+2025-12-31 18:39:14,941 - student_support - INFO - [START] Student Support Pack for mark - fraction
+2025-12-31 18:39:15,473 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 18:39:15,512 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 18:39:15,518 - sqlalchemy.engine.Engine - INFO - [cached since 1904s ago] ('processing', 'da46297a-2087-4ab0-824f-df4aef484ac2')
+2025-12-31 18:39:15,549 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 18:39:15,772 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 18:39:35,301 - student_support - INFO - [AI] Generated 3906 chars of notes
+2025-12-31 18:39:35,327 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 18:39:46,516 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 18:39:46,522 - student_support - WARNING - [IMAGE] Failed to generate image 1
+2025-12-31 18:39:46,522 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 18:39:57,180 - slide_builder.image_generator - INFO - ✅ Image generated: 514035 bytes
+2025-12-31 18:39:57,182 - student_support - ERROR - [IMAGE] Error generating image 2: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 18:39:57,182 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 18:39:58,919 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 18:40:18,635 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 18:40:18,637 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 18:40:18,661 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 18:40:18,664 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 18:40:18,666 - sqlalchemy.engine.Engine - INFO - [cached since 1881s ago] ('{"pack_id": "347977c0-36f9-477b-870b-452cc402eca7", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fraction", "i ... (13277 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', '<h2>Teacher Instructions for Mark (Class 11A) - Physics: Friction</h2>\n\n<p><strong>Objective:</strong> To help Mark understand the concept of frict ... (3271 characters truncated) ...  and understanding. By tailoring the lesson to Mark\'s interests and needs, you can create a positive and effective learning experience.</strong></p>', 'completed', 'da46297a-2087-4ab0-824f-df4aef484ac2')
+2025-12-31 18:40:18,677 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 18:40:18,689 - student_support - INFO - [DB] Saved pack content for da46297a-2087-4ab0-824f-df4aef484ac2
+2025-12-31 18:40:18,689 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 18:40:18,689 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 18:40:18,690 - arq.worker - INFO -  63.83s ← ee585a9e652848db9f6507bb9b7980d7:process_student_support_pack ● {'success': True, 'pack_id': 'da46297a-2087-4ab0-824f-df4aef484ac2'}
+2025-12-31 19:16:20,555 - arq.worker - INFO - recording health: Dec-31 19:16:20 j_complete=2 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-12-31 19:42:34,573 - arq.worker - INFO -   0.27s → 60951cfc31484f13860cabc44c8e5d06:process_student_support_pack('197f2434-a8a9-4235-99fd-371430843ba0', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2025-12-31 19:42:34,587 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 19:42:34,595 - __main__ - INFO -    Pack ID: 197f2434-a8a9-4235-99fd-371430843ba0
+2025-12-31 19:42:34,595 - __main__ - INFO -    Topic: fraction
+2025-12-31 19:42:34,596 - __main__ - INFO -    Interests: ['sex']
+2025-12-31 19:42:34,603 - student_support - INFO - [START] Student Support Pack for mark - fraction
+2025-12-31 19:42:35,029 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 19:42:35,036 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 19:42:35,037 - sqlalchemy.engine.Engine - INFO - [cached since 5703s ago] ('processing', '197f2434-a8a9-4235-99fd-371430843ba0')
+2025-12-31 19:42:35,048 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 19:42:35,244 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 19:42:50,509 - student_support - INFO - [AI] Generated 2430 chars of notes
+2025-12-31 19:42:50,516 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 19:43:03,761 - slide_builder.image_generator - INFO - ✅ Image generated: 868239 bytes
+2025-12-31 19:43:03,841 - student_support - ERROR - [IMAGE] Error generating image 1: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 19:43:03,841 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 19:43:14,970 - slide_builder.image_generator - INFO - ✅ Image generated: 523891 bytes
+2025-12-31 19:43:14,971 - student_support - ERROR - [IMAGE] Error generating image 2: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 19:43:14,971 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 19:43:16,722 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 19:43:28,437 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 20s before retry 2/3...
+2025-12-31 19:43:50,239 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 40s before retry 3/3...
+2025-12-31 19:44:40,004 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 19:44:40,021 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 19:44:40,059 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 19:44:40,062 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 19:44:40,062 - sqlalchemy.engine.Engine - INFO - [cached since 5742s ago] ('{"pack_id": "0cac6529-85d6-4413-8eb9-30b5a0537885", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fraction", "i ... (10742 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', "This lesson plan is designed to cater to Mark's needs, particularly his ADHD and his expressed interests. The primary strategy is to maintain engagem ... (1538 characters truncated) ... undaries and ensure that the lesson remains educational and appropriate. The goal is to use his interests to enhance engagement, not to exploit them.", 'completed', '197f2434-a8a9-4235-99fd-371430843ba0')
+2025-12-31 19:44:40,070 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 19:44:40,076 - student_support - INFO - [DB] Saved pack content for 197f2434-a8a9-4235-99fd-371430843ba0
+2025-12-31 19:44:40,076 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 19:44:40,077 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 19:44:40,077 - arq.worker - INFO - 125.51s ← 60951cfc31484f13860cabc44c8e5d06:process_student_support_pack ● {'success': True, 'pack_id': '197f2434-a8a9-4235-99fd-371430843ba0'}
+2025-12-31 19:57:36,504 - arq.worker - INFO -   0.10s → 2a5b8657c3044faaa16854156321eb3b:process_student_support_pack('fcabaf6f-9b7d-44ce-ad3c-36515176a9d5', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2025-12-31 19:57:36,577 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 19:57:36,589 - __main__ - INFO -    Pack ID: fcabaf6f-9b7d-44ce-ad3c-36515176a9d5
+2025-12-31 19:57:36,589 - __main__ - INFO -    Topic: fraction
+2025-12-31 19:57:36,593 - __main__ - INFO -    Interests: ['eating']
+2025-12-31 19:57:36,602 - student_support - INFO - [START] Student Support Pack for mark - fraction
+2025-12-31 19:57:36,928 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 19:57:36,955 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 19:57:36,959 - sqlalchemy.engine.Engine - INFO - [cached since 6605s ago] ('processing', 'fcabaf6f-9b7d-44ce-ad3c-36515176a9d5')
+2025-12-31 19:57:36,984 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 19:57:37,212 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 19:57:52,966 - student_support - INFO - [AI] Generated 2642 chars of notes
+2025-12-31 19:57:52,971 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 19:58:03,164 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 19:58:03,229 - student_support - WARNING - [IMAGE] Failed to generate image 1
+2025-12-31 19:58:03,229 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 19:58:15,567 - slide_builder.image_generator - INFO - ✅ Image generated: 810453 bytes
+2025-12-31 19:58:15,570 - student_support - ERROR - [IMAGE] Error generating image 2: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 19:58:15,570 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 19:58:17,336 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 19:58:44,413 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 19:58:44,435 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 19:58:44,463 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 19:58:44,469 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 19:58:44,471 - sqlalchemy.engine.Engine - INFO - [cached since 6587s ago] ('{"pack_id": "4abf7894-fdeb-4eac-94c1-ca2e4186aef5", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fraction", "i ... (10616 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', "Here are some tips for teaching Mark about fractions in physics, keeping his ADHD in mind:\n\n*   **Short Bursts:** Keep lesson segments brief (15-20 ... (1739 characters truncated) ... ness, frustration, or difficulty focusing. If you notice these signs, take a break, switch to a different activity, or adjust the pace of the lesson.", 'completed', 'fcabaf6f-9b7d-44ce-ad3c-36515176a9d5')
+2025-12-31 19:58:44,489 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 19:58:44,498 - student_support - INFO - [DB] Saved pack content for fcabaf6f-9b7d-44ce-ad3c-36515176a9d5
+2025-12-31 19:58:44,499 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 19:58:44,500 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 19:58:44,501 - arq.worker - INFO -  68.03s ← 2a5b8657c3044faaa16854156321eb3b:process_student_support_pack ● {'success': True, 'pack_id': 'fcabaf6f-9b7d-44ce-ad3c-36515176a9d5'}
+2025-12-31 20:13:25,186 - arq.worker - INFO -   0.28s → 449f3633705a4a718d3c6db5e7e01a94:process_student_support_pack('12c5a808-c8d7-4e27-9d84-53bb1be50002', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2025-12-31 20:13:25,195 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 20:13:25,197 - __main__ - INFO -    Pack ID: 12c5a808-c8d7-4e27-9d84-53bb1be50002
+2025-12-31 20:13:25,198 - __main__ - INFO -    Topic: Fraction
+2025-12-31 20:13:25,199 - __main__ - INFO -    Interests: ['writting']
+2025-12-31 20:13:25,202 - student_support - INFO - [START] Student Support Pack for mark - Fraction
+2025-12-31 20:13:25,403 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 20:13:25,412 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 20:13:25,413 - sqlalchemy.engine.Engine - INFO - [cached since 7554s ago] ('processing', '12c5a808-c8d7-4e27-9d84-53bb1be50002')
+2025-12-31 20:13:25,425 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 20:13:25,492 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 20:13:41,048 - student_support - INFO - [AI] Generated 2362 chars of notes
+2025-12-31 20:13:41,050 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 20:13:51,575 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 20:13:51,596 - student_support - WARNING - [IMAGE] Failed to generate image 1
+2025-12-31 20:13:51,596 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 20:14:04,808 - slide_builder.image_generator - INFO - ✅ Image generated: 679946 bytes
+2025-12-31 20:14:04,809 - student_support - ERROR - [IMAGE] Error generating image 2: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 20:14:04,809 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 20:14:06,539 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 20:14:18,533 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 20s before retry 2/3...
+2025-12-31 20:14:40,213 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 40s before retry 3/3...
+2025-12-31 20:15:32,839 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 20:15:32,842 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 20:15:32,860 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 20:15:32,861 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 20:15:32,862 - sqlalchemy.engine.Engine - INFO - [cached since 7595s ago] ('{"pack_id": "60e95640-377f-4cea-8802-faa6c78b12f8", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "Fraction", "i ... (11105 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', "<h3>Teacher Instructions for Mark (Class 11A) - Physics: Fractions</h3>\n\n<p><strong>Understanding Mark's Needs:</strong> Mark has Down Syndrome. Th ... (2681 characters truncated) ...  to meet Mark's individual needs. Provide extra support and scaffolding as required. Celebrate his progress and encourage his continued learning.</p>", 'completed', '12c5a808-c8d7-4e27-9d84-53bb1be50002')
+2025-12-31 20:15:32,887 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 20:15:32,892 - student_support - INFO - [DB] Saved pack content for 12c5a808-c8d7-4e27-9d84-53bb1be50002
+2025-12-31 20:15:32,892 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 20:15:32,893 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 20:15:32,893 - arq.worker - INFO - 127.71s ← 449f3633705a4a718d3c6db5e7e01a94:process_student_support_pack ● {'success': True, 'pack_id': '12c5a808-c8d7-4e27-9d84-53bb1be50002'}
+2025-12-31 20:16:20,705 - arq.worker - INFO - recording health: Dec-31 20:16:20 j_complete=5 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-12-31 20:19:16,014 - __main__ - INFO - ======================================================================
+2025-12-31 20:19:16,015 - __main__ - INFO - Starting Student Support Pack Worker
+2025-12-31 20:19:16,015 - __main__ - INFO - ======================================================================
+2025-12-31 20:19:16,047 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2025-12-31 20:19:16,051 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.46M clients_connected=2 db_keys=4
+2025-12-31 20:19:16,051 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2025-12-31 20:19:16,051 - __main__ - INFO -    Queue: student_support_queue
+2025-12-31 20:19:16,052 - __main__ - INFO -    Redis: localhost:6379/db8
+2025-12-31 20:19:35,892 - __main__ - INFO - ======================================================================
+2025-12-31 20:19:35,892 - __main__ - INFO - Starting Student Support Pack Worker
+2025-12-31 20:19:35,893 - __main__ - INFO - ======================================================================
+2025-12-31 20:19:35,921 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2025-12-31 20:19:35,923 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.46M clients_connected=2 db_keys=4
+2025-12-31 20:19:35,924 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2025-12-31 20:19:35,924 - __main__ - INFO -    Queue: student_support_queue
+2025-12-31 20:19:35,925 - __main__ - INFO -    Redis: localhost:6379/db8
+2025-12-31 20:20:33,698 - arq.worker - INFO -   0.20s → 7cc22a346d9643bba7f06ccf7136115f:process_student_support_pack('f739e3d1-fed9-4ce2-86ad-24f686d5ffc7', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2025-12-31 20:20:33,699 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 20:20:33,699 - __main__ - INFO -    Pack ID: f739e3d1-fed9-4ce2-86ad-24f686d5ffc7
+2025-12-31 20:20:33,700 - __main__ - INFO -    Topic: fraction
+2025-12-31 20:20:33,700 - __main__ - INFO -    Interests: ['sheos']
+2025-12-31 20:20:36,555 - student_support - INFO - [START] Student Support Pack for mark - fraction
+2025-12-31 20:20:36,645 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-12-31 20:20:36,645 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 20:20:36,655 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-12-31 20:20:36,656 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 20:20:36,665 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-12-31 20:20:36,666 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 20:20:36,675 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 20:20:36,677 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 20:20:36,677 - sqlalchemy.engine.Engine - INFO - [generated in 0.00067s] ('processing', 'f739e3d1-fed9-4ce2-86ad-24f686d5ffc7')
+2025-12-31 20:20:36,689 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 20:20:48,112 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 20:21:09,573 - student_support - INFO - [AI] Generated 5604 chars of notes
+2025-12-31 20:21:10,015 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 20:21:19,757 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 20:21:19,763 - student_support - WARNING - [IMAGE] Failed to generate image 1
+2025-12-31 20:21:19,763 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 20:21:30,987 - slide_builder.image_generator - INFO - ✅ Image generated: 774626 bytes
+2025-12-31 20:21:30,988 - student_support - ERROR - [IMAGE] Error generating image 2: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 20:21:30,988 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 20:21:32,658 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 20:21:52,078 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 20:21:52,079 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 20:21:52,085 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 20:21:52,086 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 20:21:52,248 - sqlalchemy.engine.Engine - INFO - [generated in 0.16179s] ('{"pack_id": "ba3160ff-fdc0-4f42-8b0d-7abf6b628759", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fraction", "i ... (12458 characters truncated) ... s": 10}]}}], "summary": {"total_slides": 8, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', "Mark has Down syndrome, so it's important to keep the lesson short, structured, and visually appealing. Break the lesson into smaller chunks, focusin ... (1214 characters truncated) ... erstanding the concepts\n* Resistance to participate\n\nIf any of these signs appear, take a break, simplify the lesson, or try a different approach.", 'completed', 'f739e3d1-fed9-4ce2-86ad-24f686d5ffc7')
+2025-12-31 20:21:52,257 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 20:21:52,317 - student_support - INFO - [DB] Saved pack content for f739e3d1-fed9-4ce2-86ad-24f686d5ffc7
+2025-12-31 20:21:52,318 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 20:21:52,318 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 20:21:52,318 - arq.worker - INFO -  78.62s ← 7cc22a346d9643bba7f06ccf7136115f:process_student_support_pack ● {'success': True, 'pack_id': 'f739e3d1-fed9-4ce2-86ad-24f686d5ffc7'}
+2025-12-31 23:13:43,593 - arq.worker - INFO - recording health: Dec-31 23:13:42 j_complete=1 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2025-12-31 23:57:41,932 - __main__ - INFO - ======================================================================
+2025-12-31 23:57:41,933 - __main__ - INFO - Starting Student Support Pack Worker
+2025-12-31 23:57:41,933 - __main__ - INFO - ======================================================================
+2025-12-31 23:57:41,980 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2025-12-31 23:57:41,984 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.46M clients_connected=2 db_keys=3
+2025-12-31 23:57:41,985 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2025-12-31 23:57:41,985 - __main__ - INFO -    Queue: student_support_queue
+2025-12-31 23:57:41,985 - __main__ - INFO -    Redis: localhost:6379/db8
+2025-12-31 23:57:42,012 - arq.worker - INFO -  21.98s → 5f6ab92a2260485d9263ceceba996b34:process_student_support_pack('3cf44d18-2397-41e7-970d-0c2e4748199d', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…) delayed=21.98s
+2025-12-31 23:57:42,013 - __main__ - INFO - 🎬 Starting pack generation for mark
+2025-12-31 23:57:42,013 - __main__ - INFO -    Pack ID: 3cf44d18-2397-41e7-970d-0c2e4748199d
+2025-12-31 23:57:42,014 - __main__ - INFO -    Topic: fractions
+2025-12-31 23:57:42,014 - __main__ - INFO -    Interests: ['eggs']
+2025-12-31 23:57:45,638 - student_support - INFO - [START] Student Support Pack for mark - fractions
+2025-12-31 23:57:45,774 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-12-31 23:57:45,775 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 23:57:45,784 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-12-31 23:57:45,785 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 23:57:45,795 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-12-31 23:57:45,796 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-31 23:57:45,803 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 23:57:45,805 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2025-12-31 23:57:45,806 - sqlalchemy.engine.Engine - INFO - [generated in 0.00106s] ('processing', '3cf44d18-2397-41e7-970d-0c2e4748199d')
+2025-12-31 23:57:45,815 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 23:57:55,268 - student_support - INFO - [AI] Generating personalized content...
+2025-12-31 23:58:13,646 - student_support - INFO - [AI] Generated 6246 chars of notes
+2025-12-31 23:58:17,483 - student_support - INFO - [IMAGE] Generating image 1/3...
+2025-12-31 23:58:19,428 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 23:58:31,783 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 20s before retry 2/3...
+2025-12-31 23:59:03,827 - slide_builder.image_generator - INFO - ✅ Image generated: 552749 bytes
+2025-12-31 23:59:03,833 - student_support - ERROR - [IMAGE] Error generating image 1: upload_image_to_gcs() missing 1 required positional argument: 'slide_item_id'
+2025-12-31 23:59:03,834 - student_support - INFO - [IMAGE] Generating image 2/3...
+2025-12-31 23:59:14,074 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 23:59:14,078 - student_support - WARNING - [IMAGE] Failed to generate image 2
+2025-12-31 23:59:14,079 - student_support - INFO - [IMAGE] Generating image 3/3...
+2025-12-31 23:59:16,019 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 10s before retry 1/3...
+2025-12-31 23:59:27,923 - slide_builder.image_generator - WARNING - ⚠️ Rate limited (429), waiting 20s before retry 2/3...
+2025-12-31 23:59:57,934 - slide_builder.image_generator - WARNING - ⚠️ No image in response
+2025-12-31 23:59:57,939 - student_support - WARNING - [IMAGE] Failed to generate image 3
+2025-12-31 23:59:58,960 - student_support - INFO - [NOTES-PARSER] Created 16 slides from HTML notes
+2025-12-31 23:59:59,011 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-31 23:59:59,018 - sqlalchemy.engine.Engine - INFO - 
+                    UPDATE student_support_packs 
+                    SET content_json = CAST($1 AS jsonb),
+                        teacher_instructions = $2,
+                        status = $3,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = CAST($4 AS uuid)
+                
+2025-12-31 23:59:59,019 - sqlalchemy.engine.Engine - INFO - [generated in 0.00340s] ('{"pack_id": "6dcf6f52-f663-48de-b65e-12165d6a9aff", "student_name": "mark", "subject": "Physics", "class_level": "Class 11A", "topic": "fractions", " ... (16055 characters truncated) ... ": 10}]}}], "summary": {"total_slides": 23, "has_notes": true, "image_count": 0, "has_teacher_instructions": true, "mcq_count": 5, "essay_count": 2}}', "This lesson focuses on fractions, breaking down the core concepts into manageable chunks. Given Mark's headache consideration, implement frequent bre ... (613 characters truncated) ... er break as needed. The MCQ questions can be used as a quick check of understanding at the end of the session, or interspersed throughout the lesson.", 'completed', '3cf44d18-2397-41e7-970d-0c2e4748199d')
+2025-12-31 23:59:59,043 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-12-31 23:59:59,055 - student_support - INFO - [DB] Saved pack content for 3cf44d18-2397-41e7-970d-0c2e4748199d
+2025-12-31 23:59:59,057 - student_support - INFO - [SUCCESS] Student Support Pack completed for mark
+2025-12-31 23:59:59,058 - __main__ - INFO - ✅ Pack generation complete for mark
+2025-12-31 23:59:59,058 - arq.worker - INFO - 137.05s ← 5f6ab92a2260485d9263ceceba996b34:process_student_support_pack ● {'success': True, 'pack_id': '3cf44d18-2397-41e7-970d-0c2e4748199d'}
+2026-01-01 03:05:35,988 - arq.worker - INFO - recording health: Jan-01 03:05:35 j_complete=1 j_failed=0 j_retried=0 j_ongoing=0 queued=0
+2026-01-01 15:56:21,090 - __main__ - INFO - ======================================================================
+2026-01-01 15:56:21,092 - __main__ - INFO - Starting Student Support Pack Worker
+2026-01-01 15:56:21,092 - __main__ - INFO - ======================================================================
+2026-01-01 15:56:21,138 - arq.worker - INFO - Starting worker for 1 functions: process_student_support_pack
+2026-01-01 15:56:21,142 - arq.worker - INFO - redis_version=8.0.3 mem_usage=1.46M clients_connected=2 db_keys=1
+2026-01-01 15:56:21,143 - __main__ - INFO - 🚀 Student Support Pack worker starting up...
+2026-01-01 15:56:21,144 - __main__ - INFO -    Queue: student_support_queue
+2026-01-01 15:56:21,144 - __main__ - INFO -    Redis: localhost:6379/db8
+2026-01-01 19:06:41,562 - arq.worker - INFO -   0.83s → 891f5ba2ed1d4402990e770f0ee35daa:process_student_support_pack('9aff16a3-a2fc-4fc7-b629-c780eb2935d1', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2026-01-01 19:06:41,635 - __main__ - INFO - 🎬 Starting pack generation for mark
+2026-01-01 19:06:41,642 - __main__ - INFO -    Pack ID: 9aff16a3-a2fc-4fc7-b629-c780eb2935d1
+2026-01-01 19:06:41,642 - __main__ - INFO -    Topic: Fractions
+2026-01-01 19:06:41,643 - __main__ - INFO -    Interests: ['water slide']
+2026-01-01 19:06:49,817 - student_support - INFO - [START] Student Support Pack for mark - Fractions
+2026-01-01 19:06:50,022 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2026-01-01 19:06:50,023 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-01 19:06:50,037 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2026-01-01 19:06:50,038 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-01 19:06:50,049 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2026-01-01 19:06:50,051 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2026-01-01 19:06:50,060 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-01 19:06:50,063 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2026-01-01 19:06:50,065 - sqlalchemy.engine.Engine - INFO - [generated in 0.00183s] ('processing', '9aff16a3-a2fc-4fc7-b629-c780eb2935d1')
+2026-01-01 19:06:50,077 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-01 19:06:59,754 - student_support - INFO - [AI] Generating personalized content...
+2026-01-01 19:07:01,516 - student_support - ERROR - [AI] Content generation failed: 403 This API method requires billing to be enabled. Please enable billing on project #teachermodule by visiting https://console.developers.google.com/billing/enable?project=teachermodule then retry. If you enabled billing for this project recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "BILLING_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "aiplatform.googleapis.com"
+}
+metadata {
+  key: "containerInfo"
+  value: "teachermodule"
+}
+metadata {
+  key: "consumer"
+  value: "projects/teachermodule"
+}
+, locale: "en-US"
+message: "This API method requires billing to be enabled. Please enable billing on project #teachermodule by visiting https://console.developers.google.com/billing/enable?project=teachermodule then retry. If you enabled billing for this project recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console billing"
+  url: "https://console.developers.google.com/billing/enable?project=teachermodule"
+}
+]
+2026-01-01 19:07:01,522 - student_support - ERROR - [ERROR] Failed to generate content for mark
+2026-01-01 19:07:01,545 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-01 19:07:01,548 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2026-01-01 19:07:01,551 - sqlalchemy.engine.Engine - INFO - [cached since 11.49s ago] ('failed', '9aff16a3-a2fc-4fc7-b629-c780eb2935d1')
+2026-01-01 19:07:01,565 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-01 19:07:01,575 - __main__ - INFO - ✅ Pack generation complete for mark
+2026-01-01 19:07:01,576 - arq.worker - INFO -  20.05s ← 891f5ba2ed1d4402990e770f0ee35daa:process_student_support_pack ● {'success': False, 'pack_id': '9aff16a3-a2fc-4fc7-b629-c780eb2935d1'}
+2026-01-01 19:18:27,124 - arq.worker - INFO -   0.16s → f985756bd5e34fff8c54ac8037cacfb2:process_student_support_pack('014dd674-728e-4411-a234-8581f10c6aef', '7bed2b69-8000-4b36-8e91-7fe0b70c9d82',…)
+2026-01-01 19:18:27,168 - __main__ - INFO - 🎬 Starting pack generation for mark
+2026-01-01 19:18:27,173 - __main__ - INFO -    Pack ID: 014dd674-728e-4411-a234-8581f10c6aef
+2026-01-01 19:18:27,174 - __main__ - INFO -    Topic: fractions
+2026-01-01 19:18:27,175 - __main__ - INFO -    Interests: ['cars', 'houses']
+2026-01-01 19:18:27,188 - student_support - INFO - [START] Student Support Pack for mark - fractions
+2026-01-01 19:18:27,923 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-01 19:18:27,949 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2026-01-01 19:18:27,953 - sqlalchemy.engine.Engine - INFO - [cached since 697.9s ago] ('processing', '014dd674-728e-4411-a234-8581f10c6aef')
+2026-01-01 19:18:27,987 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-01 19:18:28,278 - student_support - INFO - [AI] Generating personalized content...
+2026-01-01 19:18:30,498 - student_support - ERROR - [AI] Content generation failed: 403 This API method requires billing to be enabled. Please enable billing on project #teachermodule by visiting https://console.developers.google.com/billing/enable?project=teachermodule then retry. If you enabled billing for this project recently, wait a few minutes for the action to propagate to our systems and retry. [reason: "BILLING_DISABLED"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "aiplatform.googleapis.com"
+}
+metadata {
+  key: "containerInfo"
+  value: "teachermodule"
+}
+metadata {
+  key: "consumer"
+  value: "projects/teachermodule"
+}
+, locale: "en-US"
+message: "This API method requires billing to be enabled. Please enable billing on project #teachermodule by visiting https://console.developers.google.com/billing/enable?project=teachermodule then retry. If you enabled billing for this project recently, wait a few minutes for the action to propagate to our systems and retry."
+, links {
+  description: "Google developers console billing"
+  url: "https://console.developers.google.com/billing/enable?project=teachermodule"
+}
+]
+2026-01-01 19:18:30,503 - student_support - ERROR - [ERROR] Failed to generate content for mark
+2026-01-01 19:18:30,541 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2026-01-01 19:18:30,553 - sqlalchemy.engine.Engine - INFO - 
+                UPDATE student_support_packs 
+                SET status = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = CAST($2 AS uuid)
+            
+2026-01-01 19:18:30,555 - sqlalchemy.engine.Engine - INFO - [cached since 700.5s ago] ('failed', '014dd674-728e-4411-a234-8581f10c6aef')
+2026-01-01 19:18:30,571 - sqlalchemy.engine.Engine - INFO - COMMIT
+2026-01-01 19:18:30,585 - __main__ - INFO - ✅ Pack generation complete for mark
+2026-01-01 19:18:30,587 - arq.worker - INFO -   3.49s ← f985756bd5e34fff8c54ac8037cacfb2:process_student_support_pack ● {'success': False, 'pack_id': '014dd674-728e-4411-a234-8581f10c6aef'}
+2026-01-01 22:20:42,922 - arq.worker - INFO - recording health: Jan-01 22:20:42 j_complete=2 j_failed=0 j_retried=0 j_ongoing=0 queued=0

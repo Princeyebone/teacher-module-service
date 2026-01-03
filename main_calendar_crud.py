@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, Path
 from model import TeacherProfile, TeacherPlannerEvent, ClassSession, Calendar
 from typing import Annotated
 from dependencies import get_current_teacher
 from database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
-from schemas import UpdateCalendar
+from schemas import UpdateCalendar, Calendar as CalendarSchema
 
 router = APIRouter(tags=["Calendar"])
 
@@ -67,26 +67,21 @@ async def read_calendar(
 
 @router.post("/create-event")
 async def create_event(
-    event: UpdateCalendar,
+    event: CalendarSchema,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        calendar_objs = [
-            Calendar(
-                teacher_id=current_teacher.id,
-                **item.model_dump(exclude_unset=True)
-            )
-            for item in event.items
-        ]
+        # Create a single calendar event
+        calendar_obj = Calendar(
+            teacher_id=current_teacher.id,
+            **event.model_dump(exclude_unset=True)
+        )
 
-        for obj in calendar_objs:
-            db.add(obj)
+        db.add(calendar_obj)
         await db.commit()
-
-        for obj in calendar_objs:
-            await db.refresh(obj)
-        return event.items
+        await db.refresh(calendar_obj)
+        return calendar_obj
     except Exception as e:
         await db.rollback()
         raise HTTPException(
@@ -94,80 +89,110 @@ async def create_event(
             detail=str(e)
         )
 
-@router.patch("/update-calendar")
-async def update_calendar(
+
+@router.patch("/complete-calendar/{event_id}")
+async def complete_calendar_event(
+    event_id: Annotated[int, Path(title="The ID of the calendar event to complete")],
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    event: UpdateCalendar,
-    db: AsyncSession = Depends(get_db)
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        # Fetch existing entries for this teacher
-        existing_entries = (await db.execute(
-            select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        )).scalars().all()
-        existing_entries_dict = {e.id: e for e in existing_entries if e.id is not None}
-
-        # Build a set of IDs from the payload (if they exist)
-        payload_ids = set()
-        updated_entries = []
-        for item in event.items:
-            item_data = item.model_dump(exclude_unset=True)
-            item_id = item_data.get("id")
-            if item_id and item_id in existing_entries_dict:
-                # Update existing entry
-                db_entry = existing_entries_dict[item_id]
-                for key, value in item_data.items():
-                    if key != "id":
-                        setattr(db_entry, key, value)
-                db.add(db_entry)
-                updated_entries.append(db_entry)
-                payload_ids.add(item_id)
-            else:
-                # New entry
-                new_entry = Calendar(
-                    teacher_id=current_teacher.id,
-                    **item_data
-                )
-                db.add(new_entry)
-                await db.commit()
-                await db.refresh(new_entry)
-                updated_entries.append(new_entry)
-
-        # Delete entries that are not in the payload
-        for entry in existing_entries:
-            if entry.id not in payload_ids:
-                await db.delete(entry)
+        # Fetch the specific calendar event
+        result = await db.execute(
+            select(Calendar).where(
+                Calendar.id == event_id,
+                Calendar.teacher_id == current_teacher.id
+            )
+        )
+        calendar_event = result.scalar_one_or_none()
+        
+        if not calendar_event:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Calendar event not found"
+            )
+        
+        # Set the event as completed
+        calendar_event.is_completed = True
+        
+        db.add(calendar_event)
         await db.commit()
+        await db.refresh(calendar_event)
+        return calendar_event
+    
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
 
-        # Get the latest list of entries
-        final_entries = (await db.execute(
-            select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        )).scalars().all()
 
-        return final_entries
-
+@router.patch("/update-calendar/{event_id}")
+async def update_calendar_event(
+    event_id: Annotated[int, Path(title="The ID of the calendar event to update")],
+    event: CalendarSchema,
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        # Fetch the specific calendar event
+        result = await db.execute(
+            select(Calendar).where(
+                Calendar.id == event_id,
+                Calendar.teacher_id == current_teacher.id
+            )
+        )
+        calendar_event = result.scalar_one_or_none()
+        
+        if not calendar_event:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Calendar event not found"
+            )
+        
+        # Update the event with new data
+        event_data = event.model_dump(exclude_unset=True)
+        for key, value in event_data.items():
+            setattr(calendar_event, key, value)
+        
+        db.add(calendar_event)
+        await db.commit()
+        await db.refresh(calendar_event)
+        return calendar_event
+    
     except Exception as e:
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error updating calendar: {str(e)}"
+            detail=f"Error updating calendar event: {str(e)}"
         )
 
-@router.delete("/delete-calendar")
-async def delete_calendar(
+@router.delete("/delete-calendar/{event_id}")
+async def delete_calendar_event(
+    event_id: Annotated[int, Path(title="The ID of the calendar event to delete")],
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: AsyncSession = Depends(get_db)
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):
     try:
-        # Delete all events for the current teacher
-        events_to_delete = (await db.execute(
-            select(Calendar).where(Calendar.teacher_id == current_teacher.id)
-        )).scalars().all()
+        # Delete a specific event for the current teacher
+        result = await db.execute(
+            select(Calendar).where(
+                Calendar.id == event_id,
+                Calendar.teacher_id == current_teacher.id
+            )
+        )
+        calendar_event = result.scalar_one_or_none()
         
-        for event in events_to_delete:
-            await db.delete(event)
+        if not calendar_event:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Calendar event not found"
+            )
+        
+        await db.delete(calendar_event)
         await db.commit()
-        return {"message": f"Deleted {len(events_to_delete)} calendar events"}
+        return {"message": f"Deleted calendar event with ID {event_id}"}
 
     except Exception as e:
         await db.rollback()

@@ -1,0 +1,2697 @@
+# Curriculum Processing Log
+# All detailed curriculum processing logs will be written here
+# Format: YYYY-MM-DD HH:MM:SS,mmm - LEVEL - Message
+2025-12-09 08:19:19,536 - INFO - 
+2025-12-09 08:19:19,544 - INFO - ====================================================================================================
+2025-12-09 08:19:19,544 - INFO -   CURRICULUM PROCESSING STARTED - 2025-12-09T08:19:19.532285
+2025-12-09 08:19:19,544 - INFO - ====================================================================================================
+2025-12-09 08:19:19,544 - INFO - Teacher ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-12-09 08:19:19,544 - INFO - Subject: Mathematics
+2025-12-09 08:19:19,544 - INFO - Class: Class 10A
+2025-12-09 08:19:19,544 - INFO - Education System: ges
+2025-12-09 08:19:19,570 - INFO - Education Level: k12
+2025-12-09 08:19:19,570 - INFO - GCS File: curriculum/7bed2b69-8000-4b36-8e91-7fe0b70c9d82/Class 10A/Mathematics.pdf
+2025-12-09 08:19:19,682 - INFO - File Name: Mathematics.pdf
+2025-12-09 08:19:19,682 - INFO - Knowledge ID: 567
+2025-12-09 08:19:19,689 - INFO - 
+2025-12-09 08:19:19,690 - INFO - ====================================================================================================
+2025-12-09 08:19:19,741 - INFO -   INPUT: SESSION DATA
+2025-12-09 08:19:19,763 - INFO - ====================================================================================================
+2025-12-09 08:19:19,785 - INFO - Session Data Structure:
+2025-12-09 08:19:20,193 - INFO - {
+  "semester_start_date": "2024-09-10",
+  "semester_end_date": "2024-12-19",
+  "weekly_sessions": {
+    "Week 1": {
+      "week_number": 1,
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        },
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        }
+      ]
+    },
+    "Week 2": {
+      "week_number": 2,
+      "sessions": [
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        },
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        }
+      ]
+    },
+    "Week 3": {
+      "week_number": 3,
+      "sessions": [
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        },
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        }
+      ]
+    },
+    "Week 4": {
+      "week_number": 4,
+      "sessions": [
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        },
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        }
+      ]
+    },
+    "Week 5": {
+      "week_number": 5,
+      "sessions": [
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        },
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        }
+      ]
+    },
+    "Week 6": {
+      "week_number": 6,
+      "sessions": [
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        },
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        }
+      ]
+    },
+    "Week 7": {
+      "week_number": 7,
+      "sessions": [
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        },
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    "Week 8": {
+      "week_number": 8,
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        },
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        }
+      ]
+    },
+    "Week 9": {
+      "week_number": 9,
+      "sessions": [
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        }
+      ]
+    },
+    "Week 10": {
+      "week_number": 10,
+      "sessions": [
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        },
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        }
+      ]
+    },
+    "Week 11": {
+      "week_number": 11,
+      "sessions": [
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    "Week 12": {
+      "week_number": 12,
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        },
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        }
+      ]
+    },
+    "Week 13": {
+      "week_number": 13,
+      "sessions": [
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        }
+      ]
+    },
+    "Week 14": {
+      "week_number": 14,
+      "sessions": [
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        },
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        }
+      ]
+    },
+    "Week 15": {
+      "week_number": 15,
+      "sessions": [
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        },
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  }
+}
+2025-12-09 08:19:20,195 - INFO - Semester Start: 2024-09-10
+2025-12-09 08:19:20,196 - INFO - Semester End: 2024-12-19
+2025-12-09 08:19:20,196 - INFO - Number of Weeks: 15
+2025-12-09 08:19:20,196 - INFO -   Week 1: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 2: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 3: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 4: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 5: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 6: 3 sessions
+2025-12-09 08:19:20,196 - INFO -   Week 7: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 8: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 9: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 10: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 11: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 12: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 13: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 14: 3 sessions
+2025-12-09 08:19:20,197 - INFO -   Week 15: 2 sessions
+2025-12-09 08:19:41,483 - INFO - 
+2025-12-09 08:19:41,483 - INFO - ====================================================================================================
+2025-12-09 08:19:41,488 - INFO -   FETCHING SEMESTER METADATA from AcademicCalendar
+2025-12-09 08:19:41,489 - INFO - ====================================================================================================
+2025-12-09 08:19:42,083 - INFO - Semester Name: First Term 2024/2025
+2025-12-09 08:19:42,083 - INFO - Term: None
+2025-12-09 08:19:42,163 - INFO - 
+2025-12-09 08:19:42,163 - INFO - ====================================================================================================
+2025-12-09 08:19:42,163 - INFO -   METADATA FOR AI & RETRIEVAL
+2025-12-09 08:19:42,266 - INFO - ====================================================================================================
+2025-12-09 08:19:42,266 - INFO - Class Name: Class 10A
+2025-12-09 08:19:42,813 - INFO - Subject: Mathematics
+2025-12-09 08:19:42,813 - INFO - Education System: ges
+2025-12-09 08:19:42,813 - INFO - Education Level: k12
+2025-12-09 08:19:42,876 - INFO - Semester Name: First Term 2024/2025
+2025-12-09 08:19:42,876 - INFO - Term: None
+2025-12-09 08:20:39,645 - INFO - 
+2025-12-09 08:20:39,645 - INFO - ====================================================================================================
+2025-12-09 08:20:39,645 - INFO -   STEP: RETRIEVAL - Searching for Syllabus Content
+2025-12-09 08:20:39,645 - INFO - ====================================================================================================
+2025-12-09 08:20:39,681 - INFO - Retrieval Query Parameters:
+2025-12-09 08:20:39,681 - INFO -   Query: strand substrand content standard indicator syllabus Mathematics Class 10A First Term 2024/2025
+2025-12-09 08:20:39,681 - INFO -   Subject Filter: Mathematics
+2025-12-09 08:20:39,681 - INFO -   Pillar Filter: syllabus
+2025-12-09 08:20:39,681 - INFO -   Class Level Filter: Class 10A
+2025-12-09 08:20:39,682 - INFO -   Semester Context: First Term 2024/2025
+2025-12-09 08:20:39,682 - INFO -   Term Context: None
+2025-12-09 08:20:39,682 - INFO -   Limit: 4
+2025-12-09 08:20:39,682 - INFO -   Min Similarity: 0.3
+2025-12-09 08:20:39,682 - INFO -   Use Hybrid Search: True
+2025-12-09 08:20:39,682 - INFO -   Keyword Weight: 0.3
+2025-12-09 08:20:39,706 - INFO - Retrieved 0 chunks from syllabus pillar
+2025-12-09 08:20:39,707 - INFO - ⚠️ No results from syllabus, attempting fallback to curriculum pillar
+2025-12-09 08:20:39,707 - INFO - Fallback Retrieval Parameters:
+2025-12-09 08:20:39,707 - INFO -   Pillar Filter: curriculum (changed from syllabus)
+2025-12-09 08:20:41,757 - INFO - Retrieved 4 chunks from curriculum pillar
+2025-12-09 08:20:41,757 - INFO - 
+2025-12-09 08:20:41,757 - INFO - ====================================================================================================
+2025-12-09 08:20:41,757 - INFO -   RETRIEVAL RESULTS
+2025-12-09 08:20:41,757 - INFO - ====================================================================================================
+2025-12-09 08:20:41,757 - INFO - Total Chunks Retrieved: 4
+2025-12-09 08:20:41,757 - INFO - 
+--- Chunk 1 ---
+2025-12-09 08:20:41,757 - INFO - Similarity Score: 0.6599
+2025-12-09 08:20:41,757 - INFO - Combined Score: 0.5619
+2025-12-09 08:20:41,757 - INFO - Keyword Score: 0.3333
+2025-12-09 08:20:41,758 - INFO - Knowledge ID: 564
+2025-12-09 08:20:41,758 - INFO - Subject: Mathematics
+2025-12-09 08:20:41,758 - INFO - Pillar: curriculum
+2025-12-09 08:20:41,758 - INFO - Chunk Order: 4
+2025-12-09 08:20:41,758 - INFO - Chunk Text (first 500 chars):
+2025-12-09 08:20:41,758 - INFO - be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of th...
+2025-12-09 08:20:41,758 - INFO - 
+--- Chunk 2 ---
+2025-12-09 08:20:41,758 - INFO - Similarity Score: 0.6599
+2025-12-09 08:20:41,758 - INFO - Combined Score: 0.5619
+2025-12-09 08:20:41,758 - INFO - Keyword Score: 0.3333
+2025-12-09 08:20:41,758 - INFO - Knowledge ID: 565
+2025-12-09 08:20:41,758 - INFO - Subject: Mathematics
+2025-12-09 08:20:41,758 - INFO - Pillar: curriculum
+2025-12-09 08:20:41,759 - INFO - Chunk Order: 4
+2025-12-09 08:20:41,759 - INFO - Chunk Text (first 500 chars):
+2025-12-09 08:20:41,759 - INFO - be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of th...
+2025-12-09 08:20:41,759 - INFO - 
+--- Chunk 3 ---
+2025-12-09 08:20:41,759 - INFO - Similarity Score: 0.6599
+2025-12-09 08:20:41,759 - INFO - Combined Score: 0.5619
+2025-12-09 08:20:41,759 - INFO - Keyword Score: 0.3333
+2025-12-09 08:20:41,759 - INFO - Knowledge ID: 562
+2025-12-09 08:20:41,759 - INFO - Subject: Mathematics
+2025-12-09 08:20:41,759 - INFO - Pillar: curriculum
+2025-12-09 08:20:41,759 - INFO - Chunk Order: 4
+2025-12-09 08:20:41,759 - INFO - Chunk Text (first 500 chars):
+2025-12-09 08:20:41,760 - INFO - be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of th...
+2025-12-09 08:20:41,760 - INFO - 
+--- Chunk 4 ---
+2025-12-09 08:20:41,760 - INFO - Similarity Score: 0.6599
+2025-12-09 08:20:41,760 - INFO - Combined Score: 0.5619
+2025-12-09 08:20:41,760 - INFO - Keyword Score: 0.3333
+2025-12-09 08:20:41,760 - INFO - Knowledge ID: 563
+2025-12-09 08:20:41,760 - INFO - Subject: Mathematics
+2025-12-09 08:20:41,760 - INFO - Pillar: curriculum
+2025-12-09 08:20:41,760 - INFO - Chunk Order: 4
+2025-12-09 08:20:41,760 - INFO - Chunk Text (first 500 chars):
+2025-12-09 08:20:41,760 - INFO - be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of th...
+2025-12-09 08:20:41,760 - INFO - 
+Full Retrieval Results (JSON):
+2025-12-09 08:20:41,761 - INFO - [
+  {
+    "chunk_text": "be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as \"Syllabus Reference Numbers\". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to\u00ab. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The \"content\" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils\u2019 learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships",
+    "similarity": 0.6599053361640751,
+    "knowledge_id": 564,
+    "subject": "Mathematics",
+    "pillar": "curriculum",
+    "chunk_order": 4,
+    "keyword_score": 0.3333333333333333,
+    "combined_score": 0.5619337353148526
+  },
+  {
+    "chunk_text": "be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as \"Syllabus Reference Numbers\". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to\u00ab. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The \"content\" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils\u2019 learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships",
+    "similarity": 0.6599053361640751,
+    "knowledge_id": 565,
+    "subject": "Mathematics",
+    "pillar": "curriculum",
+    "chunk_order": 4,
+    "keyword_score": 0.3333333333333333,
+    "combined_score": 0.5619337353148526
+  },
+  {
+    "chunk_text": "be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as \"Syllabus Reference Numbers\". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to\u00ab. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The \"content\" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils\u2019 learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships",
+    "similarity": 0.6599053361640751,
+    "knowledge_id": 562,
+    "subject": "Mathematics",
+    "pillar": "curriculum",
+    "chunk_order": 4,
+    "keyword_score": 0.3333333333333333,
+    "combined_score": 0.5619337353148526
+  },
+  {
+    "chunk_text": "be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as \"Syllabus Reference Numbers\". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to\u00ab. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The \"content\" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils\u2019 learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships",
+    "similarity": 0.6599053361640751,
+    "knowledge_id": 563,
+    "subject": "Mathematics",
+    "pillar": "curriculum",
+    "chunk_order": 4,
+    "keyword_score": 0.3333333333333333,
+    "combined_score": 0.5619337353148526
+  }
+]
+2025-12-09 08:20:41,761 - INFO - 
+2025-12-09 08:20:41,761 - INFO - ====================================================================================================
+2025-12-09 08:20:41,761 - INFO -   STEP: AI PROCESSING - Building Prompt and Sending to AI
+2025-12-09 08:20:41,761 - INFO - ====================================================================================================
+2025-12-09 08:20:42,558 - INFO - AI Prompt Built:
+2025-12-09 08:20:42,558 - INFO - Prompt Length: 24542 characters
+2025-12-09 08:20:42,558 - INFO - Prompt Content:
+You are an Educational Curriculum Mapping AI with web search capabilities. Analyze syllabus/curriculum content and map it to actual teaching sessions.
+
+IMPORTANT WEB SEARCH INSTRUCTION:
+The curriculum content provided below may NOT be sufficient to fully map out all strands, substrands, content standards, and indicators for the entire semester.
+If the retrieved content is incomplete or lacks detail, you MUST perform a web search to find additional curriculum information.
+
+USE WEB SEARCH to find:
+- Official curriculum documents for ges k12 education system
+- Detailed Mathematics syllabus for Class 10A 
+- Strands, substrands, content standards, and indicators for First Term 2024/2025 
+- Week-by-week teaching plans and learning outcomes
+
+EDUCATIONAL CONTEXT:
+- Education System: ges
+- Education Level: k12  
+- Class Name: Class 10A
+- Subject: Mathematics
+- Semester: First Term 2024/2025
+- Term: Not specified
+
+RETRIEVED CURRICULUM CONTENT (from local syllabus database):
+Use this as a GUIDE, but supplement with web search for missing information.
+[Chunk 1 - Similarity: 0.66]
+be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to«. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The "content" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils’ learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships
+
+---
+
+[Chunk 2 - Similarity: 0.66]
+be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to«. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The "content" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils’ learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships
+
+---
+
+[Chunk 3 - Similarity: 0.66]
+be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to«. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The "content" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils’ learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships
+
+---
+
+[Chunk 4 - Similarity: 0.66]
+be more effective if you branched to another unit before coming back to the unit in the sequence, you are encouraged to do so. Column 2 - Specific Objectives: Column 2 shows the Specific Objectives for each unit. The specific objectives begin with numbers such as 1.2.5 or 3.4.1. These numbers are referred to as "Syllabus Reference Numbers". The first digit in the syllabus reference number refers to the year/class; the second digit refers to the unit, while the third refer to the rank order of the specific objective. For instance 1.2.5 means Year 1 or JH1, Unit 2 (of JH1) and Specific Objective 5. In other words 1.2.5 refers to Specific Objective 5 of Unit 2 of JH1. Using syllabus reference numbers provides an easy way for communication among teachers and educators. It further provides an easy way for selecting objectives for test construction. For instance, Unit 4 of JH3 has three specific objectives 3.4.1 - 3.4.3. A teacher may want to base his/her test items/questions on objectives 3.4.2 and 3.4.3 and not use the other first objective. A teacher would hence be able to use the syllabus reference numbers to sample objectives within units and within the year to be able to develop a test that accurately reflects the importance of the various skills taught in class. You will note also that specific objectives have been stated in terms of the pupils i.e. what the pupil will be able to do during and after instruction and learning in the unit. Each specific objective hence starts with the following The pupil will be able to«. This in effect, means that you have to address the learning problems of each individual pupil. It means individualizing your instruction as much as possible such that the majority of pupils will be able to master the objectives of each unit of the syllabus. Column 3 - Content: The "content" in the third column of the syllabus shows the mathematical concepts, and operations required in the teaching of the specific objectives. In some cases, the content presented is quite exhaustive. In some other cases, you could provide additional information based upon your own training and current knowledge and information. Column 4 - Teaching/Learning Activities (T/LA): T/LA activities that will ensure maximum pupil participation in the lessons are presented in Column 4. The General Aims of the subject can only be most effectively achieved when teachers create learning situations and provide guided opportunities for pupils to acquire as much knowledge and understanding of mathematics as possible through their own activities. Pupils' questions are as important as teacher's questions. There are times when the teacher must show, demonstrate, and explain. But the major part of pupils’ learning experience should consist of opportunities to explore various mathematical situations in their environment to enable them make their own observations and discoveries and record them. Teachers should help pupils to learn to compare, classify, analyze, look for patterns, spot relationships
+
+AVAILABLE TEACHING SESSIONS:
+- WeeklySessions: {
+  "semester_start_date": "2024-09-10",
+  "semester_end_date": "2024-12-19",
+  "weekly_sessions": {
+    "Week 1": {
+      "week_number": 1,
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        },
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        }
+      ]
+    },
+    "Week 2": {
+      "week_number": 2,
+      "sessions": [
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        },
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        }
+      ]
+    },
+    "Week 3": {
+      "week_number": 3,
+      "sessions": [
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        },
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        }
+      ]
+    },
+    "Week 4": {
+      "week_number": 4,
+      "sessions": [
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        },
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        }
+      ]
+    },
+    "Week 5": {
+      "week_number": 5,
+      "sessions": [
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        },
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        }
+      ]
+    },
+    "Week 6": {
+      "week_number": 6,
+      "sessions": [
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        },
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        }
+      ]
+    },
+    "Week 7": {
+      "week_number": 7,
+      "sessions": [
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        },
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    "Week 8": {
+      "week_number": 8,
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        },
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        }
+      ]
+    },
+    "Week 9": {
+      "week_number": 9,
+      "sessions": [
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        }
+      ]
+    },
+    "Week 10": {
+      "week_number": 10,
+      "sessions": [
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        },
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        }
+      ]
+    },
+    "Week 11": {
+      "week_number": 11,
+      "sessions": [
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    "Week 12": {
+      "week_number": 12,
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        },
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        }
+      ]
+    },
+    "Week 13": {
+      "week_number": 13,
+      "sessions": [
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        }
+      ]
+    },
+    "Week 14": {
+      "week_number": 14,
+      "sessions": [
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        },
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        }
+      ]
+    },
+    "Week 15": {
+      "week_number": 15,
+      "sessions": [
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        },
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  }
+}
+
+AVAILABLE WEEKS: Week 1, Week 2, Week 3, Week 4, Week 5, Week 6, Week 7, Week 8, Week 9, Week 10, Week 11, Week 12, Week 13, Week 14, Week 15
+WEEK DETAILS: Week 1: 3 sessions, Week 2: 3 sessions, Week 3: 3 sessions, Week 4: 3 sessions, Week 5: 3 sessions, Week 6: 3 sessions, Week 7: 3 sessions, Week 8: 3 sessions, Week 9: 3 sessions, Week 10: 3 sessions, Week 11: 3 sessions, Week 12: 3 sessions, Week 13: 3 sessions, Week 14: 3 sessions, Week 15: 2 sessions
+
+STRICT INSTRUCTIONS - READ CAREFULLY:
+1. Use the curriculum content above AND web search results to identify strands, substrands, content standards, and indicators
+2. Map these elements to the available teaching sessions from WeeklySessions
+3. You MUST ONLY use the weeks and sessions provided in the WeeklySessions data
+4. ALL curriculum elements (strands, substrands, content standards, indicators) MUST be for the specified Class Name and Subject only
+5. CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3])
+6. CRITICAL FORMAT REQUIREMENT: You MUST return FLAT STRUCTURES for all curriculum elements
+7. For strand_data: use strand_name (NOT name)
+8. For substrand_data: use substrand_name (NOT name)
+9. For content_standard_data: use content_standard_text (NOT name)
+10. For indicator_data: use indicator_text (NOT name)
+
+CONTENT STANDARD AND INDICATOR ASSIGNMENT RULES:
+1. EACH content standard MUST be assigned to at least one session from its parent substrand
+2. EACH indicator MUST be assigned to at least one session from its parent content standard's sessions
+3. A session CAN have at most TWO indicators assigned to it
+4. When assigning sessions, ensure even distribution of indicators across available sessions
+
+EXPECTED OUTPUT FORMAT:
+{
+  "strand_data": [
+    {
+      "strand_name": "Example Strand Name",
+      "weeks": []
+    }
+  ],
+  "substrand_data": [
+    {
+      "strand_name": "Example Strand Name",
+      "substrand_name": "Example Substrand Name",
+      "weeks": []
+    }
+  ],
+  "content_standard_data": [
+    {
+      "strand_name": "Example Strand Name",
+      "substrand_name": "Example Substrand Name",
+      "content_standard_code": "EXAMPLE.CODE.1",
+      "content_standard_text": "Example content standard description"
+    }
+  ],
+  "indicator_data": [
+    {
+      "strand_name": "Example Strand Name",
+      "substrand_name": "Example Substrand Name",
+      "content_standard_code": "EXAMPLE.CODE.1",
+      "indicator_code": "EXAMPLE.CODE.1.1",
+      "indicator_text": "Example indicator description"
+    }
+  ]
+}
+
+Return ONLY the JSON, nothing else. DO NOT wrap the output in markdown code blocks.
+
+2025-12-09 08:20:42,559 - INFO - 
+2025-12-09 08:20:42,559 - INFO - ====================================================================================================
+2025-12-09 08:20:42,559 - INFO -   WEB SEARCH CONFIGURATION
+2025-12-09 08:20:42,559 - INFO - ====================================================================================================
+2025-12-09 08:20:42,559 - INFO - Web Search Enabled: YES (via prompt instructions)
+2025-12-09 08:20:42,560 - INFO - Search Context - Education System: ges
+2025-12-09 08:20:42,560 - INFO - Search Context - Education Level: k12
+2025-12-09 08:20:42,560 - INFO - Search Context - Semester: First Term 2024/2025
+2025-12-09 08:20:42,560 - INFO - Search Context - Term: None
+2025-12-09 08:20:42,560 - INFO - Search Context - Subject: Mathematics
+2025-12-09 08:20:42,560 - INFO - Search Context - Class: Class 10A
+2025-12-09 08:20:42,560 - INFO - Sending prompt to AI with web search capability...
+2025-12-09 08:22:47,299 - INFO - 
+2025-12-09 08:22:47,301 - INFO - ====================================================================================================
+2025-12-09 08:22:47,301 - INFO -   AI RESPONSE
+2025-12-09 08:22:47,301 - INFO - ====================================================================================================
+2025-12-09 08:22:47,303 - INFO - ✅ AI Processing Successful
+2025-12-09 08:22:47,308 - INFO - AI Response Length: 25643 characters
+2025-12-09 08:22:47,309 - INFO - AI Response Structure:
+2025-12-09 08:22:47,309 - INFO -   - Strand Data: 3 items
+2025-12-09 08:22:47,309 - INFO -   - Substrand Data: 4 items
+2025-12-09 08:22:47,309 - INFO -   - Content Standard Data: 8 items
+2025-12-09 08:22:47,309 - INFO -   - Indicator Data: 24 items
+2025-12-09 08:22:47,309 - INFO - 
+Complete AI Response (JSON):
+2025-12-09 08:22:47,310 - INFO - {
+  "strand_data": [
+    {
+      "strand_name": "Number and Algebra",
+      "weeks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        },
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        },
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        },
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        },
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        },
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        },
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        },
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        },
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        },
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        },
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        },
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        },
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        },
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "weeks": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        },
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        },
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        },
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        },
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        },
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "weeks": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        },
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        },
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        },
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        },
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        },
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        },
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  ],
+  "substrand_data": [
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "weeks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        },
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        },
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        },
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        },
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        },
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        },
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        },
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "weeks": [
+        5,
+        6,
+        7
+      ],
+      "sessions": [
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        },
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        },
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        },
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        },
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        },
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "weeks": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        },
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        },
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        },
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        },
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        },
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "weeks": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        },
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        },
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        },
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        },
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        },
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        },
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  ],
+  "content_standard_data": [
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.1",
+      "content_standard_text": "Demonstrate understanding of number systems (rational and irrational numbers).",
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        },
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        },
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        },
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.2",
+      "content_standard_text": "Apply laws of indices and logarithms.",
+      "sessions": [
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        },
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        },
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        },
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.1",
+      "content_standard_text": "Manipulate algebraic expressions.",
+      "sessions": [
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        },
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.2",
+      "content_standard_text": "Solve linear and quadratic equations.",
+      "sessions": [
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        },
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        },
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        },
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.1",
+      "content_standard_text": "Understand and apply properties of polygons.",
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        },
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        },
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.2",
+      "content_standard_text": "Apply concepts of similarity and congruence.",
+      "sessions": [
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        },
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        },
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.1",
+      "content_standard_text": "Collect, organize, and represent data.",
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        },
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        },
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.2",
+      "content_standard_text": "Calculate measures of central tendency and dispersion.",
+      "sessions": [
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        },
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        },
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        },
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  ],
+  "indicator_data": [
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.1",
+      "indicator_code": "NA.NO.1.1.1.1",
+      "indicator_text": "Classify numbers as rational or irrational.",
+      "sessions": [
+        {
+          "id": 1269,
+          "date": "2024-09-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 1
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.1",
+      "indicator_code": "NA.NO.1.1.1.2",
+      "indicator_text": "Perform operations with rational and irrational numbers.",
+      "sessions": [
+        {
+          "id": 1404,
+          "date": "2024-09-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 1
+        },
+        {
+          "id": 1491,
+          "date": "2024-09-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 1
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.1",
+      "indicator_code": "NA.NO.1.1.1.3",
+      "indicator_text": "Convert recurring decimals to fractions.",
+      "sessions": [
+        {
+          "id": 1270,
+          "date": "2024-09-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 2
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.1",
+      "indicator_code": "NA.NO.1.1.1.4",
+      "indicator_text": "Solve problems involving surds.",
+      "sessions": [
+        {
+          "id": 1405,
+          "date": "2024-09-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 2
+        },
+        {
+          "id": 1492,
+          "date": "2024-09-20",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 2
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.2",
+      "indicator_code": "NA.NO.1.1.2.1",
+      "indicator_text": "State and apply the laws of indices.",
+      "sessions": [
+        {
+          "id": 1271,
+          "date": "2024-09-24",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 3
+        },
+        {
+          "id": 1406,
+          "date": "2024-09-26",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 3
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.2",
+      "indicator_code": "NA.NO.1.1.2.2",
+      "indicator_text": "Simplify expressions involving indices.",
+      "sessions": [
+        {
+          "id": 1493,
+          "date": "2024-09-27",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 3
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.2",
+      "indicator_code": "NA.NO.1.1.2.3",
+      "indicator_text": "State and apply the laws of logarithms.",
+      "sessions": [
+        {
+          "id": 1272,
+          "date": "2024-10-01",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 4
+        },
+        {
+          "id": 1407,
+          "date": "2024-10-03",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 4
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Number Operations",
+      "content_standard_code": "NA.NO.1.1.2",
+      "indicator_code": "NA.NO.1.1.2.4",
+      "indicator_text": "Solve problems involving logarithms.",
+      "sessions": [
+        {
+          "id": 1494,
+          "date": "2024-10-04",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 4
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.1",
+      "indicator_code": "NA.AEE.1.2.1.1",
+      "indicator_text": "Expand and factorize algebraic expressions (including quadratic expressions).",
+      "sessions": [
+        {
+          "id": 1273,
+          "date": "2024-10-08",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 5
+        },
+        {
+          "id": 1408,
+          "date": "2024-10-10",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 5
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.1",
+      "indicator_code": "NA.AEE.1.2.1.2",
+      "indicator_text": "Simplify algebraic fractions.",
+      "sessions": [
+        {
+          "id": 1495,
+          "date": "2024-10-11",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 5
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.2",
+      "indicator_code": "NA.AEE.1.2.2.1",
+      "indicator_text": "Solve linear equations in one variable.",
+      "sessions": [
+        {
+          "id": 1274,
+          "date": "2024-10-15",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 6
+        },
+        {
+          "id": 1409,
+          "date": "2024-10-17",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 6
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.2",
+      "indicator_code": "NA.AEE.1.2.2.2",
+      "indicator_text": "Solve simultaneous linear equations by substitution and elimination.",
+      "sessions": [
+        {
+          "id": 1496,
+          "date": "2024-10-18",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 6
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.2",
+      "indicator_code": "NA.AEE.1.2.2.3",
+      "indicator_text": "Solve quadratic equations by factorization, completing the square, and using the formula.",
+      "sessions": [
+        {
+          "id": 1275,
+          "date": "2024-10-22",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 7
+        },
+        {
+          "id": 1410,
+          "date": "2024-10-24",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 7
+        }
+      ]
+    },
+    {
+      "strand_name": "Number and Algebra",
+      "substrand_name": "Algebraic Expressions and Equations",
+      "content_standard_code": "NA.AEE.1.2.2",
+      "indicator_code": "NA.AEE.1.2.2.4",
+      "indicator_text": "Formulate and solve word problems leading to linear and quadratic equations.",
+      "sessions": [
+        {
+          "id": 1497,
+          "date": "2024-10-25",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 7
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.1",
+      "indicator_code": "GM.PG.2.1.1.1",
+      "indicator_text": "Identify different types of polygons.",
+      "sessions": [
+        {
+          "id": 1276,
+          "date": "2024-10-29",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 8
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.1",
+      "indicator_code": "GM.PG.2.1.1.2",
+      "indicator_text": "Calculate interior and exterior angles of regular polygons.",
+      "sessions": [
+        {
+          "id": 1411,
+          "date": "2024-10-31",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 8
+        },
+        {
+          "id": 1498,
+          "date": "2024-11-01",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 8
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.1",
+      "indicator_code": "GM.PG.2.1.1.3",
+      "indicator_text": "Solve problems involving properties of polygons.",
+      "sessions": [
+        {
+          "id": 1277,
+          "date": "2024-11-05",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 9
+        },
+        {
+          "id": 1412,
+          "date": "2024-11-07",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 9
+        },
+        {
+          "id": 1499,
+          "date": "2024-11-08",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 9
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.2",
+      "indicator_code": "GM.PG.2.1.2.1",
+      "indicator_text": "State conditions for similarity and congruence of triangles.",
+      "sessions": [
+        {
+          "id": 1278,
+          "date": "2024-11-12",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 10
+        },
+        {
+          "id": 1413,
+          "date": "2024-11-14",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 10
+        }
+      ]
+    },
+    {
+      "strand_name": "Geometry and Measurement",
+      "substrand_name": "Plane Geometry",
+      "content_standard_code": "GM.PG.2.1.2",
+      "indicator_code": "GM.PG.2.1.2.2",
+      "indicator_text": "Solve problems involving similar and congruent figures.",
+      "sessions": [
+        {
+          "id": 1500,
+          "date": "2024-11-15",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 10
+        },
+        {
+          "id": 1279,
+          "date": "2024-11-19",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 11
+        },
+        {
+          "id": 1414,
+          "date": "2024-11-21",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 11
+        },
+        {
+          "id": 1501,
+          "date": "2024-11-22",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 11
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.1",
+      "indicator_code": "DP.S.3.1.1.1",
+      "indicator_text": "Collect and classify data.",
+      "sessions": [
+        {
+          "id": 1280,
+          "date": "2024-11-26",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 12
+        },
+        {
+          "id": 1415,
+          "date": "2024-11-28",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 12
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.1",
+      "indicator_code": "DP.S.3.1.1.2",
+      "indicator_text": "Construct frequency tables, bar charts, pie charts, and histograms.",
+      "sessions": [
+        {
+          "id": 1502,
+          "date": "2024-11-29",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 12
+        },
+        {
+          "id": 1281,
+          "date": "2024-12-03",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 13
+        },
+        {
+          "id": 1416,
+          "date": "2024-12-05",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 13
+        },
+        {
+          "id": 1503,
+          "date": "2024-12-06",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 13
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.2",
+      "indicator_code": "DP.S.3.1.2.1",
+      "indicator_text": "Calculate mean, median, and mode for ungrouped data.",
+      "sessions": [
+        {
+          "id": 1282,
+          "date": "2024-12-10",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 14
+        },
+        {
+          "id": 1417,
+          "date": "2024-12-12",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 14
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.2",
+      "indicator_code": "DP.S.3.1.2.2",
+      "indicator_text": "Calculate mean, median, and mode for grouped data.",
+      "sessions": [
+        {
+          "id": 1504,
+          "date": "2024-12-13",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "week_number": 14
+        },
+        {
+          "id": 1283,
+          "date": "2024-12-17",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "week_number": 15
+        }
+      ]
+    },
+    {
+      "strand_name": "Data and Probability",
+      "substrand_name": "Statistics",
+      "content_standard_code": "DP.S.3.1.2",
+      "indicator_code": "DP.S.3.1.2.3",
+      "indicator_text": "Determine range and interquartile range.",
+      "sessions": [
+        {
+          "id": 1418,
+          "date": "2024-12-19",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "week_number": 15
+        }
+      ]
+    }
+  ]
+}
+2025-12-09 08:22:47,310 - INFO - 
+2025-12-09 08:22:47,310 - INFO - ====================================================================================================
+2025-12-09 08:22:47,311 - INFO -   STEP: DATABASE STORAGE - Storing Semester Plan Data
+2025-12-09 08:22:47,311 - INFO - ====================================================================================================
+2025-12-09 08:22:55,436 - INFO - Starting database storage...
+2025-12-09 08:23:03,336 - INFO - ✅ Database storage completed successfully
+2025-12-09 08:23:03,338 - INFO - 
+2025-12-09 08:23:03,338 - INFO - ====================================================================================================
+2025-12-09 08:23:03,338 - INFO -   CURRICULUM PROCESSING COMPLETED SUCCESSFULLY
+2025-12-09 08:23:03,338 - INFO - ====================================================================================================
+2025-12-09 08:23:03,338 - INFO - Teacher ID: 7bed2b69-8000-4b36-8e91-7fe0b70c9d82
+2025-12-09 08:23:03,338 - INFO - Subject: Mathematics
+2025-12-09 08:23:03,338 - INFO - Class: Class 10A
+2025-12-09 08:23:03,338 - INFO - Processing Time: 2025-12-09T08:23:03.338855
+2025-12-09 08:23:03,338 - INFO - Status: SUCCESS
+2025-12-09 08:23:03,339 - INFO - ====================================================================================================

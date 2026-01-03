@@ -581,7 +581,7 @@ class StudentEnrollmentResponse(BaseModel):
 class StudentRegistrationResponse(BaseModel):
     id: str
     name: str
-    email: str
+    email: Optional[str] = None
     index_number: str
     login_id: str
     created_at: Optional[str] = None

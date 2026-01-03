@@ -310,7 +310,8 @@ async def generate_schedule_task(ctx: dict, teacher_id: str, country: str):
                             def fetch_holidays():
                                 nonlocal holidays, holiday_error
                                 try:
-                                    holidays = get_holidays_from_ai(country, calendar_data["semester_start_date"].year)
+                                    import asyncio
+                                    holidays = asyncio.run(get_holidays_from_ai(country, calendar_data["semester_start_date"].year))
                                 except Exception as e:
                                     holiday_error = e
                             thread = threading.Thread(target=fetch_holidays)

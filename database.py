@@ -1,27 +1,45 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlmodel import SQLModel
-from config import settings
+"""
+Database Utilities
 
-# Configure async engine with explicit connection pool settings
+This module provides database connection and session utilities for the application.
+"""
+
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from config import settings
+import asyncio
+
+# Initialize SQLAlchemy async engine
 async_engine = create_async_engine(
     settings.DATABASE_URL,
     echo=True,
-    pool_size=20,           # Max number of connections in the pool
-    max_overflow=40,        # Allow up to 40 additional connections under load
-    pool_timeout=60,        # Wait up to 60 seconds for a connection
-    pool_recycle=900        # Recycle connections every 15 minutes to prevent stale connections
-)
-
-AsyncSessionLocal = async_sessionmaker(
-    bind=async_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+    pool_size=10,
+    max_overflow=20,
+    pool_timeout=5,
+    pool_recycle=180,
+    pool_pre_ping=True
 )
 
 async def get_db():
-    async with AsyncSessionLocal() as session:
+    """
+    Get database session generator.
+    
+    Yields:
+        AsyncSession: Database session
+    """
+    async with AsyncSession(async_engine) as session:
         yield session
 
 async def create_all_db_tables():
+    """
+    Create all database tables.
+    
+    This function initializes the database by creating all tables defined in the models.
+    """
+    # Import all models here to ensure they are registered with the metadata
+    from model import SQLModel
+    
+    # Create all tables
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
+    
+    print("✅ All database tables created successfully")

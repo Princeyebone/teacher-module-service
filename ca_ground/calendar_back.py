@@ -243,7 +243,11 @@ class FileExtractor:
                     text_content = ""
                     for i, image in enumerate(images):
                         logger.info(f"Processing image {i+1}/{len(images)}")
-                        page_text = pytesseract.image_to_string(image)
+                        try:
+                            page_text = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                        except Exception as timeout_e:
+                            logger.warning(f"OCR timed out for page {i+1}: {timeout_e}")
+                            page_text = ""  # Treat timeout as no text extracted
                         text_content += f"Page {i+1}:\n{page_text}\n"
                     
                     logger.info(f"✅ OCR extraction from PDF successful: {len(text_content)} characters")
@@ -256,7 +260,11 @@ class FileExtractor:
                 # Direct image OCR
                 logger.info("Performing direct image OCR")
                 image = Image.open(file_path)
-                text_content = pytesseract.image_to_string(image)
+                try:
+                    text_content = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                except Exception as timeout_e:
+                    logger.warning(f"OCR timed out for image: {timeout_e}")
+                    text_content = ""  # Treat timeout as no text extracted
                 logger.info(f"✅ OCR extraction successful: {len(text_content)} characters")
                 return text_content
                 
@@ -436,18 +444,15 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
     
     Args:
         ctx: ARQ context
-        teacher_id: UUID of the teacher
-        file_path: Path to the uploaded file
-        gcs_file_name: File name to be used in GCS
+        teacher_id: UUID of the teacher (can be None for system/developer records)
+        file_path: Original file name or path
+        gcs_file_name: File name in GCS
         additional_data: Additional context or data that may contain multiple calendar info
     """
     logger.info(f"🚀 Starting academic calendar file processing for teacher: {teacher_id}, file: {file_path}")
     logger.info(f"GCS file name: {gcs_file_name}")
     logger.info(f"Additional data length: {len(additional_data) if additional_data else 0}")
     logger.info(f"Current working directory: {os.getcwd()}")
-    logger.info(f"File path exists: {os.path.exists(file_path)}")
-    if os.path.exists(file_path):
-        logger.info(f"File size: {os.path.getsize(file_path)} bytes")
     
     # Global set to track sent messages across all function instances
     GLOBAL_SENT_MESSAGES = set()
@@ -457,6 +462,11 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
     
     async def send_unique_ws_message(teacher_id: str, message: dict):
         """Send WebSocket message only if it hasn't been sent before"""
+        # Skip sending messages if teacher_id is None
+        if teacher_id is None:
+            logger.info("Skipping WebSocket message for system/developer record (NULL teacher_id)")
+            return False
+            
         # Create a more robust hash of the message content to identify duplicates
         # Include more fields to make the hash more unique
         status = message.get('status', '')
@@ -504,6 +514,47 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
             return False
     
     try:
+        # For metadata-only uploads, we need to download the file from GCS first
+        # Create local directory if it doesn't exist
+        local_dir = "./downloads/calendar"
+        os.makedirs(local_dir, exist_ok=True)
+        
+        # Generate local file path
+        file_extension = os.path.splitext(file_path)[1] or ".dat"
+        local_file_path = os.path.join(local_dir, f"calendar_{teacher_id or 'system'}_{int(datetime.now().timestamp())}{file_extension}")
+        
+        # Download file from GCS to local storage
+        from config import settings
+        from gcs_utils import download_file_from_gcs
+        
+        download_success = download_file_from_gcs(
+            settings.GCS_BUCKET_NAME, 
+            gcs_file_name, 
+            local_file_path
+        )
+        
+        if not download_success:
+            error_msg = f"Failed to download file from GCS: {gcs_file_name}"
+            logger.error(f"❌ {error_msg}")
+            # Only send error message if teacher_id is not None
+            if teacher_id is not None:
+                try:
+                    await send_unique_ws_message(teacher_id, {
+                        "status": "error",
+                        "message": error_msg,
+                        "teacher_id": teacher_id,
+                    })
+                except Exception as send_error:
+                    logger.error(f"Failed to send error message: {send_error}")
+            return {"error": error_msg}
+        
+        # Update file_path to point to the downloaded local file
+        file_path = local_file_path
+        logger.info(f"✅ File downloaded from GCS to: {file_path}")
+        logger.info(f"File path exists: {os.path.exists(file_path)}")
+        if os.path.exists(file_path):
+            logger.info(f"File size: {os.path.getsize(file_path)} bytes")
+        
         # Send initial status - always send this
         logger.info("Sending initial status message")
         logger.info(f"Teacher ID: {teacher_id}")
@@ -635,7 +686,7 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
                 logger.info(f"GCS file name: {gcs_file_name}")
                 logger.info(f"Additional data length: {len(additional_data) if additional_data else 0}")
                 # Pass both the extracted text and GCS file name to the AI processing function
-                ai_result = send_academic_calendar_to_ai(
+                ai_result = await send_academic_calendar_to_ai(
                     extracted_text, 
                     f"gs://{settings.GCS_BUCKET_NAME}/{gcs_file_name}",
                     settings.GEMINI_API_KEY,
@@ -1115,7 +1166,8 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
                 })
             except Exception as send_error:
                 logger.error(f"Failed to send error message: {send_error}")
-            return {"error": error_msg}
+            # Raise exception to trigger ARQ retry mechanism
+            raise RuntimeError(error_msg)
             
     except Exception as e:
         error_msg = f"Unexpected error in calendar processing: {str(e)}"
@@ -1130,7 +1182,8 @@ async def process_calendar_file_task(ctx: dict, teacher_id: str, file_path: str,
             })
         except Exception as send_error:
             logger.error(f"Failed to send error message: {send_error}")
-        return {"error": error_msg}
+        # Raise exception to trigger ARQ retry mechanism
+        raise RuntimeError(error_msg)
     finally:
         # Clean up global sent messages for this function instance
         try:

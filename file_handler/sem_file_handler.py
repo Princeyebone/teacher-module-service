@@ -1,326 +1,41 @@
-from fastapi import APIRouter, UploadFile, HTTPException, Depends, status, Form
+from fastapi import APIRouter, HTTPException, Depends, Form
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-import uuid
-from uuid import uuid4, UUID
+from sqlalchemy import and_, or_, func, select
+from uuid import UUID
 import os
-from logger import logger
-from model import TeacherProfile
+from logger import logging, logger  # Add logger import
 from database import get_db
-from datetime import datetime
-from schemas import AvailableWeeksResponse, WeekAvailability, SessionInfo
+from typing import Annotated, Optional
 from dependencies import get_current_teacher
-from typing import Annotated
-from model import AcademicCalendar, ClassSession, Strand
-import json
+from model import TeacherProfile, WeeklyTimeTable
 from config import settings
 from gcs_utils import generate_signed_url, generate_file_name, get_file_from_gcs
+import asyncio
+import uuid
+from datetime import datetime
 from semplan_ground.semplan_back import enqueue_semplan_processing
 
-
-router = APIRouter(tags=["Semester Mapper File Handler"])
-
-
-
-@router.get("/available-weeks-sessions/{subject}/{class_name}", response_model=AvailableWeeksResponse)
-async def get_available_weeks_sessions(
-    subject: str,
-    class_name: str,
-    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    db: AsyncSession = Depends(get_db)
-):
-    """
-    Get available weeks and sessions for curriculum planning.
-    Returns weeks that are NOT booked in the Strand table.
-    """
-    logger.debug(f"Fetching available weeks and sessions for teacher_id: {current_teacher.id}, subject: {subject}, class_name: {class_name}")
-    
-    try:
-        # Step 1: Get Academic Calendar for semester boundaries
-        acc = (await db.execute(
-            select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
-        )).scalar_one_or_none()
-        
-        if not acc:
-            logger.error("Academic calendar not found")
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Academic calendar not found for this teacher"
-            )
-
-        acc_start_date = acc.semester_start_date
-        acc_end_date = acc.semester_end_date
-        logger.debug(f"Academic calendar: start_date={acc_start_date}, end_date={acc_end_date}")
-
-        # Step 2: Get all ClassSessions for the subject and class
-        subject = subject.strip()
-        class_name = class_name.strip()
-        
-        class_sessions = (await db.execute(
-            select(ClassSession).where(
-                (ClassSession.subject.ilike(f"%{subject}%")) &
-                (ClassSession.class_name.ilike(f"%{class_name}%")) &
-                (ClassSession.teacher_id == current_teacher.id)
-            )
-        )).scalars().all()
-        
-        logger.debug(f"Found {len(class_sessions)} total class sessions for {subject} - {class_name}")
-
-        # Step 3: Calculate week numbers and group sessions by week
-        sessions_by_week = {}
-        
-        for session in class_sessions:
-            # Calculate week number using the same logic as the existing endpoint
-            # week_number = (session.date - acc_start_date).days // 7 + 1
-            days_diff = (session.date - acc_start_date).days
-            week_number = (days_diff // 7) + 1
-            
-            # Ensure week number is within valid range (1-16)
-            if 1 <= week_number <= 16:
-                week_key = f"Week {week_number}"
-                
-                if week_key not in sessions_by_week:
-                    sessions_by_week[week_key] = []
-                
-                # Create SessionInfo object
-                session_info = SessionInfo(
-                    id=session.id,
-                    date=str(session.date),
-                    subject=session.subject,
-                    start_time=session.start_time,
-                    end_time=session.end_time,
-                    class_name=session.class_name,
-                    location=session.location,
-                    session_number=session.session_number
-                )
-                
-                sessions_by_week[week_key].append(session_info)
-        
-        logger.debug(f"Grouped sessions into {len(sessions_by_week)} weeks: {list(sessions_by_week.keys())}")
-
-        # Step 4: Get booked weeks from Strand table
-        booked_weeks = (await db.execute(
-            select(Strand.week_number).where(
-                (Strand.subject.ilike(f"%{subject}%")) &
-                (Strand.teacher_id == current_teacher.id)
-            )
-        )).scalars().all()
-        
-        booked_week_keys = {f"Week {week}" for week in booked_weeks}
-        logger.debug(f"Found booked weeks: {booked_week_keys}")
-
-        # Step 5: Filter out booked weeks to get available weeks
-        available_weeks = {}
-        total_available_sessions = 0
-        
-        for week_key, sessions in sessions_by_week.items():
-            if week_key not in booked_week_keys:
-                week_number = int(week_key.replace("Week ", ""))
-                
-                week_availability = WeekAvailability(
-                    week_key=week_key,
-                    week_number=week_number,
-                    total_sessions=len(sessions),
-                    available_sessions=sessions
-                )
-                
-                available_weeks[week_key] = week_availability
-                total_available_sessions += len(sessions)
-        
-        logger.debug(f"Available weeks: {list(available_weeks.keys())}")
-
-        # Step 6: Prepare response
-        response = AvailableWeeksResponse(
-            subject=subject,
-            class_name=class_name,
-            teacher_id=current_teacher.id,
-            available_weeks=available_weeks,
-            total_available_weeks=len(available_weeks),
-            total_available_sessions=total_available_sessions,
-            semester_info={
-                "start_date": str(acc_start_date),
-                "end_date": str(acc_end_date),
-                "total_weeks": "16"
-            }
-        )
-        
-        logger.debug(f"Returning {len(available_weeks)} available weeks with {total_available_sessions} total sessions")
-        return response
-        
-    except Exception as e:
-        logger.error(f"Error retrieving available weeks and sessions: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-            detail=f"Error retrieving available weeks and sessions: {str(e)}"
-        )
-
-
-
+router = APIRouter(tags=["Semester Plan File Handler"])
 
 UPLOAD_DIR = "./uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-async def save_file(file: UploadFile, teacher_id: str) -> str:
-    """Save uploaded file to uploads directory."""
-    try:
-        # Validate file
-        if not file or not file.filename:
-            raise ValueError("No file provided")
-        
-        # Read file content
-        content = await file.read()
-        if not content:
-            raise ValueError("File is empty")
-        
-        # Create uploads directory if it doesn't exist
-        uploads_dir = "./uploads"
-        os.makedirs(uploads_dir, exist_ok=True)
-        
-        # Generate unique filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_id = str(uuid.uuid4())
-        file_extension = os.path.splitext(file.filename)[1]
-        filename = f"{unique_id}_{timestamp}{file_extension}"
-        file_path = os.path.join(uploads_dir, filename)
-        
-        # Save file
-        with open(file_path, "wb") as f:
-            f.write(content)
-        
-        logger.info(f"File saved successfully: {file_path}")
-        return file_path
-        
-    except Exception as e:
-        logger.error(f"Error saving file: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
-
-async def extract_semester_mapper_data(file_path: str) -> dict:
-    """
-    Extract semester mapper data with mock session IDs.
-    """
-    logger.info(f"Extracting semester mapper data with mock session IDs")
-    
-    # Always use mock data with correct session IDs
-    return {
-        "strands": [
-            {
-                "strand_name": "Number Operations and Patterns",
-                "weeks": [6, 7],
-                "sub_strands": [
-                    {
-                        "substrand_name": "Basic Addition and Subtraction",
-                        "session_id": 2931,  # Correct mock session ID
-                        "week": 6,
-                        "content_standards": [
-                            {
-                                "content_standard_code": "B6.1.1.1",
-                                "content_standard_text": "Demonstrate understanding of addition and subtraction of whole numbers up to 100",
-                                "indicators": [
-                                    {
-                                        "indicator_code": "B6.1.1.1.1",
-                                        "indicator_text": "Add and subtract two-digit numbers with and without regrouping"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "substrand_name": "Number Patterns and Sequences", 
-                        "session_id": 2997,  # Correct mock session ID
-                        "week": 6,
-                        "content_standards": [
-                            {
-                                "content_standard_code": "B6.1.2.1",
-                                "content_standard_text": "Identify and create patterns using numbers, shapes, and objects",
-                                "indicators": [
-                                    {
-                                        "indicator_code": "B6.1.2.1.1", 
-                                        "indicator_text": "Recognize and extend growing and repeating patterns"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "substrand_name": "Place Value and Number Representation",
-                        "session_id": 2932,  # Correct mock session ID
-                        "week": 7,
-                        "content_standards": [
-                            {
-                                "content_standard_code": "B6.1.3.1",
-                                "content_standard_text": "Understand place value concepts for numbers up to 1000",
-                                "indicators": [
-                                    {
-                                        "indicator_code": "B6.1.3.1.1",
-                                        "indicator_text": "Identify the value of digits in their place positions"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "substrand_name": "Problem Solving with Operations",
-                        "session_id": 2998,  # Correct mock session ID
-                        "week": 7, 
-                        "content_standards": [
-                            {
-                                "content_standard_code": "B6.1.4.1",
-                                "content_standard_text": "Apply mathematical operations to solve real-world problems",
-                                "indicators": [
-                                    {
-                                        "indicator_code": "B6.1.4.1.1",
-                                        "indicator_text": "Solve word problems involving addition and subtraction"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
-
-async def generate_ai_planning_response(file_path: str, teacher_id: str, available_sessions: dict = None) -> dict:
-    """
-    Generate AI-powered planning response based on uploaded curriculum and available sessions.
-    This simulates what an AI system would return after analyzing curriculum documents.
-    """
-    logger.info(f"Generating AI planning response for file: {file_path}")
-    
-    # Simulate AI processing time and analysis
-    import random
-    import time
-    
-    # Mock AI processing
-    time.sleep(0.1)  # Simulate processing time
-    
-    # Use the same mock data structure as the existing upload plans
-    # This ensures consistency with the current system
-    ai_generated_plan = await extract_semester_mapper_data(file_path)
-    
-    # If available sessions are provided, use them to enhance the mock data
-    if available_sessions and available_sessions.get('available_weeks'):
-        logger.info("Enhancing mock data with available sessions information")
-        # You can enhance the mock data here based on available sessions
-        # For now, we'll just use the existing mock data structure
-    
-    logger.info(f"AI planning response generated successfully using existing mock data structure")
-    return ai_generated_plan
-
 
 @router.post("/sem-plan/upload")
 async def upload_semester_plan(
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)], 
     subject: str = Form(...),  # Add subject parameter
     class_name: str = Form(...),  # Add class_name parameter
-    file: UploadFile = Form(...), 
+    education_system: str = Form(...),  # Add education_system parameter (required)
+    education_level: str = Form(...),  # Add education_level parameter (required)
+    country_name: Optional[str] = Form(None),  # Add optional country_name parameter
+    file_name: str = Form(...),  # Change from UploadFile to file_name string
+    file_size: int = Form(...),  # Add file_size parameter
+    file_type: str = Form(...),  # Add file_type parameter
     session: AsyncSession = Depends(get_db)
 ):
     """
     Upload semester plan file endpoint.
-    Renames the file to sem_plan/teacher_id/class_name/subject.file_extension, generates a signed URL for GCS,
-    and returns the signed URL to the frontend for direct upload to Google Cloud Storage.
+    Accepts metadata only, generates signed URL for GCS, and returns the signed URL to the frontend.
     Teacher ID is extracted from the access token.
     """
     try:
@@ -328,15 +43,16 @@ async def upload_semester_plan(
         logger.info(f"🚀 Processing semester plan upload for teacher: {teacher_id}")
         
         # Log file details
-        logger.info(f"📁 Received file: {file.filename}, size: {file.size}, content_type: {file.content_type}")
+        logger.info(f"📁 Received metadata for file: {file_name}, size: {file_size}, content_type: {file_type}")
         logger.info(f"📚 Subject: {subject}, Class: {class_name}")
+        logger.info(f"🏫 Education System: {education_system}, Education Level: {education_level}")
         
         # Validate file type
-        if not file.filename:
+        if not file_name:
             raise HTTPException(status_code=400, detail="No filename provided")
         
-        file_ext = file.filename.split(".")[-1].lower() if "." in file.filename else ""
-        supported_types = ['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff', 'docx', 'xlsx', 'xls', 'txt', 'pptx', 'ppt']
+        file_ext = file_name.split(".")[-1].lower() if "." in file_name else ""
+        supported_types = ['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff', 'docx', 'xlsx', 'xls', 'txt']
         
         if file_ext not in supported_types:
             raise HTTPException(
@@ -349,29 +65,69 @@ async def upload_semester_plan(
         logger.info(f"📂 Generated GCS file name: {gcs_file_name}")
         
         # Use the content_type from the uploaded file or default to application/octet-stream
-        content_type = file.content_type if file.content_type else "application/octet-stream"
+        content_type = file_type if file_type else "application/octet-stream"
         logger.info(f"🏷️ File content type: {content_type}")
+        
+        # Update existing WeeklyTimeTable entries for this subject and class with the new education system and level
+        # This ensures the data is overwritten each time a new file is uploaded
+        stmt = (
+            WeeklyTimeTable.__table__.update()
+            .where(WeeklyTimeTable.teacher_id == UUID(teacher_id))
+            .where(WeeklyTimeTable.subject == subject)
+            .where(WeeklyTimeTable.pupils == class_name)
+            .values(edu_sys=education_system, edu_lvl=education_level)
+        )
+        await session.execute(stmt)
+        await session.commit()
+        logger.info(f"✅ Updated WeeklyTimeTable entries with education system: {education_system}, education level: {education_level}")
         
         # Generate signed URL for frontend to upload to GCS with correct content type
         # For file uploads, we need to use PUT method
-        signed_url = generate_signed_url(
+        # Increase expiration time to 24 hours (86400 seconds) to prevent expiration issues
+        signed_url_primary = generate_signed_url(
             settings.GCS_BUCKET_NAME, 
             gcs_file_name, 
             method="PUT",
-            content_type=content_type
+            content_type=content_type,
+            expiration=86400  # 24 hours
         )
-        logger.info(f"🔗 Generated signed URL for GCS upload")
+        logger.info(f"🔗 Generated primary signed URL for GCS upload")
+        
+        # Schedule background processing task to run immediately
+        # This will be handled by a separate background task that processes semester plans
+        # We add a delay to allow the frontend to complete the upload to GCS
+        
+        # Define a temporary local path for the file - the worker will download to this location
+        # Since we use a unique ID in the filename, we can safely assume it won't conflict
+        temp_file_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}_{file_name}")
+        
+        await enqueue_semplan_processing(
+            teacher_id=teacher_id,
+            file_path=temp_file_path,
+            gcs_file_name=gcs_file_name,
+            subject=subject,
+            class_name=class_name,
+            session_data=None, # Worker will fetch session data
+            delay=30 # 30 seconds delay to ensure file is uploaded
+        )
+        logger.info(f"⏰ Scheduled semester plan processing for teacher {teacher_id} to run in 30s")
         
         return {
             "status": "success",
             "message": "Signed URL generated successfully. Use it to upload file to GCS.", 
-            "signed_url": signed_url,
-            "gcs_file_name": gcs_file_name,
+            "signed_urls": {
+                "primary": signed_url_primary
+            },
+            "gcs_file_names": {
+                "primary": gcs_file_name
+            },
             "content_type": content_type,
             "teacher_id": teacher_id,
             "subject": subject,
             "class_name": class_name,
-            "note": "Use the signed_url to upload your file directly to Google Cloud Storage."
+            "education_system": education_system,
+            "education_level": education_level,
+            "note": "Use the signed_url to upload your file directly to Google Cloud Storage. Processing will begin immediately."
         }
         
     except HTTPException:
@@ -379,152 +135,3 @@ async def upload_semester_plan(
     except Exception as e:
         logger.error(f"💥 Semester plan upload failed: {e}")
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
-
-@router.post("/semester-mapper/ai-plan")
-async def ai_semester_planning(
-    subject: str,
-    class_name: str,
-    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
-    session: AsyncSession = Depends(get_db)
-):
-    """
-    AI planning endpoint that checks GCS for semester plan files, downloads it,
-    and sets up background text extraction with session data.
-    Accepts subject and class_name to fetch relevant session information.
-    """
-    try:
-        teacher_id = str(current_teacher.id)
-        logger.info(f"🚀 Starting AI semester planning for teacher: {teacher_id}, subject: {subject}, class: {class_name}")
-        
-        # Check for semester plan files in sem_plan/ path first (preferred location)
-        # If not found, then check curriculum/ path
-        file_search_patterns = [
-            {"type": "sem_plan", "pattern": f"sem_plan/{teacher_id}/{class_name}/{subject}"},
-            {"type": "curriculum", "pattern": f"curriculum/{teacher_id}/{class_name}/{subject}"}
-        ]
-        
-        logger.info(f"🔍 Checking for semester plan files in paths: {[p['pattern'] for p in file_search_patterns]}")
-        
-        # For simplicity, we'll check common file extensions
-        common_extensions = ['pdf', 'docx', 'txt', 'jpg', 'png']
-        
-        # Variables to store the found file
-        found_file = None
-        
-        # Search in order of preference - stop at first found file
-        for search_pattern in file_search_patterns:
-            if found_file:
-                break  # Stop searching if we already found a file
-                
-            pattern_type = search_pattern["type"]
-            pattern_name = search_pattern["pattern"]
-            
-            logger.info(f"🔍 Searching for files in {pattern_type} path: {pattern_name}")
-            
-            for ext in common_extensions:
-                if found_file:
-                    break  # Stop searching if we already found a file
-                    
-                file_path = f"{pattern_name}.{ext}"
-                
-                # Check if file exists
-                file_content = get_file_from_gcs(settings.GCS_BUCKET_NAME, file_path)
-                if file_content is not None:
-                    found_file = {
-                        "path": file_path,
-                        "type": pattern_type,
-                        "content": file_content
-                    }
-                    logger.info(f"✅ Found {pattern_type} file: {file_path}")
-                    # Stop searching - we found the first file in preferred location
-                    break
-        
-        # If no files found in either location
-        if not found_file:
-            logger.warning(f"❌ No semester plan or curriculum files found for teacher: {teacher_id}")
-            raise HTTPException(
-                status_code=404, 
-                detail="Please upload a semester plan or curriculum file to proceed"
-            )
-        
-        # Use the found file
-        selected_file_path = found_file["path"]
-        selected_file_content = found_file["content"]
-        selected_file_type = found_file["type"]
-        
-        logger.info(f"🎯 Selected {selected_file_type} file: {selected_file_path}")
-        
-        # Download the selected file
-        if selected_file_content is None:
-            logger.error(f"❌ Failed to download {selected_file_type} file: {selected_file_path}")
-            raise HTTPException(
-                status_code=500, 
-                detail=f"Failed to download {selected_file_type} file: {selected_file_path}"
-            )
-        
-        # Create semplan_ground directory if it doesn't exist
-        semplan_ground_dir = "./semplan_ground"
-        os.makedirs(semplan_ground_dir, exist_ok=True)
-        
-        # Save the downloaded file locally
-        local_file_path = os.path.join(semplan_ground_dir, f"{teacher_id}_{uuid.uuid4().hex}_{os.path.basename(selected_file_path)}")
-        with open(local_file_path, "wb") as f:
-            f.write(selected_file_content)
-        
-        logger.info(f"💾 {selected_file_type} file saved locally: {local_file_path}")
-        
-        # Get academic calendar data (semester start and end dates)
-        acc = (await session.execute(
-            select(AcademicCalendar).where(AcademicCalendar.teacher_id == current_teacher.id)
-        )).scalar_one_or_none()
-        
-        if not acc:
-            logger.error("Academic calendar not found")
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Academic calendar not found for this teacher"
-            )
-        
-        semester_start_date = acc.semester_start_date
-        semester_end_date = acc.semester_end_date
-        logger.info(f"📅 Academic calendar: start_date={semester_start_date}, end_date={semester_end_date}")
-        
-        # Set up background task for text extraction with session data
-        # Pass subject and class_name to background task for session data extraction
-        job_id = await enqueue_semplan_processing(
-            teacher_id, 
-            local_file_path, 
-            selected_file_path,  # This is the GCS file name that was found
-            subject,
-            class_name,
-            {
-                "semester_start_date": str(semester_start_date),
-                "semester_end_date": str(semester_end_date),
-                "file_type": selected_file_type  # Include file type in session data
-            }
-        )
-        
-        if not job_id:
-            raise HTTPException(status_code=500, detail="Failed to enqueue processing task")
-        
-        logger.info(f"[JOB] Semester plan processing job queued for teacher {teacher_id}: {job_id}")
-        
-        return {
-            "status": "success",
-            "message": f"{selected_file_type} file downloaded and processing started with session data.",
-            "selected_file": selected_file_path,
-            "selected_file_type": selected_file_type,
-            "local_file_path": local_file_path,
-            "gcs_bucket": settings.GCS_BUCKET_NAME,
-            "teacher_id": teacher_id,
-            "subject": subject,
-            "class_name": class_name,
-            "job_id": job_id,
-            "note": "Connect to WebSocket for real-time updates on processing progress."
-        }
-            
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"💥 AI semester planning failed: {e}")
-        raise HTTPException(status_code=500, detail=f"AI planning failed: {str(e)}")

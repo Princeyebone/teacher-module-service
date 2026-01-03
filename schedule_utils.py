@@ -154,3 +154,91 @@ async def trigger_session_generation_after_save(teacher_id: str):
             return False
         finally:
             await session.close()
+
+
+def trigger_session_generation_sync(teacher_id: str):
+    """
+    Synchronous wrapper that runs session generation check in a completely isolated
+    background thread with its own database engine to avoid greenlet conflicts.
+    
+    Args:
+        teacher_id: UUID string of the teacher
+    """
+    import asyncio
+    import threading
+    
+    def run_in_thread():
+        try:
+            # Create a new event loop in this thread
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                loop.run_until_complete(_check_and_trigger_isolated(teacher_id))
+            finally:
+                loop.close()
+        except Exception as e:
+            logger.error(f"❌ Error in background thread for teacher {teacher_id}: {e}")
+    
+    # Run in a daemon thread so it doesn't block shutdown
+    thread = threading.Thread(target=run_in_thread, daemon=True)
+    thread.start()
+
+
+async def _check_and_trigger_isolated(teacher_id: str):
+    """
+    Isolated async function that creates its own database engine.
+    This avoids sharing any SQLAlchemy objects with the main request thread.
+    """
+    from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+    from sqlmodel import select
+    from config import settings
+    
+    # Create a completely fresh database engine for this thread
+    isolated_engine = create_async_engine(
+        settings.DATABASE_URL,
+        echo=False,
+        pool_size=2,
+        max_overflow=5,
+        pool_timeout=30,
+        pool_recycle=3600,
+        pool_pre_ping=True
+    )
+    
+    try:
+        async with AsyncSession(isolated_engine) as session:
+            # Check if academic calendar exists
+            from model import AcademicCalendar, WeeklyTimeTable, TeacherProfile
+            
+            academic_calendar_exists = (await session.execute(
+                select(AcademicCalendar).where(AcademicCalendar.teacher_id == teacher_id)
+            )).scalar_one_or_none() is not None
+            
+            # Check if timetable exists
+            timetable_exists = (await session.execute(
+                select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == teacher_id)
+            )).scalars().first() is not None
+            
+            # If both exist, trigger session generation
+            if academic_calendar_exists and timetable_exists:
+                # Get teacher profile to get country
+                teacher = (await session.execute(
+                    select(TeacherProfile).where(TeacherProfile.id == teacher_id)
+                )).scalar_one_or_none()
+                
+                if teacher:
+                    # Enqueue schedule generation
+                    from enque_task import enqueue_schedule_generation
+                    job_id = await enqueue_schedule_generation(str(teacher_id), teacher.country or "Ghana")
+                    if job_id:
+                        logger.info(f"✅ Session generation triggered for teacher {teacher_id}: {job_id}")
+                    else:
+                        logger.error(f"❌ Failed to trigger session generation for teacher {teacher_id}")
+                else:
+                    logger.warning(f"⚠️ Teacher profile not found for teacher {teacher_id}")
+            else:
+                if not academic_calendar_exists:
+                    logger.info(f"ℹ️ Academic calendar not found for teacher {teacher_id}, skipping session generation")
+                if not timetable_exists:
+                    logger.info(f"ℹ️ Timetable not found for teacher {teacher_id}, skipping session generation")
+    finally:
+        await isolated_engine.dispose()

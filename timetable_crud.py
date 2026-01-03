@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import Annotated
+from typing import Annotated, Optional
 from model import TeacherProfile, WeeklyTimeTable, TempExtract, AcademicCalendar
 from dependencies import get_current_teacher
 from database import get_db
@@ -8,6 +8,7 @@ from sqlmodel import Session, select, delete
 from schemas import TimeTableEntry, TimeTableItem
 from uuid import UUID
 from schedule_utils import check_and_trigger_session_generation
+from logger import logger
 
 router = APIRouter(prefix="/api")
 
@@ -79,118 +80,108 @@ async def subjects(
             detail=f"Error retrieving subjects: {str(e)}"
         )
 
+class SingleTimeTableRequest(TimeTableItem):
+    id: Optional[int] = None
+
 @router.post("/save-timetable")
 async def save_timetable(
-    data: TimeTableEntry,
+    data: SingleTimeTableRequest,
     current_teacher: TeacherProfile = Depends(get_current_teacher),
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Fused endpoint that either creates new timetable entries or updates existing ones.
-    If existing timetable data is found for the teacher, it will be updated.
-    If no existing data is found, new entries will be created.
-    Also cleans up any temporary data from TempExtract table.
+    Endpoint to create or update a single timetable entry.
+    If 'id' is provided, it updates the existing entry.
+    If 'id' is not provided, it creates a new entry.
     """
+    # Prepare response data
+    item_response = None
+    operation_type = "create"
+    teacher_id_str = str(current_teacher.id)
+    teacher_country = current_teacher.country or "Ghana"
+    
     try:
-        # Check if there's temporary data that should be cleaned up
-        temp_extract = (await db.execute(
-            select(TempExtract).where(
-                TempExtract.teacher_id == current_teacher.id,
-                TempExtract.type == "timetable"
-            )
-        )).scalar_one_or_none()
-        
-        # Check if existing timetable entries exist for this teacher
-        existing_entries = (await db.execute(
-            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-        )).scalars().all()
-        
-        operation_type = "create"
-        
-        if existing_entries:
-            # Update existing entries instead of deleting all and recreating
-            operation_type = "update"
-            
-            # Create a mapping of existing entries by their unique characteristics
-            existing_map = {(entry.weekday, entry.start_time, entry.subject): entry for entry in existing_entries}
-            
-            # Track which existing entries have been updated
-            updated_entries = set()
-            
-            # Update or create entries
-            for item in data.items:
-                item_dict = item.model_dump(exclude_unset=True)
-                key = (item.weekday, item.start_time, item.subject)
-                
-                if key in existing_map:
-                    # Update existing entry
-                    entry = existing_map[key]
-                    for field, value in item_dict.items():
-                        if field != 'id' and hasattr(entry, field):
-                            setattr(entry, field, value)
-                    db.add(entry)
-                    updated_entries.add(key)
-                else:
-                    # Create new entry
-                    new_entry = WeeklyTimeTable(
-                        teacher_id=current_teacher.id,
-                        **item_dict
-                    )
-                    db.add(new_entry)
-            
-            # Delete entries that weren't in the new data
-            for key, entry in existing_map.items():
-                if key not in updated_entries:
-                    await db.delete(entry)
-        else:
-            # Create new entries from the provided data
-            timetable_entries = [
-                WeeklyTimeTable(
-                    teacher_id=current_teacher.id,
-                    **item.model_dump(exclude_unset=True)
-                )
-                for item in data.items
-            ]
+        entry = None
 
-            for entry in timetable_entries:
+        if data.id:
+            # Update existing entry
+            stmt = select(WeeklyTimeTable).where(
+                WeeklyTimeTable.id == data.id,
+                WeeklyTimeTable.teacher_id == current_teacher.id
+            )
+            result = await db.execute(stmt)
+            entry = result.scalar_one_or_none()
+            
+            if entry:
+                operation_type = "update"
+                # Update fields
+                entry_data = data.model_dump(exclude={'id', 'data_source'}, exclude_unset=True)
+                for field, value in entry_data.items():
+                    if hasattr(entry, field):
+                        setattr(entry, field, value)
                 db.add(entry)
-        
-        # If there was temporary data, delete it
-        if temp_extract:
-            await db.delete(temp_extract)
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Timetable entry with id {data.id} not found"
+                )
+        else:
+            # Create new entry
+            entry = WeeklyTimeTable(
+                teacher_id=current_teacher.id,
+                weekday=data.weekday,
+                pupils=data.pupils,
+                subject=data.subject,
+                start_time=data.start_time,
+                end_time=data.end_time,
+                location=data.location,
+                data_source=data.data_source
+            )
+            db.add(entry)
             
         await db.commit()
+        await db.refresh(entry)
 
-        # Get the latest list of entries
-        final_entries = (await db.execute(
-            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-        )).scalars().all()
-        
-        # Add source indicator for frontend
-        result = []
-        for entry in final_entries:
-            entry_dict = entry.model_dump()
-            result.append(entry_dict)
-            
-        response_data = {
-            "items": result,
-            "operation": operation_type,
-            "data_source": "weekly_timetable",
-            "temp_data_cleaned": temp_extract is not None  # Indicates if temp data was cleaned up
+        # Manually construct response to avoid potential lazy load issues
+        item_response = {
+            "id": entry.id,
+            "weekday": entry.weekday,
+            "pupils": entry.pupils,
+            "subject": entry.subject,
+            "start_time": entry.start_time,
+            "end_time": entry.end_time,
+            "location": entry.location,
+            "edu_sys": entry.edu_sys,
+            "edu_lvl": entry.edu_lvl
         }
-        
-        # Trigger session generation after successful save
-        # We do this after the main transaction is complete to avoid session issues
-        from schedule_utils import trigger_session_generation_after_save
-        await trigger_session_generation_after_save(str(current_teacher.id))
-        
-        return response_data
+
+    except HTTPException:
+        raise
     except Exception as e:
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error saving timetable: {str(e)}"
         )
+    
+    # Trigger session generation AFTER database transaction is complete
+    # This happens outside the db transaction context to avoid greenlet conflicts
+    from enque_task import enqueue_schedule_generation
+    try:
+        job_id = await enqueue_schedule_generation(teacher_id_str, teacher_country)
+        if job_id:
+            logger.info(f"✅ Session generation job enqueued: {job_id}")
+        else:
+            logger.warning(f"⚠️ Session generation job returned None (check if both timetable and calendar exist)")
+    except Exception as e:
+        logger.error(f"❌ Failed to enqueue session generation: {e}")
+        # Don't fail the request if background job fails
+
+    return {
+        "message": "Timetable saved successfully",
+        "item": item_response,
+        "operation": operation_type
+    }
 
 @router.get("/get-timetable")  # Removed response_model to allow custom response structure
 async def get_timetable(
@@ -198,93 +189,125 @@ async def get_timetable(
     db: AsyncSession = Depends(get_db)
 ):
     try:
-        # First check if there's temporary extracted data
-        temp_extract = (await db.execute(
-            select(TempExtract).where(
-                TempExtract.teacher_id == current_teacher.id,
-                TempExtract.type == "timetable"
-            )
-        )).scalar_one_or_none()
-        
-        if temp_extract:
-            # Use temporary data
-            timetable_data = temp_extract.data.get("entries", [])
-            if not timetable_data:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="No timetable found for this teacher"
-                )
-            
-            # Return the data with source information
-            return {
-                "items": timetable_data,
-                "data_source": "temp_extract"
-            }
-        else:
-            # Fall back to permanent timetable data
-            timetable = (await db.execute(
-                select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
-            )).scalars().all()
+        # Strictly read from permanent timetable data
+        timetable = (await db.execute(
+            select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )).scalars().all()
 
-            if not timetable:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="No timetable found for this teacher"
-                )
-            
-            # Convert entries to dict format
-            result = []
-            for entry in timetable:
-                entry_dict = entry.model_dump()
-                result.append(entry_dict)
-                
+        if not timetable:
             return {
-                "items": result,
+                "items": [],
                 "data_source": "weekly_timetable"
             }
+        
+        # Convert entries to dict format
+        result = []
+        for entry in timetable:
+            entry_dict = entry.model_dump()
+            result.append(entry_dict)
+            
+        return {
+            "items": result,
+            "data_source": "weekly_timetable"
+        }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Could not retrieve timetable: {str(e)}"
         )
 
-@router.delete("/delete-timetable")
+@router.delete("/delete-timetable/{entry_id}")
 async def delete_timetable(
+    entry_id: int,
     current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
     db: AsyncSession = Depends(get_db)
 ):
+    """
+    Delete a single timetable entry by its ID.
+    """
     try:
-        # Check if there's temporary data that should be cleaned up
-        temp_extract = (await db.execute(
-            select(TempExtract).where(
-                TempExtract.teacher_id == current_teacher.id,
-                TempExtract.type == "timetable"
-            )
-        )).scalar_one_or_none()
-        
-        result = await db.execute(
-            delete(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        stmt = select(WeeklyTimeTable).where(
+            WeeklyTimeTable.id == entry_id,
+            WeeklyTimeTable.teacher_id == current_teacher.id
         )
-        await db.commit()
-        
-        # If there was temporary data, delete it
-        if temp_extract:
-            await db.delete(temp_extract)
-            await db.commit()
-        
-        # Check if any rows were deleted (if supported by the backend)
-        if hasattr(result, 'rowcount') and result.rowcount == 0:
+        result = await db.execute(stmt)
+        entry = result.scalar_one_or_none()
+
+        if not entry:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="No timetable entries found for this teacher"
+                detail="Timetable entry not found"
             )
+
+        await db.delete(entry)
+        await db.commit()
+        
+        # Trigger session generation directly like other file handlers
+        from enque_task import enqueue_schedule_generation
+        try:
+            job_id = await enqueue_schedule_generation(str(current_teacher.id), current_teacher.country or "Ghana")
+            if job_id:
+                logger.info(f"✅ Session generation job enqueued: {job_id}")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to enqueue session generation: {e}")
+        
         return {
-            "message": "Timetable deleted successfully",
-            "temp_data_cleaned": temp_extract is not None  # Indicates if temp data was cleaned up
+            "message": "Timetable entry deleted successfully",
+            "id": entry_id
         }
+    except HTTPException:
+        raise
     except Exception as e:
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error deleting timetable: {str(e)}"
+            detail=f"Error deleting timetable entry: {str(e)}"
+        )
+
+@router.delete("/delete-all-timetable")
+async def delete_all_timetable(
+    current_teacher: Annotated[TeacherProfile, Depends(get_current_teacher)],
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Delete all timetable entries for the current teacher.
+    """
+    try:
+        # Check if there are any entries to delete
+        stmt = select(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        result = await db.execute(stmt)
+        entries = result.scalars().all()
+        
+        if not entries:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No timetable entries found for this teacher"
+            )
+
+        # Delete all entries
+        await db.execute(
+            delete(WeeklyTimeTable).where(WeeklyTimeTable.teacher_id == current_teacher.id)
+        )
+        await db.commit()
+        
+        # Trigger session generation directly like other file handlers
+        from enque_task import enqueue_schedule_generation
+        try:
+            job_id = await enqueue_schedule_generation(str(current_teacher.id), current_teacher.country or "Ghana")
+            if job_id:
+                logger.info(f"✅ Session generation job enqueued: {job_id}")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to enqueue session generation: {e}")
+        
+        return {
+            "message": "All timetable entries deleted successfully",
+            "count": len(entries)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error deleting all timetable entries: {str(e)}"
         )

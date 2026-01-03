@@ -1,0 +1,2178 @@
+--- TIMESTAMP: 2025-12-17T03:44:52.240593 ---
+
+--- WEEKLY SESSION DATA ---
+{
+  "semester_start_date": "2025-12-02",
+  "semester_end_date": "2026-04-02",
+  "weekly_sessions": {
+    "Week 1": {
+      "week_number": 1,
+      "sessions": [
+        {
+          "id": 1618,
+          "date": "2025-12-02",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1652,
+          "date": "2025-12-03",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1754,
+          "date": "2025-12-05",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        }
+      ]
+    },
+    "Week 2": {
+      "week_number": 2,
+      "sessions": [
+        {
+          "id": 1619,
+          "date": "2025-12-09",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1653,
+          "date": "2025-12-10",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1755,
+          "date": "2025-12-12",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        }
+      ]
+    },
+    "Week 3": {
+      "week_number": 3,
+      "sessions": [
+        {
+          "id": 1620,
+          "date": "2025-12-16",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1654,
+          "date": "2025-12-17",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1756,
+          "date": "2025-12-19",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        }
+      ]
+    },
+    "Week 4": {
+      "week_number": 4,
+      "sessions": [
+        {
+          "id": 1621,
+          "date": "2025-12-23",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1655,
+          "date": "2025-12-24",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1757,
+          "date": "2025-12-26",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        }
+      ]
+    },
+    "Week 5": {
+      "week_number": 5,
+      "sessions": [
+        {
+          "id": 1622,
+          "date": "2025-12-30",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1656,
+          "date": "2025-12-31",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1758,
+          "date": "2026-01-02",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        }
+      ]
+    },
+    "Week 6": {
+      "week_number": 6,
+      "sessions": [
+        {
+          "id": 1623,
+          "date": "2026-01-06",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1657,
+          "date": "2026-01-07",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1759,
+          "date": "2026-01-09",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        }
+      ]
+    },
+    "Week 7": {
+      "week_number": 7,
+      "sessions": [
+        {
+          "id": 1624,
+          "date": "2026-01-13",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1658,
+          "date": "2026-01-14",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1760,
+          "date": "2026-01-16",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        }
+      ]
+    },
+    "Week 8": {
+      "week_number": 8,
+      "sessions": [
+        {
+          "id": 1625,
+          "date": "2026-01-20",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1659,
+          "date": "2026-01-21",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1761,
+          "date": "2026-01-23",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        }
+      ]
+    },
+    "Week 9": {
+      "week_number": 9,
+      "sessions": [
+        {
+          "id": 1626,
+          "date": "2026-01-27",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1660,
+          "date": "2026-01-28",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1762,
+          "date": "2026-01-30",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        }
+      ]
+    },
+    "Week 10": {
+      "week_number": 10,
+      "sessions": [
+        {
+          "id": 1627,
+          "date": "2026-02-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1661,
+          "date": "2026-02-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1763,
+          "date": "2026-02-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        }
+      ]
+    },
+    "Week 11": {
+      "week_number": 11,
+      "sessions": [
+        {
+          "id": 1628,
+          "date": "2026-02-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1662,
+          "date": "2026-02-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1764,
+          "date": "2026-02-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        }
+      ]
+    },
+    "Week 12": {
+      "week_number": 12,
+      "sessions": [
+        {
+          "id": 1629,
+          "date": "2026-02-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1663,
+          "date": "2026-02-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1765,
+          "date": "2026-02-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        }
+      ]
+    },
+    "Week 13": {
+      "week_number": 13,
+      "sessions": [
+        {
+          "id": 1630,
+          "date": "2026-02-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1664,
+          "date": "2026-02-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1766,
+          "date": "2026-02-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        }
+      ]
+    },
+    "Week 14": {
+      "week_number": 14,
+      "sessions": [
+        {
+          "id": 1631,
+          "date": "2026-03-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1665,
+          "date": "2026-03-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1767,
+          "date": "2026-03-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        }
+      ]
+    },
+    "Week 15": {
+      "week_number": 15,
+      "sessions": [
+        {
+          "id": 1632,
+          "date": "2026-03-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1666,
+          "date": "2026-03-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1768,
+          "date": "2026-03-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        }
+      ]
+    },
+    "Week 16": {
+      "week_number": 16,
+      "sessions": [
+        {
+          "id": 1633,
+          "date": "2026-03-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1667,
+          "date": "2026-03-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1769,
+          "date": "2026-03-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        }
+      ]
+    },
+    "Week 17": {
+      "week_number": 17,
+      "sessions": [
+        {
+          "id": 1634,
+          "date": "2026-03-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1668,
+          "date": "2026-03-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1770,
+          "date": "2026-03-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        }
+      ]
+    }
+  }
+}
+
+--- EXACT PROMPT SENT TO AI ---
+You are an Educational Curriculum Mapping AI. Analyze academic content and map it to actual teaching sessions.
+
+IMPORTANT: You MUST use BOTH the ExtractedText AND the original file at GCSFileLocation for comprehensive analysis. The ExtractedText may be incomplete or unclear, but the original file contains the complete information.
+
+TARGET CLASS AND SUBJECT:
+- Class Name: Class 11A
+- Subject: Physics
+
+If the document contains information for multiple classes or subjects, you MUST ONLY process and return data for the specified class and subject above. Ignore all other classes and subjects in the document.
+
+INPUTS:
+- ExtractedText: You are an Educational Curriculum Planning AI with web search capabilities. Create a comprehensive semester plan by searching the web for official curriculum information.
+
+**CRITICAL**: You MUST use web search to find the curriculum information. There are NO local documents provided.
+
+WEB SEARCH REQUIREMENTS (MANDATORY):
+You MUST search the web for:
+- Official curriculum documents for university education system
+- university level curriculum for Physics
+- **second semester** curriculum for level 100 in Physics
+- Syllabus for level 100 (pupil level) in Physics - **second semester specific**
+- level 100 level teaching content for Physics - **second semester  term**
+- Strands, substrands, content standards, and indicators for level 100 - **second semester**
+- Week-by-week teaching plans and learning outcomes for level 100 - **second semester**
+- university second semester  syllabus for level 100
+
+EDUCATIONAL CONTEXT:
+- Education System: university
+- Academic Level: university
+- Subject/Course: Physics
+- **PUPIL/CLASS LEVEL: level 100** ← PRIMARY level indicator for curriculum targeting
+- **SEMESTER: second semester** ← CRITICAL for temporal targeting
+- **TERM: Not specified** ← Additional temporal context
+
+
+
+AVAILABLE TEACHING SESSIONS:
+{
+  "semester_start_date": "2025-12-02",
+  "semester_end_date": "2026-04-02",
+  "weekly_sessions": {
+    "Week 1": {
+      "week_number": 1,
+      "sessions": [
+        {
+          "id": 1618,
+          "date": "2025-12-02",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1652,
+          "date": "2025-12-03",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1754,
+          "date": "2025-12-05",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        }
+      ]
+    },
+    "Week 2": {
+      "week_number": 2,
+      "sessions": [
+        {
+          "id": 1619,
+          "date": "2025-12-09",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1653,
+          "date": "2025-12-10",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1755,
+          "date": "2025-12-12",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        }
+      ]
+    },
+    "Week 3": {
+      "week_number": 3,
+      "sessions": [
+        {
+          "id": 1620,
+          "date": "2025-12-16",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1654,
+          "date": "2025-12-17",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1756,
+          "date": "2025-12-19",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        }
+      ]
+    },
+    "Week 4": {
+      "week_number": 4,
+      "sessions": [
+        {
+          "id": 1621,
+          "date": "2025-12-23",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1655,
+          "date": "2025-12-24",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1757,
+          "date": "2025-12-26",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        }
+      ]
+    },
+    "Week 5": {
+      "week_number": 5,
+      "sessions": [
+        {
+          "id": 1622,
+          "date": "2025-12-30",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1656,
+          "date": "2025-12-31",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1758,
+          "date": "2026-01-02",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        }
+      ]
+    },
+    "Week 6": {
+      "week_number": 6,
+      "sessions": [
+        {
+          "id": 1623,
+          "date": "2026-01-06",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1657,
+          "date": "2026-01-07",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1759,
+          "date": "2026-01-09",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        }
+      ]
+    },
+    "Week 7": {
+      "week_number": 7,
+      "sessions": [
+        {
+          "id": 1624,
+          "date": "2026-01-13",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1658,
+          "date": "2026-01-14",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1760,
+          "date": "2026-01-16",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        }
+      ]
+    },
+    "Week 8": {
+      "week_number": 8,
+      "sessions": [
+        {
+          "id": 1625,
+          "date": "2026-01-20",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1659,
+          "date": "2026-01-21",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1761,
+          "date": "2026-01-23",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        }
+      ]
+    },
+    "Week 9": {
+      "week_number": 9,
+      "sessions": [
+        {
+          "id": 1626,
+          "date": "2026-01-27",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1660,
+          "date": "2026-01-28",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1762,
+          "date": "2026-01-30",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        }
+      ]
+    },
+    "Week 10": {
+      "week_number": 10,
+      "sessions": [
+        {
+          "id": 1627,
+          "date": "2026-02-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1661,
+          "date": "2026-02-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1763,
+          "date": "2026-02-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        }
+      ]
+    },
+    "Week 11": {
+      "week_number": 11,
+      "sessions": [
+        {
+          "id": 1628,
+          "date": "2026-02-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1662,
+          "date": "2026-02-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1764,
+          "date": "2026-02-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        }
+      ]
+    },
+    "Week 12": {
+      "week_number": 12,
+      "sessions": [
+        {
+          "id": 1629,
+          "date": "2026-02-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1663,
+          "date": "2026-02-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1765,
+          "date": "2026-02-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        }
+      ]
+    },
+    "Week 13": {
+      "week_number": 13,
+      "sessions": [
+        {
+          "id": 1630,
+          "date": "2026-02-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1664,
+          "date": "2026-02-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1766,
+          "date": "2026-02-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        }
+      ]
+    },
+    "Week 14": {
+      "week_number": 14,
+      "sessions": [
+        {
+          "id": 1631,
+          "date": "2026-03-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1665,
+          "date": "2026-03-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1767,
+          "date": "2026-03-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        }
+      ]
+    },
+    "Week 15": {
+      "week_number": 15,
+      "sessions": [
+        {
+          "id": 1632,
+          "date": "2026-03-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1666,
+          "date": "2026-03-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1768,
+          "date": "2026-03-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        }
+      ]
+    },
+    "Week 16": {
+      "week_number": 16,
+      "sessions": [
+        {
+          "id": 1633,
+          "date": "2026-03-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1667,
+          "date": "2026-03-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1769,
+          "date": "2026-03-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        }
+      ]
+    },
+    "Week 17": {
+      "week_number": 17,
+      "sessions": [
+        {
+          "id": 1634,
+          "date": "2026-03-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1668,
+          "date": "2026-03-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1770,
+          "date": "2026-03-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        }
+      ]
+    }
+  }
+}
+
+AVAILABLE WEEKS: Week 1, Week 2, Week 3, Week 4, Week 5, Week 6, Week 7, Week 8, Week 9, Week 10, Week 11, Week 12, Week 13, Week 14, Week 15, Week 16, Week 17
+WEEK DETAILS: Week 1: 3 sessions, Week 2: 3 sessions, Week 3: 3 sessions, Week 4: 3 sessions, Week 5: 3 sessions, Week 6: 3 sessions, Week 7: 3 sessions, Week 8: 3 sessions, Week 9: 3 sessions, Week 10: 3 sessions, Week 11: 3 sessions, Week 12: 3 sessions, Week 13: 3 sessions, Week 14: 3 sessions, Week 15: 3 sessions, Week 16: 3 sessions, Week 17: 3 sessions
+
+INSTRUCTIONS:
+1. SEARCH THE WEB for the official curriculum structure for this educational context
+2. Identify appropriate strands, substrands, content standards, and indicators
+3. Map these to the available teaching sessions
+4. Use ONLY the weeks and sessions provided in WeeklySessions data
+5. If topic description is provided, ensure content relates to it
+6. If learning objectives are provided, ensure all elements support them
+7. Week numbers MUST be NUMERIC VALUES ONLY (e.g., [1, 2, 3])
+8. Return FLAT STRUCTURES for all curriculum elements
+9. Use strand_name, substrand_name, content_standard_text, indicator_text (NOT "name")
+
+CONTENT ASSIGNMENT RULES:
+1. Each content standard MUST be assigned to sessions
+2. Each indicator MUST be assigned to sessions  
+3. Maximum TWO indicators per session
+4. Even distribution across available sessions
+
+EXPECTED OUTPUT FORMAT:
+{
+  "strand_data": [...],
+  "substrand_data": [...],
+  "content_standard_data": [...],
+  "indicator_data": [...]
+}
+
+Return ONLY the JSON, nothing else. DO NOT wrap in markdown code blocks.
+
+- GCSFileLocation: free://ai_generated/Physics/Class 11A
+- WeeklySessions: {
+  "semester_start_date": "2025-12-02",
+  "semester_end_date": "2026-04-02",
+  "weekly_sessions": {
+    "Week 1": {
+      "week_number": 1,
+      "sessions": [
+        {
+          "id": 1618,
+          "date": "2025-12-02",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1652,
+          "date": "2025-12-03",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        },
+        {
+          "id": 1754,
+          "date": "2025-12-05",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 1,
+          "week_number": 1
+        }
+      ]
+    },
+    "Week 2": {
+      "week_number": 2,
+      "sessions": [
+        {
+          "id": 1619,
+          "date": "2025-12-09",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1653,
+          "date": "2025-12-10",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        },
+        {
+          "id": 1755,
+          "date": "2025-12-12",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 2,
+          "week_number": 2
+        }
+      ]
+    },
+    "Week 3": {
+      "week_number": 3,
+      "sessions": [
+        {
+          "id": 1620,
+          "date": "2025-12-16",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1654,
+          "date": "2025-12-17",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        },
+        {
+          "id": 1756,
+          "date": "2025-12-19",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 3,
+          "week_number": 3
+        }
+      ]
+    },
+    "Week 4": {
+      "week_number": 4,
+      "sessions": [
+        {
+          "id": 1621,
+          "date": "2025-12-23",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1655,
+          "date": "2025-12-24",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        },
+        {
+          "id": 1757,
+          "date": "2025-12-26",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 4,
+          "week_number": 4
+        }
+      ]
+    },
+    "Week 5": {
+      "week_number": 5,
+      "sessions": [
+        {
+          "id": 1622,
+          "date": "2025-12-30",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1656,
+          "date": "2025-12-31",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        },
+        {
+          "id": 1758,
+          "date": "2026-01-02",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 5,
+          "week_number": 5
+        }
+      ]
+    },
+    "Week 6": {
+      "week_number": 6,
+      "sessions": [
+        {
+          "id": 1623,
+          "date": "2026-01-06",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1657,
+          "date": "2026-01-07",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        },
+        {
+          "id": 1759,
+          "date": "2026-01-09",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 6,
+          "week_number": 6
+        }
+      ]
+    },
+    "Week 7": {
+      "week_number": 7,
+      "sessions": [
+        {
+          "id": 1624,
+          "date": "2026-01-13",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1658,
+          "date": "2026-01-14",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        },
+        {
+          "id": 1760,
+          "date": "2026-01-16",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 7,
+          "week_number": 7
+        }
+      ]
+    },
+    "Week 8": {
+      "week_number": 8,
+      "sessions": [
+        {
+          "id": 1625,
+          "date": "2026-01-20",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1659,
+          "date": "2026-01-21",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        },
+        {
+          "id": 1761,
+          "date": "2026-01-23",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 8,
+          "week_number": 8
+        }
+      ]
+    },
+    "Week 9": {
+      "week_number": 9,
+      "sessions": [
+        {
+          "id": 1626,
+          "date": "2026-01-27",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1660,
+          "date": "2026-01-28",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        },
+        {
+          "id": 1762,
+          "date": "2026-01-30",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 9,
+          "week_number": 9
+        }
+      ]
+    },
+    "Week 10": {
+      "week_number": 10,
+      "sessions": [
+        {
+          "id": 1627,
+          "date": "2026-02-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1661,
+          "date": "2026-02-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        },
+        {
+          "id": 1763,
+          "date": "2026-02-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 10,
+          "week_number": 10
+        }
+      ]
+    },
+    "Week 11": {
+      "week_number": 11,
+      "sessions": [
+        {
+          "id": 1628,
+          "date": "2026-02-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1662,
+          "date": "2026-02-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        },
+        {
+          "id": 1764,
+          "date": "2026-02-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 11,
+          "week_number": 11
+        }
+      ]
+    },
+    "Week 12": {
+      "week_number": 12,
+      "sessions": [
+        {
+          "id": 1629,
+          "date": "2026-02-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1663,
+          "date": "2026-02-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        },
+        {
+          "id": 1765,
+          "date": "2026-02-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 12,
+          "week_number": 12
+        }
+      ]
+    },
+    "Week 13": {
+      "week_number": 13,
+      "sessions": [
+        {
+          "id": 1630,
+          "date": "2026-02-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1664,
+          "date": "2026-02-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        },
+        {
+          "id": 1766,
+          "date": "2026-02-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 13,
+          "week_number": 13
+        }
+      ]
+    },
+    "Week 14": {
+      "week_number": 14,
+      "sessions": [
+        {
+          "id": 1631,
+          "date": "2026-03-03",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1665,
+          "date": "2026-03-04",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        },
+        {
+          "id": 1767,
+          "date": "2026-03-06",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 14,
+          "week_number": 14
+        }
+      ]
+    },
+    "Week 15": {
+      "week_number": 15,
+      "sessions": [
+        {
+          "id": 1632,
+          "date": "2026-03-10",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1666,
+          "date": "2026-03-11",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        },
+        {
+          "id": 1768,
+          "date": "2026-03-13",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 15,
+          "week_number": 15
+        }
+      ]
+    },
+    "Week 16": {
+      "week_number": 16,
+      "sessions": [
+        {
+          "id": 1633,
+          "date": "2026-03-17",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1667,
+          "date": "2026-03-18",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        },
+        {
+          "id": 1769,
+          "date": "2026-03-20",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 16,
+          "week_number": 16
+        }
+      ]
+    },
+    "Week 17": {
+      "week_number": 17,
+      "sessions": [
+        {
+          "id": 1634,
+          "date": "2026-03-24",
+          "subject": "Physics",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1668,
+          "date": "2026-03-25",
+          "subject": "Physics",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        },
+        {
+          "id": 1770,
+          "date": "2026-03-27",
+          "subject": "Physics",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "class_name": "Class 11A",
+          "location": "Class 11A",
+          "session_number": 17,
+          "week_number": 17
+        }
+      ]
+    }
+  }
+}
+
+AVAILABLE WEEKS: Week 1, Week 2, Week 3, Week 4, Week 5, Week 6, Week 7, Week 8, Week 9, Week 10, Week 11, Week 12, Week 13, Week 14, Week 15, Week 16, Week 17
+WEEK DETAILS: Week 1: 3 sessions, Week 2: 3 sessions, Week 3: 3 sessions, Week 4: 3 sessions, Week 5: 3 sessions, Week 6: 3 sessions, Week 7: 3 sessions, Week 8: 3 sessions, Week 9: 3 sessions, Week 10: 3 sessions, Week 11: 3 sessions, Week 12: 3 sessions, Week 13: 3 sessions, Week 14: 3 sessions, Week 15: 3 sessions, Week 16: 3 sessions, Week 17: 3 sessions
+
+STRICT INSTRUCTIONS - READ CAREFULLY:
+1. The weeks mentioned in the ExtractedText or the original document are FOR REFERENCE ONLY to understand the duration of each strand
+2. You MUST IGNORE any week numbers mentioned in the ExtractedText or original document for your final output
+3. You MUST ONLY use the weeks and sessions provided in the WeeklySessions data above
+4. The WeeklySessions data contains the ACTUAL available teaching weeks and sessions for this specific class
+5. Any week numbers in the ExtractedText or document are for your understanding of strand duration, NOT for mapping
+6. You MUST ONLY process data for the specified Class Name and Subject provided above
+7. If the document contains multiple classes or subjects, IGNORE all except the specified Class Name and Subject
+8. ALL curriculum elements (strands, substrands, content standards, indicators) MUST be for the specified Class Name and Subject only
+9. CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., ["Week 1", "Week 2", "Week 3"])
+10. CRITICAL FORMAT REQUIREMENT: You MUST return FLAT STRUCTURES for all curriculum elements:
+    - strand_data: Array of strand objects with strand_name field
+    - substrand_data: Array of substrand objects with strand_name and substrand_name fields
+    - content_standard_data: Array of content standard objects with strand_name, substrand_name, content_standard_code, and content_standard_text fields
+    - indicator_data: Array of indicator objects with strand_name, substrand_name, content_standard_code, indicator_code, and indicator_text fields
+11. DO NOT return nested structures where substrand_data is inside strand_data
+12. Each curriculum element MUST have its own entry in the appropriate array
+13. Use the field names EXACTLY as specified above (e.g., strand_name, substrand_name, content_standard_text, indicator_text)
+14. CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the "sessions" array with session details from the WeeklySessions data
+15. CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:
+    - id: The session ID from WeeklySessions
+    - date: The session date from WeeklySessions
+    - start_time: The session start time from WeeklySessions
+    - end_time: The session end time from WeeklySessions
+    - week_number: The week number from WeeklySessions
+16. CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes
+17. CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document
+
+CRITICAL REQUIREMENT: Each curriculum element MUST have session data in the "sessions" array.
+CRITICAL REQUIREMENT: DO NOT put session data in "session_ids" or "session_details" fields.
+CRITICAL REQUIREMENT: Session data MUST be in the "sessions" array with the exact field names specified above.
+CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes.
+CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document.
+
+STRICT STRAND BOUNDARY RULES:
+Each strand must have its own distinct weeks. For example:
+- Example Strand A: Weeks Wee (example)
+- Example Strand B: Weeks ['4', '5', '6'] (example)
+
+CONTENT STANDARD AND INDICATOR ASSIGNMENT RULES:
+1. EACH content standard MUST be assigned to at least one session from its parent substrand
+2. EACH indicator MUST be assigned to at least one session from its parent content standard's sessions
+3. EVERY single indicator of a strand MUST be assigned to at least one session of its content standard
+4. A session CAN have at most TWO indicators assigned to it
+5. ONLY in extreme cases can a session have two indicators (indicators can be paired with another indicator)
+6. Aside from extreme cases, indicators should have exactly ONE session each
+7. When assigning sessions, ensure even distribution of indicators across available sessions
+
+STRICT RULES FOR CURRICULUM MAPPING:
+1. ONLY use weeks that are explicitly provided in WeeklySessions (see AVAILABLE WEEKS above)
+2. NEVER create or invent weeks that are not in the provided WeeklySessions data
+3. ALL members of a strand (substrands, content standards, indicators) MUST be within the week bounds of that specific strand
+4. Strand A members MUST ONLY use Strand A's assigned weeks, even if Strand B has unassigned sessions
+5. Each strand must have its own distinct week boundaries - NO cross-strand week assignments
+6. ONLY use session data that is explicitly provided in WeeklySessions
+7. NEVER make assumptions or create imaginary session data
+8. ALL session details must be copied EXACTLY from WeeklySessions - DO NOT modify or invent session details
+9. When creating a strand, define its weeks field - this becomes the boundary for ALL its members
+10. ALL substrands, content standards, and indicators MUST use weeks from their parent strand's weeks field ONLY
+11. ALL curriculum elements MUST be for the specified Class Name: Class 11A and Subject: Physics only
+12. CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., ["Week 1", "Week 2", "Week 3"])
+13. CRITICAL FORMAT REQUIREMENT: Use the EXACT field names specified:
+    - For strands: strand_name (NOT name)
+    - For substrands: substrand_name (NOT name)
+    - For content standards: content_standard_text (NOT name)
+    - For indicators: indicator_text (NOT name)
+14. CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the "sessions" array with session details from the WeeklySessions data
+15. CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:
+    - id: The session ID from WeeklySessions
+    - date: The session date from WeeklySessions
+    - start_time: The session start time from WeeklySessions
+    - end_time: The session end time from WeeklySessions
+    - week_number: The week number from WeeklySessions
+16. CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes
+17. CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document
+
+TASK:
+1. Analyze BOTH the ExtractedText AND the original file at GCSFileLocation for complete curriculum information
+2. Use the weeks mentioned in the text/document ONLY to understand how long each strand should last
+3. Identify strands, substrands, content standards, and indicators from the combined analysis BUT ONLY for the specified Class Name and Subject
+4. Map these elements to FLAT STRUCTURES (not nested):
+   - Create strand_data entries with strand information including weeks (this defines the strand boundary)
+   - Create substrand_data entries with substrand information (must use weeks from parent strand only)
+   - Create content_standard_data entries with content standard information (must use weeks from parent strand only)
+   - Create indicator_data entries with indicator information (must use weeks from parent strand only)
+5. For each entry, map to actual sessions from WeeklySessions ONLY
+6. For each mapping, COPY EXACT session details (id, date, start_time, end_time, week_number) from WeeklySessions
+7. Return ONLY valid JSON matching the format below
+
+IMPORTANT INSTRUCTIONS:
+- The example JSON below is ONLY for showing the STRUCTURE - DO NOT copy the example values
+- COPY session details EXACTLY from WeeklySessions - DO NOT make up values
+- ONLY use sessions that are provided in WeeklySessions
+- Each session in WeeklySessions contains ONLY these fields: id, date, start_time, end_time, week_number
+- Map content linearly across weeks using the sessions provided in WeeklySessions
+- Each session should only be used once
+- Return ONLY the JSON, nothing else
+- DO NOT wrap the output in markdown code blocks like ```json ... ```
+- DO NOT include any introductory or concluding text
+- just raw JSON starting with [ or { and ending with ] or }
+- ONLY use weeks that are listed in AVAILABLE WEEKS above
+- NEVER create session data that is not in WeeklySessions
+- ONLY process data for Class Name: Class 11A and Subject: Physics
+- CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., ["Week 1", "Week 2", "Week 3"])
+- CRITICAL FORMAT REQUIREMENT: Use the EXACT field names specified:
+    - For strands: strand_name (NOT name)
+    - For substrands: substrand_name (NOT name)
+    - For content standards: content_standard_text (NOT name)
+    - For indicators: indicator_text (NOT name)
+- CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the "sessions" array with session details from the WeeklySessions data
+- CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:
+    - id: The session ID from WeeklySessions
+    - date: The session date from WeeklySessions
+    - start_time: The session start time from WeeklySessions
+    - end_time: The session end time from WeeklySessions
+    - week_number: The week number from WeeklySessions
+- CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes
+- CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document
+- The weeks in the document are ONLY for understanding strand duration, NOT for actual mapping
+- ALL actual mapping MUST use the provided WeeklySessions data
+
+
+--- FULL PAYLOAD STRUCT ---
+{
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "You are an Educational Curriculum Mapping AI. Analyze academic content and map it to actual teaching sessions.\n\nIMPORTANT: You MUST use BOTH the ExtractedText AND the original file at GCSFileLocation for comprehensive analysis. The ExtractedText may be incomplete or unclear, but the original file contains the complete information.\n\nTARGET CLASS AND SUBJECT:\n- Class Name: Class 11A\n- Subject: Physics\n\nIf the document contains information for multiple classes or subjects, you MUST ONLY process and return data for the specified class and subject above. Ignore all other classes and subjects in the document.\n\nINPUTS:\n- ExtractedText: You are an Educational Curriculum Planning AI with web search capabilities. Create a comprehensive semester plan by searching the web for official curriculum information.\n\n**CRITICAL**: You MUST use web search to find the curriculum information. There are NO local documents provided.\n\nWEB SEARCH REQUIREMENTS (MANDATORY):\nYou MUST search the web for:\n- Official curriculum documents for university education system\n- university level curriculum for Physics\n- **second semester** curriculum for level 100 in Physics\n- Syllabus for level 100 (pupil level) in Physics - **second semester specific**\n- level 100 level teaching content for Physics - **second semester  term**\n- Strands, substrands, content standards, and indicators for level 100 - **second semester**\n- Week-by-week teaching plans and learning outcomes for level 100 - **second semester**\n- university second semester  syllabus for level 100\n\nEDUCATIONAL CONTEXT:\n- Education System: university\n- Academic Level: university\n- Subject/Course: Physics\n- **PUPIL/CLASS LEVEL: level 100** \u2190 PRIMARY level indicator for curriculum targeting\n- **SEMESTER: second semester** \u2190 CRITICAL for temporal targeting\n- **TERM: Not specified** \u2190 Additional temporal context\n\n\n\nAVAILABLE TEACHING SESSIONS:\n{\n  \"semester_start_date\": \"2025-12-02\",\n  \"semester_end_date\": \"2026-04-02\",\n  \"weekly_sessions\": {\n    \"Week 1\": {\n      \"week_number\": 1,\n      \"sessions\": [\n        {\n          \"id\": 1618,\n          \"date\": \"2025-12-02\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        },\n        {\n          \"id\": 1652,\n          \"date\": \"2025-12-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        },\n        {\n          \"id\": 1754,\n          \"date\": \"2025-12-05\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        }\n      ]\n    },\n    \"Week 2\": {\n      \"week_number\": 2,\n      \"sessions\": [\n        {\n          \"id\": 1619,\n          \"date\": \"2025-12-09\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        },\n        {\n          \"id\": 1653,\n          \"date\": \"2025-12-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        },\n        {\n          \"id\": 1755,\n          \"date\": \"2025-12-12\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        }\n      ]\n    },\n    \"Week 3\": {\n      \"week_number\": 3,\n      \"sessions\": [\n        {\n          \"id\": 1620,\n          \"date\": \"2025-12-16\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        },\n        {\n          \"id\": 1654,\n          \"date\": \"2025-12-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        },\n        {\n          \"id\": 1756,\n          \"date\": \"2025-12-19\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        }\n      ]\n    },\n    \"Week 4\": {\n      \"week_number\": 4,\n      \"sessions\": [\n        {\n          \"id\": 1621,\n          \"date\": \"2025-12-23\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        },\n        {\n          \"id\": 1655,\n          \"date\": \"2025-12-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        },\n        {\n          \"id\": 1757,\n          \"date\": \"2025-12-26\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        }\n      ]\n    },\n    \"Week 5\": {\n      \"week_number\": 5,\n      \"sessions\": [\n        {\n          \"id\": 1622,\n          \"date\": \"2025-12-30\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        },\n        {\n          \"id\": 1656,\n          \"date\": \"2025-12-31\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        },\n        {\n          \"id\": 1758,\n          \"date\": \"2026-01-02\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        }\n      ]\n    },\n    \"Week 6\": {\n      \"week_number\": 6,\n      \"sessions\": [\n        {\n          \"id\": 1623,\n          \"date\": \"2026-01-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        },\n        {\n          \"id\": 1657,\n          \"date\": \"2026-01-07\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        },\n        {\n          \"id\": 1759,\n          \"date\": \"2026-01-09\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        }\n      ]\n    },\n    \"Week 7\": {\n      \"week_number\": 7,\n      \"sessions\": [\n        {\n          \"id\": 1624,\n          \"date\": \"2026-01-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        },\n        {\n          \"id\": 1658,\n          \"date\": \"2026-01-14\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        },\n        {\n          \"id\": 1760,\n          \"date\": \"2026-01-16\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        }\n      ]\n    },\n    \"Week 8\": {\n      \"week_number\": 8,\n      \"sessions\": [\n        {\n          \"id\": 1625,\n          \"date\": \"2026-01-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        },\n        {\n          \"id\": 1659,\n          \"date\": \"2026-01-21\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        },\n        {\n          \"id\": 1761,\n          \"date\": \"2026-01-23\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        }\n      ]\n    },\n    \"Week 9\": {\n      \"week_number\": 9,\n      \"sessions\": [\n        {\n          \"id\": 1626,\n          \"date\": \"2026-01-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        },\n        {\n          \"id\": 1660,\n          \"date\": \"2026-01-28\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        },\n        {\n          \"id\": 1762,\n          \"date\": \"2026-01-30\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        }\n      ]\n    },\n    \"Week 10\": {\n      \"week_number\": 10,\n      \"sessions\": [\n        {\n          \"id\": 1627,\n          \"date\": \"2026-02-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        },\n        {\n          \"id\": 1661,\n          \"date\": \"2026-02-04\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        },\n        {\n          \"id\": 1763,\n          \"date\": \"2026-02-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        }\n      ]\n    },\n    \"Week 11\": {\n      \"week_number\": 11,\n      \"sessions\": [\n        {\n          \"id\": 1628,\n          \"date\": \"2026-02-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        },\n        {\n          \"id\": 1662,\n          \"date\": \"2026-02-11\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        },\n        {\n          \"id\": 1764,\n          \"date\": \"2026-02-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        }\n      ]\n    },\n    \"Week 12\": {\n      \"week_number\": 12,\n      \"sessions\": [\n        {\n          \"id\": 1629,\n          \"date\": \"2026-02-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        },\n        {\n          \"id\": 1663,\n          \"date\": \"2026-02-18\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        },\n        {\n          \"id\": 1765,\n          \"date\": \"2026-02-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        }\n      ]\n    },\n    \"Week 13\": {\n      \"week_number\": 13,\n      \"sessions\": [\n        {\n          \"id\": 1630,\n          \"date\": \"2026-02-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        },\n        {\n          \"id\": 1664,\n          \"date\": \"2026-02-25\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        },\n        {\n          \"id\": 1766,\n          \"date\": \"2026-02-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        }\n      ]\n    },\n    \"Week 14\": {\n      \"week_number\": 14,\n      \"sessions\": [\n        {\n          \"id\": 1631,\n          \"date\": \"2026-03-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        },\n        {\n          \"id\": 1665,\n          \"date\": \"2026-03-04\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        },\n        {\n          \"id\": 1767,\n          \"date\": \"2026-03-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        }\n      ]\n    },\n    \"Week 15\": {\n      \"week_number\": 15,\n      \"sessions\": [\n        {\n          \"id\": 1632,\n          \"date\": \"2026-03-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        },\n        {\n          \"id\": 1666,\n          \"date\": \"2026-03-11\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        },\n        {\n          \"id\": 1768,\n          \"date\": \"2026-03-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        }\n      ]\n    },\n    \"Week 16\": {\n      \"week_number\": 16,\n      \"sessions\": [\n        {\n          \"id\": 1633,\n          \"date\": \"2026-03-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        },\n        {\n          \"id\": 1667,\n          \"date\": \"2026-03-18\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        },\n        {\n          \"id\": 1769,\n          \"date\": \"2026-03-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        }\n      ]\n    },\n    \"Week 17\": {\n      \"week_number\": 17,\n      \"sessions\": [\n        {\n          \"id\": 1634,\n          \"date\": \"2026-03-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        },\n        {\n          \"id\": 1668,\n          \"date\": \"2026-03-25\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        },\n        {\n          \"id\": 1770,\n          \"date\": \"2026-03-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        }\n      ]\n    }\n  }\n}\n\nAVAILABLE WEEKS: Week 1, Week 2, Week 3, Week 4, Week 5, Week 6, Week 7, Week 8, Week 9, Week 10, Week 11, Week 12, Week 13, Week 14, Week 15, Week 16, Week 17\nWEEK DETAILS: Week 1: 3 sessions, Week 2: 3 sessions, Week 3: 3 sessions, Week 4: 3 sessions, Week 5: 3 sessions, Week 6: 3 sessions, Week 7: 3 sessions, Week 8: 3 sessions, Week 9: 3 sessions, Week 10: 3 sessions, Week 11: 3 sessions, Week 12: 3 sessions, Week 13: 3 sessions, Week 14: 3 sessions, Week 15: 3 sessions, Week 16: 3 sessions, Week 17: 3 sessions\n\nINSTRUCTIONS:\n1. SEARCH THE WEB for the official curriculum structure for this educational context\n2. Identify appropriate strands, substrands, content standards, and indicators\n3. Map these to the available teaching sessions\n4. Use ONLY the weeks and sessions provided in WeeklySessions data\n5. If topic description is provided, ensure content relates to it\n6. If learning objectives are provided, ensure all elements support them\n7. Week numbers MUST be NUMERIC VALUES ONLY (e.g., [1, 2, 3])\n8. Return FLAT STRUCTURES for all curriculum elements\n9. Use strand_name, substrand_name, content_standard_text, indicator_text (NOT \"name\")\n\nCONTENT ASSIGNMENT RULES:\n1. Each content standard MUST be assigned to sessions\n2. Each indicator MUST be assigned to sessions  \n3. Maximum TWO indicators per session\n4. Even distribution across available sessions\n\nEXPECTED OUTPUT FORMAT:\n{\n  \"strand_data\": [...],\n  \"substrand_data\": [...],\n  \"content_standard_data\": [...],\n  \"indicator_data\": [...]\n}\n\nReturn ONLY the JSON, nothing else. DO NOT wrap in markdown code blocks.\n\n- GCSFileLocation: free://ai_generated/Physics/Class 11A\n- WeeklySessions: {\n  \"semester_start_date\": \"2025-12-02\",\n  \"semester_end_date\": \"2026-04-02\",\n  \"weekly_sessions\": {\n    \"Week 1\": {\n      \"week_number\": 1,\n      \"sessions\": [\n        {\n          \"id\": 1618,\n          \"date\": \"2025-12-02\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        },\n        {\n          \"id\": 1652,\n          \"date\": \"2025-12-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        },\n        {\n          \"id\": 1754,\n          \"date\": \"2025-12-05\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 1,\n          \"week_number\": 1\n        }\n      ]\n    },\n    \"Week 2\": {\n      \"week_number\": 2,\n      \"sessions\": [\n        {\n          \"id\": 1619,\n          \"date\": \"2025-12-09\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        },\n        {\n          \"id\": 1653,\n          \"date\": \"2025-12-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        },\n        {\n          \"id\": 1755,\n          \"date\": \"2025-12-12\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 2,\n          \"week_number\": 2\n        }\n      ]\n    },\n    \"Week 3\": {\n      \"week_number\": 3,\n      \"sessions\": [\n        {\n          \"id\": 1620,\n          \"date\": \"2025-12-16\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        },\n        {\n          \"id\": 1654,\n          \"date\": \"2025-12-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        },\n        {\n          \"id\": 1756,\n          \"date\": \"2025-12-19\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 3,\n          \"week_number\": 3\n        }\n      ]\n    },\n    \"Week 4\": {\n      \"week_number\": 4,\n      \"sessions\": [\n        {\n          \"id\": 1621,\n          \"date\": \"2025-12-23\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        },\n        {\n          \"id\": 1655,\n          \"date\": \"2025-12-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        },\n        {\n          \"id\": 1757,\n          \"date\": \"2025-12-26\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 4,\n          \"week_number\": 4\n        }\n      ]\n    },\n    \"Week 5\": {\n      \"week_number\": 5,\n      \"sessions\": [\n        {\n          \"id\": 1622,\n          \"date\": \"2025-12-30\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        },\n        {\n          \"id\": 1656,\n          \"date\": \"2025-12-31\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        },\n        {\n          \"id\": 1758,\n          \"date\": \"2026-01-02\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 5,\n          \"week_number\": 5\n        }\n      ]\n    },\n    \"Week 6\": {\n      \"week_number\": 6,\n      \"sessions\": [\n        {\n          \"id\": 1623,\n          \"date\": \"2026-01-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        },\n        {\n          \"id\": 1657,\n          \"date\": \"2026-01-07\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        },\n        {\n          \"id\": 1759,\n          \"date\": \"2026-01-09\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 6,\n          \"week_number\": 6\n        }\n      ]\n    },\n    \"Week 7\": {\n      \"week_number\": 7,\n      \"sessions\": [\n        {\n          \"id\": 1624,\n          \"date\": \"2026-01-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        },\n        {\n          \"id\": 1658,\n          \"date\": \"2026-01-14\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        },\n        {\n          \"id\": 1760,\n          \"date\": \"2026-01-16\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 7,\n          \"week_number\": 7\n        }\n      ]\n    },\n    \"Week 8\": {\n      \"week_number\": 8,\n      \"sessions\": [\n        {\n          \"id\": 1625,\n          \"date\": \"2026-01-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        },\n        {\n          \"id\": 1659,\n          \"date\": \"2026-01-21\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        },\n        {\n          \"id\": 1761,\n          \"date\": \"2026-01-23\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 8,\n          \"week_number\": 8\n        }\n      ]\n    },\n    \"Week 9\": {\n      \"week_number\": 9,\n      \"sessions\": [\n        {\n          \"id\": 1626,\n          \"date\": \"2026-01-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        },\n        {\n          \"id\": 1660,\n          \"date\": \"2026-01-28\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        },\n        {\n          \"id\": 1762,\n          \"date\": \"2026-01-30\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 9,\n          \"week_number\": 9\n        }\n      ]\n    },\n    \"Week 10\": {\n      \"week_number\": 10,\n      \"sessions\": [\n        {\n          \"id\": 1627,\n          \"date\": \"2026-02-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        },\n        {\n          \"id\": 1661,\n          \"date\": \"2026-02-04\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        },\n        {\n          \"id\": 1763,\n          \"date\": \"2026-02-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 10,\n          \"week_number\": 10\n        }\n      ]\n    },\n    \"Week 11\": {\n      \"week_number\": 11,\n      \"sessions\": [\n        {\n          \"id\": 1628,\n          \"date\": \"2026-02-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        },\n        {\n          \"id\": 1662,\n          \"date\": \"2026-02-11\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        },\n        {\n          \"id\": 1764,\n          \"date\": \"2026-02-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 11,\n          \"week_number\": 11\n        }\n      ]\n    },\n    \"Week 12\": {\n      \"week_number\": 12,\n      \"sessions\": [\n        {\n          \"id\": 1629,\n          \"date\": \"2026-02-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        },\n        {\n          \"id\": 1663,\n          \"date\": \"2026-02-18\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        },\n        {\n          \"id\": 1765,\n          \"date\": \"2026-02-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 12,\n          \"week_number\": 12\n        }\n      ]\n    },\n    \"Week 13\": {\n      \"week_number\": 13,\n      \"sessions\": [\n        {\n          \"id\": 1630,\n          \"date\": \"2026-02-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        },\n        {\n          \"id\": 1664,\n          \"date\": \"2026-02-25\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        },\n        {\n          \"id\": 1766,\n          \"date\": \"2026-02-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 13,\n          \"week_number\": 13\n        }\n      ]\n    },\n    \"Week 14\": {\n      \"week_number\": 14,\n      \"sessions\": [\n        {\n          \"id\": 1631,\n          \"date\": \"2026-03-03\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        },\n        {\n          \"id\": 1665,\n          \"date\": \"2026-03-04\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        },\n        {\n          \"id\": 1767,\n          \"date\": \"2026-03-06\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 14,\n          \"week_number\": 14\n        }\n      ]\n    },\n    \"Week 15\": {\n      \"week_number\": 15,\n      \"sessions\": [\n        {\n          \"id\": 1632,\n          \"date\": \"2026-03-10\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        },\n        {\n          \"id\": 1666,\n          \"date\": \"2026-03-11\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        },\n        {\n          \"id\": 1768,\n          \"date\": \"2026-03-13\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 15,\n          \"week_number\": 15\n        }\n      ]\n    },\n    \"Week 16\": {\n      \"week_number\": 16,\n      \"sessions\": [\n        {\n          \"id\": 1633,\n          \"date\": \"2026-03-17\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        },\n        {\n          \"id\": 1667,\n          \"date\": \"2026-03-18\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        },\n        {\n          \"id\": 1769,\n          \"date\": \"2026-03-20\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 16,\n          \"week_number\": 16\n        }\n      ]\n    },\n    \"Week 17\": {\n      \"week_number\": 17,\n      \"sessions\": [\n        {\n          \"id\": 1634,\n          \"date\": \"2026-03-24\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"11:00\",\n          \"end_time\": \"12:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        },\n        {\n          \"id\": 1668,\n          \"date\": \"2026-03-25\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"09:00\",\n          \"end_time\": \"10:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        },\n        {\n          \"id\": 1770,\n          \"date\": \"2026-03-27\",\n          \"subject\": \"Physics\",\n          \"start_time\": \"10:00\",\n          \"end_time\": \"11:00\",\n          \"class_name\": \"Class 11A\",\n          \"location\": \"Class 11A\",\n          \"session_number\": 17,\n          \"week_number\": 17\n        }\n      ]\n    }\n  }\n}\n\nAVAILABLE WEEKS: Week 1, Week 2, Week 3, Week 4, Week 5, Week 6, Week 7, Week 8, Week 9, Week 10, Week 11, Week 12, Week 13, Week 14, Week 15, Week 16, Week 17\nWEEK DETAILS: Week 1: 3 sessions, Week 2: 3 sessions, Week 3: 3 sessions, Week 4: 3 sessions, Week 5: 3 sessions, Week 6: 3 sessions, Week 7: 3 sessions, Week 8: 3 sessions, Week 9: 3 sessions, Week 10: 3 sessions, Week 11: 3 sessions, Week 12: 3 sessions, Week 13: 3 sessions, Week 14: 3 sessions, Week 15: 3 sessions, Week 16: 3 sessions, Week 17: 3 sessions\n\nSTRICT INSTRUCTIONS - READ CAREFULLY:\n1. The weeks mentioned in the ExtractedText or the original document are FOR REFERENCE ONLY to understand the duration of each strand\n2. You MUST IGNORE any week numbers mentioned in the ExtractedText or original document for your final output\n3. You MUST ONLY use the weeks and sessions provided in the WeeklySessions data above\n4. The WeeklySessions data contains the ACTUAL available teaching weeks and sessions for this specific class\n5. Any week numbers in the ExtractedText or document are for your understanding of strand duration, NOT for mapping\n6. You MUST ONLY process data for the specified Class Name and Subject provided above\n7. If the document contains multiple classes or subjects, IGNORE all except the specified Class Name and Subject\n8. ALL curriculum elements (strands, substrands, content standards, indicators) MUST be for the specified Class Name and Subject only\n9. CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., [\"Week 1\", \"Week 2\", \"Week 3\"])\n10. CRITICAL FORMAT REQUIREMENT: You MUST return FLAT STRUCTURES for all curriculum elements:\n    - strand_data: Array of strand objects with strand_name field\n    - substrand_data: Array of substrand objects with strand_name and substrand_name fields\n    - content_standard_data: Array of content standard objects with strand_name, substrand_name, content_standard_code, and content_standard_text fields\n    - indicator_data: Array of indicator objects with strand_name, substrand_name, content_standard_code, indicator_code, and indicator_text fields\n11. DO NOT return nested structures where substrand_data is inside strand_data\n12. Each curriculum element MUST have its own entry in the appropriate array\n13. Use the field names EXACTLY as specified above (e.g., strand_name, substrand_name, content_standard_text, indicator_text)\n14. CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the \"sessions\" array with session details from the WeeklySessions data\n15. CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:\n    - id: The session ID from WeeklySessions\n    - date: The session date from WeeklySessions\n    - start_time: The session start time from WeeklySessions\n    - end_time: The session end time from WeeklySessions\n    - week_number: The week number from WeeklySessions\n16. CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes\n17. CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document\n\nCRITICAL REQUIREMENT: Each curriculum element MUST have session data in the \"sessions\" array.\nCRITICAL REQUIREMENT: DO NOT put session data in \"session_ids\" or \"session_details\" fields.\nCRITICAL REQUIREMENT: Session data MUST be in the \"sessions\" array with the exact field names specified above.\nCRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes.\nCRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document.\n\nSTRICT STRAND BOUNDARY RULES:\nEach strand must have its own distinct weeks. For example:\n- Example Strand A: Weeks Wee (example)\n- Example Strand B: Weeks ['4', '5', '6'] (example)\n\nCONTENT STANDARD AND INDICATOR ASSIGNMENT RULES:\n1. EACH content standard MUST be assigned to at least one session from its parent substrand\n2. EACH indicator MUST be assigned to at least one session from its parent content standard's sessions\n3. EVERY single indicator of a strand MUST be assigned to at least one session of its content standard\n4. A session CAN have at most TWO indicators assigned to it\n5. ONLY in extreme cases can a session have two indicators (indicators can be paired with another indicator)\n6. Aside from extreme cases, indicators should have exactly ONE session each\n7. When assigning sessions, ensure even distribution of indicators across available sessions\n\nSTRICT RULES FOR CURRICULUM MAPPING:\n1. ONLY use weeks that are explicitly provided in WeeklySessions (see AVAILABLE WEEKS above)\n2. NEVER create or invent weeks that are not in the provided WeeklySessions data\n3. ALL members of a strand (substrands, content standards, indicators) MUST be within the week bounds of that specific strand\n4. Strand A members MUST ONLY use Strand A's assigned weeks, even if Strand B has unassigned sessions\n5. Each strand must have its own distinct week boundaries - NO cross-strand week assignments\n6. ONLY use session data that is explicitly provided in WeeklySessions\n7. NEVER make assumptions or create imaginary session data\n8. ALL session details must be copied EXACTLY from WeeklySessions - DO NOT modify or invent session details\n9. When creating a strand, define its weeks field - this becomes the boundary for ALL its members\n10. ALL substrands, content standards, and indicators MUST use weeks from their parent strand's weeks field ONLY\n11. ALL curriculum elements MUST be for the specified Class Name: Class 11A and Subject: Physics only\n12. CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., [\"Week 1\", \"Week 2\", \"Week 3\"])\n13. CRITICAL FORMAT REQUIREMENT: Use the EXACT field names specified:\n    - For strands: strand_name (NOT name)\n    - For substrands: substrand_name (NOT name)\n    - For content standards: content_standard_text (NOT name)\n    - For indicators: indicator_text (NOT name)\n14. CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the \"sessions\" array with session details from the WeeklySessions data\n15. CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:\n    - id: The session ID from WeeklySessions\n    - date: The session date from WeeklySessions\n    - start_time: The session start time from WeeklySessions\n    - end_time: The session end time from WeeklySessions\n    - week_number: The week number from WeeklySessions\n16. CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes\n17. CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document\n\nTASK:\n1. Analyze BOTH the ExtractedText AND the original file at GCSFileLocation for complete curriculum information\n2. Use the weeks mentioned in the text/document ONLY to understand how long each strand should last\n3. Identify strands, substrands, content standards, and indicators from the combined analysis BUT ONLY for the specified Class Name and Subject\n4. Map these elements to FLAT STRUCTURES (not nested):\n   - Create strand_data entries with strand information including weeks (this defines the strand boundary)\n   - Create substrand_data entries with substrand information (must use weeks from parent strand only)\n   - Create content_standard_data entries with content standard information (must use weeks from parent strand only)\n   - Create indicator_data entries with indicator information (must use weeks from parent strand only)\n5. For each entry, map to actual sessions from WeeklySessions ONLY\n6. For each mapping, COPY EXACT session details (id, date, start_time, end_time, week_number) from WeeklySessions\n7. Return ONLY valid JSON matching the format below\n\nIMPORTANT INSTRUCTIONS:\n- The example JSON below is ONLY for showing the STRUCTURE - DO NOT copy the example values\n- COPY session details EXACTLY from WeeklySessions - DO NOT make up values\n- ONLY use sessions that are provided in WeeklySessions\n- Each session in WeeklySessions contains ONLY these fields: id, date, start_time, end_time, week_number\n- Map content linearly across weeks using the sessions provided in WeeklySessions\n- Each session should only be used once\n- Return ONLY the JSON, nothing else\n- DO NOT wrap the output in markdown code blocks like ```json ... ```\n- DO NOT include any introductory or concluding text\n- just raw JSON starting with [ or { and ending with ] or }\n- ONLY use weeks that are listed in AVAILABLE WEEKS above\n- NEVER create session data that is not in WeeklySessions\n- ONLY process data for Class Name: Class 11A and Subject: Physics\n- CRITICAL FORMAT REQUIREMENT: Week numbers MUST be provided as NUMERIC VALUES ONLY (e.g., [1, 2, 3]) NOT as text (e.g., [\"Week 1\", \"Week 2\", \"Week 3\"])\n- CRITICAL FORMAT REQUIREMENT: Use the EXACT field names specified:\n    - For strands: strand_name (NOT name)\n    - For substrands: substrand_name (NOT name)\n    - For content standards: content_standard_text (NOT name)\n    - For indicators: indicator_text (NOT name)\n- CRITICAL REQUIREMENT: For ALL curriculum elements (strand, substrand, content standard, indicator), you MUST include the \"sessions\" array with session details from the WeeklySessions data\n- CRITICAL REQUIREMENT: For each session in the sessions array, you MUST include ALL of these fields:\n    - id: The session ID from WeeklySessions\n    - date: The session date from WeeklySessions\n    - start_time: The session start time from WeeklySessions\n    - end_time: The session end time from WeeklySessions\n    - week_number: The week number from WeeklySessions\n- CRITICAL REQUIREMENT: You MUST return the FULL TEXT for ALL content standards and indicators, NOT just the codes\n- CRITICAL REQUIREMENT: You MUST ONLY use the weeks provided in WeeklySessions data, NOT weeks mentioned in the document\n- The weeks in the document are ONLY for understanding strand duration, NOT for actual mapping\n- ALL actual mapping MUST use the provided WeeklySessions data\n"
+        }
+      ]
+    }
+  ],
+  "generation_config": {
+    "temperature": 0.5,
+    "maxOutputTokens": 65536
+  },
+  "tools": [
+    {
+      "google_search": {}
+    }
+  ]
+}

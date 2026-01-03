@@ -29,7 +29,7 @@ def test_gcs_authentication():
         print("Generating signed URL...")
         teacher_id = "7bed2b69-8000-4b36-8e91-7fe0b70c9d82"
         file_name = generate_file_name(teacher_id, "pdf")
-        signed_url = generate_signed_url(settings.GCS_BUCKET_NAME, file_name, 3600)  # 1 hour for testing
+        signed_url = generate_signed_url(settings.GCS_BUCKET_NAME, file_name)  # Use default expiration (24 hours)
         print("✅ Signed URL generated successfully")
         print(f"Signed URL: {signed_url[:100]}...")
         

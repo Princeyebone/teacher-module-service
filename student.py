@@ -27,7 +27,7 @@ class StudentPasswordChangeRequest(BaseModel):
     current_password: str
     new_password: str
 
-def generate_index_number(name: str, db: AsyncSession) -> str:
+async def generate_index_number(name: str, db: AsyncSession) -> str:
     """Generate a unique index number based on student name"""
     name_part = ''.join(c for c in name if c.isalnum())[:5].upper()
     base_index = f"STU{name_part}"
@@ -37,7 +37,7 @@ def generate_index_number(name: str, db: AsyncSession) -> str:
     # Check if this index number already exists
     while True:
         stmt = select(Student).where(Student.index_number == index_number)
-        result = db.execute(stmt)
+        result = await db.execute(stmt)
         if not result.scalar_one_or_none():
             break
         index_number = f"{base_index}{counter:03d}"
@@ -144,7 +144,10 @@ async def bulk_create_students(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Upload a CSV file containing student information and create accounts with temporary passwords.
+    Upload a CSV file containing student information and add students to database without login credentials.
+    
+    For now, we only add students to the database.
+    Full login credentials will be implemented in the future.
     
     CSV Format:
     Required columns: name
@@ -209,19 +212,13 @@ async def bulk_create_students(
                     })
                     continue
                 
-                # Hash the name as temporary password
-                hashed_password = get_password_hash(student_data['name'])  # Use name as temporary password
-                
-                # Create student object
+                # Create student (only fields that exist in the Student model)
                 student = Student(
-                    teacher_id=current_teacher.id,
-                    email=student_data['email'] or '',  # Empty string if no email
+                    email=student_data['email'] or None,  # None if no email to avoid unique constraint issues
                     index_number=student_data['index_number'],
-                    hashed_password=hashed_password,
+                    hashed_password="",  # No password for now
                     name=student_data['name'],
-                    student_id=0,  # Default to 0
-                    class_name=student_data.get('class_name', 'Not assigned'),  # Default class
-                    password_changed=False  # Password not changed yet
+                    password_changed=True  # Mark as "changed" since there's no login
                 )
                 
                 # Add to database
@@ -233,9 +230,9 @@ async def bulk_create_students(
                 created_students.append({
                     "id": str(student.id),
                     "name": student.name,
-                    "email": student.email,
+                    "email": student.email if student.email is not None else "",
                     "index_number": student.index_number,
-                    "login_id": student.index_number,  # Students will login with index_number
+                    "login_id": "",  # No login ID for now
                     "created_at": student.created_at.isoformat() if student.created_at else None
                 })
                 
@@ -284,13 +281,15 @@ async def register_single_student(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Register a single student with name as temporary password.
+    Register a single student in the database without login credentials.
+    
+    For now, we only add students to the database.
+    Full login credentials will be implemented in the future.
     
     At least one of email or index_number must be provided.
     
     Returns:
     - Student information
-    - Login ID (index_number) that student will use to login
     """
     # Validate that at least one of email or index_number is provided
     if not student_data.email and not student_data.index_number:
@@ -317,21 +316,15 @@ async def register_single_student(
         # If no index_number provided but email is, generate one
         index_number = student_data.index_number
         if not index_number and student_data.email:
-            index_number = generate_index_number(student_data.name, db)
+            index_number = await generate_index_number(student_data.name, db)
         
-        # Hash the name as temporary password
-        hashed_password = get_password_hash(student_data.name)  # Use name as temporary password
-        
-        # Create student object
+        # Create student (only fields that exist in the Student model)
         student = Student(
-            teacher_id=current_teacher.id,
-            email=student_data.email or '',  # Empty string if no email
+            email=student_data.email or None,  # None if no email to avoid unique constraint issues
             index_number=index_number,
-            hashed_password=hashed_password,
+            hashed_password="",  # No password for now
             name=student_data.name,
-            student_id=0,  # Default to 0
-            class_name="Not assigned",  # Default class
-            password_changed=False  # Password not changed yet
+            password_changed=True  # Mark as "changed" since there's no login
         )
         
         # Add to database
@@ -343,9 +336,9 @@ async def register_single_student(
         return {
             "id": str(student.id),
             "name": student.name,
-            "email": student.email,
+            "email": student.email if student.email is not None else "",
             "index_number": student.index_number,
-            "login_id": student.index_number,  # Students will login with index_number
+            "login_id": "",  # No login ID for now
             "created_at": student.created_at.isoformat() if student.created_at else None
         }
         

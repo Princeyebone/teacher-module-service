@@ -1,0 +1,9 @@
+1. GETTING EXISTING EMBEDDING AS REFERENCE
+============================================================
+Found reference embedding from pillar: 'lesson design'
+Preview: Excited: “Will this enable me to cover more indications and sell more scripts?” Overwhelmed ‘| thoug...
+Embedding type: <class 'str'>
+Embedding string (first 50 chars): [[,-,0,.,0,2,1,0,0,1,7,0,2,,,-,0,.,0,0,6,0,2,4,7,0...
+
+2. SEARCHING WITH REFERENCE EMBEDDING
+============================================================

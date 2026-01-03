@@ -21,42 +21,50 @@ async def get_current_teacher(
     authorization: str = Header(None),
     db: AsyncSession = Depends(get_db)
 ):
-    logger.debug("Validating access token")
+    logger.debug("🔐 [AUTH] get_current_teacher called")
+    logger.debug(f"🔐 [AUTH] Authorization header present: {authorization is not None}")
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Invalid Activation Token",
         headers={"WWW-Authenticate": "Bearer"}
     )
     
-    if authorization is None or not authorization.startswith("Bearer "):
+    if authorization is None:
+        logger.error("🔐 [AUTH] ❌ Authorization header is None")
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+    
+    if not authorization.startswith("Bearer "):
+        logger.error(f"🔐 [AUTH] ❌ Authorization header doesn't start with 'Bearer ': {authorization[:20]}...")
         raise HTTPException(status_code=401, detail="Missing or invalid token")
     
     access_token = authorization.split(" ")[1]
+    logger.debug(f"🔐 [AUTH] Token extracted (first 20 chars): {access_token[:20]}...")
 
     try:
         payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         
         email = payload.get("sub")
         if email is None:
-            logger.warning("Missing email in token payload")
+            logger.warning("🔐 [AUTH] ❌ Missing email in token payload")
             raise credentials_exception
             
         role = payload.get("role")
         school_id = payload.get("school_id")
         individual_id = payload.get("individual_id")
-        logger.info(f"Token decoded: {email} (Role: {role}, School: {school_id}, individual ID: {individual_id})")
+        logger.info(f"🔐 [AUTH] ✅ Token decoded: {email} (Role: {role}, School: {school_id}, Individual ID: {individual_id})")
         
         token_data = TokenData(email=email, role=role, school_id=school_id, individual_id=individual_id)
     except JWTError as e:
-        logger.error(f"Token validation error: {str(e)}")
+        logger.error(f"🔐 [AUTH] ❌ Token validation error: {str(e)}")
         raise credentials_exception
     
     user = (await db.execute(select(TeacherProfile).where(TeacherProfile.individual_id == token_data.individual_id))).scalar_one_or_none()
     if user is None:
-        logger.warning(f"Token user not found: {token_data.email}")
+        logger.warning(f"🔐 [AUTH] ❌ Token user not found: {token_data.email}")
         raise credentials_exception
     
-    logger.info(f"Current user resolved: {token_data.email} (ID: {user.id})")
+    logger.info(f"🔐 [AUTH] ✅ Current user resolved: {token_data.email} (ID: {user.id})")
     return user
 
 async def get_current_student(

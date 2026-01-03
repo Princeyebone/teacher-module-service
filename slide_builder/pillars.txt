@@ -1,0 +1,12 @@
+KNOWLEDGE PILLARS IN DATABASE:
+'syllabus': 115 records
+'subject specific knowledge': 46 records
+'cognitive science and pedagogy': 31 records
+'lesson design': 26 records
+'evaluation': 19 records
+'curriculum': 5 records
+'Cognitive Science & Pedagogy': 4 records
+'Assessment & Evaluation Models': 3 records
+'Lesson Design': 3 records
+'Subject Mastery': 3 records
+'Subject Specific Knowledge': 2 records

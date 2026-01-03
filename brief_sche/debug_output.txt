@@ -1,0 +1,41 @@
+
+============================================================
+1. PILLARS IN KNOWLEDGEMETADATA
+============================================================
+  'syllabus': 115 documents
+  'subject specific knowledge': 46 documents
+  'cognitive science and pedagogy': 31 documents
+  'lesson design': 26 documents
+  'evaluation': 19 documents
+  'curriculum': 5 documents
+  'Cognitive Science & Pedagogy': 4 documents
+  'Lesson Design': 3 documents
+  'Subject Mastery': 3 documents
+  'Assessment & Evaluation Models': 3 documents
+  'Subject Specific Knowledge': 2 documents
+
+============================================================
+2. EMBEDDINGS COUNT BY PILLAR
+============================================================
+  'subject specific knowledge': 23901 embeddings
+  'syllabus': 5705 embeddings
+  'cognitive science and pedagogy': 5185 embeddings
+  'lesson design': 4988 embeddings
+  'evaluation': 3084 embeddings
+  'Subject Specific Knowledge': 1930 embeddings
+  'curriculum': 317 embeddings
+
+============================================================
+3. LESSON DESIGN EMBEDDINGS CHECK
+============================================================
+  Found 0 embeddings in 'Lesson Design' pillar
+
+============================================================
+4. CHECK FOR SIMILAR PILLAR NAMES
+============================================================
+  Pillars containing 'lesson' or 'design':
+    - 'lesson design'
+    - 'Lesson Design'
+
+
+DEBUG COMPLETE

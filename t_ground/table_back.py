@@ -200,7 +200,11 @@ class FileExtractor:
                     
                     text_content = ""
                     for i, image in enumerate(images):
-                        page_text = pytesseract.image_to_string(image)
+                        try:
+                            page_text = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                        except Exception as timeout_e:
+                            logger.warning(f"OCR timed out for page {i+1}: {timeout_e}")
+                            page_text = ""  # Treat timeout as no text extracted
                         text_content += f"Page {i+1}:\n{page_text}\n"
                     
                     logger.info(f"✅ OCR extraction from PDF successful: {len(text_content)} characters")
@@ -212,7 +216,11 @@ class FileExtractor:
             else:
                 # Direct image OCR
                 image = Image.open(file_path)
-                text_content = pytesseract.image_to_string(image)
+                try:
+                    text_content = pytesseract.image_to_string(image, timeout=30)  # 30 second timeout
+                except Exception as timeout_e:
+                    logger.warning(f"OCR timed out for image: {timeout_e}")
+                    text_content = ""  # Treat timeout as no text extracted
                 logger.info(f"✅ OCR extraction successful: {len(text_content)} characters")
                 return text_content
                 
@@ -349,9 +357,9 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
     
     Args:
         ctx: ARQ context
-        teacher_id: UUID of the teacher
-        file_path: Path to the uploaded file
-        gcs_file_name: File name to be used in GCS
+        teacher_id: UUID of the teacher (can be None for system/developer records)
+        file_path: Original file name or path
+        gcs_file_name: File name in GCS
     """
     logger.info(f"🚀 Starting timetable file processing for teacher: {teacher_id}, file: {file_path}")
     
@@ -363,6 +371,11 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
     
     async def send_unique_ws_message(teacher_id: str, message: dict):
         """Send WebSocket message only if it hasn't been sent before"""
+        # Skip sending messages if teacher_id is None
+        if teacher_id is None:
+            logger.info("Skipping WebSocket message for system/developer record (NULL teacher_id)")
+            return False
+            
         # Create a more robust hash of the message content to identify duplicates
         # Include more fields to make the hash more unique
         status = message.get('status', '')
@@ -400,6 +413,44 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
             return False
     
     try:
+        # For metadata-only uploads, we need to download the file from GCS first
+        # Create local directory if it doesn't exist
+        local_dir = "./downloads/timetable"
+        os.makedirs(local_dir, exist_ok=True)
+        
+        # Generate local file path
+        file_extension = os.path.splitext(file_path)[1] or ".dat"
+        local_file_path = os.path.join(local_dir, f"timetable_{teacher_id or 'system'}_{int(datetime.now().timestamp())}{file_extension}")
+        
+        # Download file from GCS to local storage
+        from config import settings
+        from gcs_utils import download_file_from_gcs
+        
+        download_success = download_file_from_gcs(
+            settings.GCS_BUCKET_NAME, 
+            gcs_file_name, 
+            local_file_path
+        )
+        
+        if not download_success:
+            error_msg = f"Failed to download file from GCS: {gcs_file_name}"
+            logger.error(f"❌ {error_msg}")
+            # Only send error message if teacher_id is not None
+            if teacher_id is not None:
+                try:
+                    await send_unique_ws_message(teacher_id, {
+                        "status": "error",
+                        "message": error_msg,
+                        "teacher_id": teacher_id,
+                    })
+                except Exception as send_error:
+                    logger.error(f"Failed to send error message: {send_error}")
+            return {"error": error_msg}
+        
+        # Update file_path to point to the downloaded local file
+        file_path = local_file_path
+        logger.info(f"✅ File downloaded from GCS to: {file_path}")
+        
         # Send initial status - always send this
         await send_unique_ws_message(teacher_id, {
             "status": "started",
@@ -465,7 +516,7 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
                     "message": error_msg,
                     "teacher_id": teacher_id
                 })
-                return {"error": error_msg}
+                raise RuntimeError(error_msg)
                 
         except Exception as e:
             error_msg = f"Text extraction failed: {str(e)}"
@@ -492,7 +543,7 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
             from external_service import send_timetable_to_ai
             if hasattr(settings, 'GEMINI_API_KEY') and settings.GEMINI_API_KEY:
                 logger.info("🤖 Sending extracted text to AI for processing")
-                ai_result = send_timetable_to_ai(
+                ai_result = await send_timetable_to_ai(
                     extracted_text, 
                     f"gs:#{settings.GCS_BUCKET_NAME}/{gcs_file_name}",
                     settings.GEMINI_API_KEY
@@ -702,7 +753,8 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
                 "message": error_msg,
                 "teacher_id": teacher_id
             })
-            return {"error": error_msg}
+            # Raise exception to trigger ARQ retry mechanism
+            raise RuntimeError(error_msg)
             
     except Exception as e:
         error_msg = f"Unexpected error in timetable processing: {str(e)}"
@@ -713,7 +765,8 @@ async def process_timetable_file_task(ctx: dict, teacher_id: str, file_path: str
             "message": error_msg,
             "teacher_id": teacher_id
         })
-        return {"error": error_msg}
+        # Raise exception to trigger ARQ retry mechanism
+        raise RuntimeError(error_msg)
     finally:
         # Clean up global sent messages for this function instance
         try:

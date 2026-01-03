@@ -1,7 +1,7 @@
-#from groq import Groq
+# from groq import Groq
 
-#client = Groq(api_key="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")
-#completion = client.chat.completions.create(
+# client = Groq(api_key="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")
+# completion = client.chat.completions.create(
 #   model="openai/gpt-oss-20b",
 #    messages=[
 #     {
@@ -18,7 +18,7 @@
 #   stop=None
 #)
 
-#for chunk in completion:
+# for chunk in completion:
 #    print(chunk.choices[0].delta.content or "", end="")
 
 
