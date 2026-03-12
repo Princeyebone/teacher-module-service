@@ -6,3 +6,6 @@ teachermodule-*.json
 ai.py
 *.log
 cors.json
+__pycache__/
+env/
+uploads/
