@@ -12,7 +12,7 @@ Merged notes simplification and video fetching into **ONE AI call** for better c
 
 **Before**:
 ```
-AI Call 1: Generate simplified notes
+AI Call 1: Generate/create simplified notes
 AI Call 2: Suggest videos
 Total: 2 API calls
 ```
