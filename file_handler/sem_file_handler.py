@@ -13,7 +13,6 @@ from gcs_utils import generate_signed_url, generate_file_name, get_file_from_gcs
 import asyncio
 import uuid
 from datetime import datetime
-from semplan_ground.semplan_back import enqueue_semplan_processing
 
 router = APIRouter(tags=["Semester Plan File Handler"])
 
@@ -52,7 +51,7 @@ async def upload_semester_plan(
             raise HTTPException(status_code=400, detail="No filename provided")
         
         file_ext = file_name.split(".")[-1].lower() if "." in file_name else ""
-        supported_types = ['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff', 'docx', 'xlsx', 'xls', 'txt']
+        supported_types = ['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff', 'docx', 'xlsx', 'xls', 'txt', 'pptx', 'ppt']
         
         if file_ext not in supported_types:
             raise HTTPException(
@@ -95,22 +94,7 @@ async def upload_semester_plan(
         
         # Schedule background processing task to run immediately
         # This will be handled by a separate background task that processes semester plans
-        # We add a delay to allow the frontend to complete the upload to GCS
-        
-        # Define a temporary local path for the file - the worker will download to this location
-        # Since we use a unique ID in the filename, we can safely assume it won't conflict
-        temp_file_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}_{file_name}")
-        
-        await enqueue_semplan_processing(
-            teacher_id=teacher_id,
-            file_path=temp_file_path,
-            gcs_file_name=gcs_file_name,
-            subject=subject,
-            class_name=class_name,
-            session_data=None, # Worker will fetch session data
-            delay=30 # 30 seconds delay to ensure file is uploaded
-        )
-        logger.info(f"⏰ Scheduled semester plan processing for teacher {teacher_id} to run in 30s")
+        logger.info(f"⏰ Scheduled semester plan processing for teacher {teacher_id} to run immediately")
         
         return {
             "status": "success",

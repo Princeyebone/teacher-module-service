@@ -1,2 +1,8 @@
 .env
-teachermodule-728d7a044c34.json
+teachermodule-*.json
+*.md
+*.sql
+*.dump
+ai.py
+*.log
+cors.json
