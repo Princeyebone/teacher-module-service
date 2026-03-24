@@ -51,6 +51,11 @@ import file_handler.slide_handler as slide_handler
 import file_handler.student_lesson_pack_handler as student_pack_handler
 import file_handler.student_support_handler as student_support_handler
 
+# gRPC Imports
+import grpc
+import teacher_pb2_grpc
+from grpc_server import TeacherServiceServicer
+
 # ✅ Custom OpenAPI (Swagger) Docs
 def custom_openapi():
     if app.openapi_schema:
@@ -77,8 +82,18 @@ async def lifespan(app: FastAPI):
     print("🚀 Starting FastAPI with Redis listener...")
     await create_all_db_tables()  # Await the async database initialization
     asyncio.create_task(redis_listener())  # Start Redis Pub/Sub listener
+
+    # --- Start Async gRPC Server ---
+    server = grpc.aio.server()
+    teacher_pb2_grpc.add_TeacherServiceServicer_to_server(TeacherServiceServicer(), server)
+    server.add_insecure_port('[::]:50051')
+    grpc_task = asyncio.create_task(server.start())
+    print("🚀 Started gRPC Server on port 50051...")
+    
     yield
-    print("🛑 Shutting down FastAPI...")
+    
+    print("🛑 Shutting down FastAPI and gRPC server...")
+    await server.stop(grace=5)
 
 
 # ✅ Create App (ONLY ONCE)

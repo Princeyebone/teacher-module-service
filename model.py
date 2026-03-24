@@ -32,6 +32,8 @@ class TeacherProfile(SQLModel, table=True):
     rating:Optional[int] = None
     role: UserRole = Field(default=UserRole.SCH_TEACHER)
     country:Optional[str]=None 
+    email: Optional[str] = Field(default=None, index=True, unique=True)
+
 
   
 

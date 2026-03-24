@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package teacher;
+
+message SyncEmailRequest {
+    string old_email = 1;
+    string new_email = 2;
+}
+
+message SyncEmailResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+service TeacherService {
+    rpc SyncEmail (SyncEmailRequest) returns (SyncEmailResponse);
+}
