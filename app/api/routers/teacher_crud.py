@@ -1,0 +1,164 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Annotated
+from app.core.dependencies import get_current_teacher
+from app.core.database import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select, delete
+from app.models.model import TeacherProfile
+from uuid import UUID
+from app.schemas.schemas import TeacherUpdate
+from httpx import AsyncClient
+from app.core.config import settings
+import logging
+
+router = APIRouter(tags=["Teacher CRUD"])
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+async def verify_teacher_access(
+    db: AsyncSession,
+    teacher_id: UUID,
+    current_user: dict
+) -> TeacherProfile:
+    """Shared verification logic for teacher operations"""
+    teacher = await db.get(TeacherProfile, teacher_id)
+    if not teacher:
+        logger.error(f"Teacher not found: {teacher_id}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Teacher not found"
+        )
+    
+    # Add any additional permission checks here if needed
+    return teacher
+
+@router.get("/read-teacher/{teacher_id}", summary="Get teacher details")
+async def get_teacher(
+    current_user: Annotated[dict, Depends(get_current_teacher)],
+    teacher_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        teacher = await verify_teacher_access(db, teacher_id, current_user)
+        return teacher
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching teacher: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not retrieve teacher"
+        )
+
+@router.get("/", summary="List all teachers")
+async def get_teachers(
+    current_user: Annotated[dict, Depends(get_current_teacher)],
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        teachers = (await db.execute(select(TeacherProfile))).scalars().all()
+        return teachers
+    except Exception as e:
+        logger.error(f"Error fetching teachers: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not retrieve teachers"
+        )
+
+@router.patch("/{teacher_id}", summary="Update teacher")
+async def update_teacher(
+    current_user: Annotated[dict, Depends(get_current_teacher)],
+    teacher_id: UUID,
+    data: TeacherUpdate,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        teacher = await verify_teacher_access(db, teacher_id, current_user)
+        
+        update_data = data.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            if hasattr(teacher, key):
+                setattr(teacher, key, value)
+            else:
+                logger.warning(f"Field {key} not found in TeacherProfile for teacher {teacher_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid field: {key}"
+                )
+
+        db.add(teacher)
+        await db.commit()
+        await db.refresh(teacher)
+        return teacher
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error updating teacher: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not update teacher"
+        )
+
+@router.post("/{teacher_id}/deactivate", summary="Deactivate teacher")
+async def deactivate_teacher(
+    current_user: Annotated[dict, Depends(get_current_teacher)],
+    teacher_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        teacher = await verify_teacher_access(db, teacher_id, current_user)
+        
+        async with AsyncClient(verify=False) as client:
+            resp = await client.post(
+                f"{settings.CORE_SERVICE_URL}/api/deactivate",
+                headers={"Authorization": f"Bearer {settings.SERVICE_JWT}"},
+                params={"individual_id": teacher.individual_id}
+            )
+
+        if resp.status_code not in (200, 201):
+            detail = resp.json().get("detail", resp.text)
+            logger.error(f"Auth service error for teacher {teacher_id}: {detail}")
+            raise HTTPException(
+                status_code=resp.status_code,
+                detail=detail
+            )
+            
+        return resp.json()
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deactivating teacher {teacher_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not deactivate teacher"
+        )
+
+@router.delete("/{teacher_id}", summary="Delete teacher")
+async def delete_teacher(
+    current_user: Annotated[dict, Depends(get_current_teacher)],
+    teacher_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    try:
+        teacher = await verify_teacher_access(db, teacher_id, current_user)
+        
+        # Only allow deletion if teacher isn't linked to auth system
+        if teacher.individual_id is None:
+            await db.delete(teacher)
+            await db.commit()
+            return {"message": "Teacher deleted successfully"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot delete teacher with active authentication record"
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error deleting teacher {teacher_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not delete teacher"
+        )
